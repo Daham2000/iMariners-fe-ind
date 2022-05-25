@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.imariners.ind.com_ind_imariners">
    <application
-        android:label="com_ind_imariners"
+        android:label="iMariners"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
