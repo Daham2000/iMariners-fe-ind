@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppBarCurve extends StatefulWidget {
-  const AppBarCurve({Key? key}) : super(key: key);
+  final String text;
+  const AppBarCurve({Key? key, required this.text}) : super(key: key);
 
   @override
   _AppBarCurveState createState() => _AppBarCurveState();
@@ -38,14 +39,14 @@ class _AppBarCurveState extends State<AppBarCurve> {
           left: MediaQuery.of(context).size.width * 0.10,
           child: Container(
             child: Text(
-              "Login",
+              widget.text,
               style: GoogleFonts.roboto(
                 fontSize: 30,
                 shadows: <Shadow>[
                   const Shadow(
-                    offset: Offset(2.0, 2.0),
+                    offset: Offset(1.0, 1.0),
                     blurRadius: 3.0,
-                    color: Color.fromARGB(255, 82, 77, 77),
+                    color: Color.fromARGB(255, 97, 95, 95),
                   ),
                 ],
                 color: Colors.white,
