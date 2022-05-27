@@ -36,7 +36,7 @@ class _KnowlageBaseViewState extends State<KnowlageBaseView> {
                 const SizedBox(
                   height: 15,
                 ),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),

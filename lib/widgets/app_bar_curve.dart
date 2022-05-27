@@ -73,8 +73,8 @@ class _AppBarCurveState extends State<AppBarCurve> {
                 ))
             : widget.text == "Knowledge Base"
                 ? Positioned(
-                    top: MediaQuery.of(context).size.height * 0.25,
-                    left: MediaQuery.of(context).size.width * 0.06,
+                    top: MediaQuery.of(context).size.height * 0.248,
+                    left: MediaQuery.of(context).size.width * 0.065,
                     child: Container(
                       width: 25,
                       child: Image.asset("assets/s.png"),
