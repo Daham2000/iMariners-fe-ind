@@ -3,7 +3,6 @@ import 'package:com_ind_imariners/login_page/counter_cubit.dart';
 import 'package:com_ind_imariners/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../login_page/counter_state.dart';
@@ -46,10 +45,15 @@ class _HomePageState extends State<HomePage> {
                           color: ThemeColors.WELCOME,
                         ),
                       ),
-                      SizedBox(height: 20,),
-                      CustomHomeButton(i: 1, path: "assets/t.png", text: "Tools"),
-                      CustomHomeButton(i: 2, path: "assets/s.png", text: "Knowledge Base"),
-                      CustomHomeButton(i: 3, path: "assets/e.png", text: "Telegram"),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CustomHomeButton(
+                          i: 1, path: "assets/t.png", text: "Tools"),
+                      CustomHomeButton(
+                          i: 2, path: "assets/s.png", text: "Knowledge Base"),
+                      CustomHomeButton(
+                          i: 3, path: "assets/e.png", text: "Telegram"),
                     ],
                   ),
                 )
@@ -58,6 +62,8 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
+      backgroundColor: ThemeColors.BACKGROUD_COLOR,
+      bottomNavigationBar: const BottomNaviBar(),
     );
   }
 }

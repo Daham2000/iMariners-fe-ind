@@ -48,3 +48,101 @@ class CustomHomeButton extends StatelessWidget {
     );
   }
 }
+
+class BottomNaviBar extends StatelessWidget {
+  const BottomNaviBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.06,
+        padding: const EdgeInsets.only(top: 5),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(
+            Radius.circular(50.0),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/home.png",
+                    width: 25,
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Home',
+                      style: GoogleFonts.roboto(
+                          fontSize: 10,
+                          color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/upgrade.png",
+                    width: 25,
+                  ),
+                  Text(
+                    "Upgrade",
+                    style: GoogleFonts.roboto(
+                        fontSize: 12,
+                        color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/search_icon.png",
+                    width: 25,
+                  ),
+                  Text(
+                    "Search",
+                    style: GoogleFonts.roboto(
+                        fontSize: 12,
+                        color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/Shutdown.png",
+                    width: 25,
+                  ),
+                  Text(
+                    "Logout",
+                    style: GoogleFonts.roboto(
+                        fontSize: 12,
+                        color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
