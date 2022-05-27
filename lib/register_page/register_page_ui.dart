@@ -1,22 +1,20 @@
 import 'package:com_ind_imariners/login_page/widgets/sample_widget.dart';
-import 'package:com_ind_imariners/theme/colors.dart';
 import 'package:com_ind_imariners/widgets/app_bar_curve.dart';
 import 'package:com_ind_imariners/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import 'counter_cubit.dart';
-import 'counter_state.dart';
+import '../login_page/counter_cubit.dart';
+import '../login_page/counter_state.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+class RegisterView extends StatefulWidget {
+  const RegisterView({Key? key}) : super(key: key);
 
   @override
   _CounterPageState createState() => _CounterPageState();
 }
 
-class _CounterPageState extends State<LoginView> {
+class _CounterPageState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     // CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
@@ -32,7 +30,7 @@ class _CounterPageState extends State<LoginView> {
             child: Column(
               children: [
                 const AppBarCurve(
-                  text: "Login",
+                  text: "Create Your Account",
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -50,6 +48,22 @@ class _CounterPageState extends State<LoginView> {
                         height: 20,
                       ),
                       CustomTextField(
+                        text: "Email Address",
+                        icon: Icon(Icons.email, color: Colors.grey[400]),
+                        textEditingController: password,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextField(
+                        text: "Mobile No",
+                        icon: Icon(Icons.phone_android, color: Colors.grey[400]),
+                        textEditingController: password,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextField(
                         text: "Password",
                         icon: Icon(Icons.lock, color: Colors.grey[400]),
                         textEditingController: password,
@@ -57,15 +71,10 @@ class _CounterPageState extends State<LoginView> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const RemindMeButton(),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          const ActionButton(text: "Login"),
-                          const SizedBox(
-                            height: 2,
-                          ),
-                          ForgotPassword(),
+                          const ActionButton(text: "Register"),
                         ],
                       ),
                       const OrField(),
@@ -86,7 +95,7 @@ class _CounterPageState extends State<LoginView> {
                       const SignupText(),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           );

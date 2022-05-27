@@ -35,9 +35,11 @@ class _AppBarCurveState extends State<AppBarCurve> {
           ),
         ),
         Positioned(
-          top: MediaQuery.of(context).size.height * 0.25,
+          top: widget.text == "Login" ? MediaQuery.of(context).size.height * 0.25:
+          MediaQuery.of(context).size.height * 0.22,
           left: MediaQuery.of(context).size.width * 0.10,
           child: Container(
+            width: MediaQuery.of(context).size.width*0.4,
             child: Text(
               widget.text,
               style: GoogleFonts.roboto(
