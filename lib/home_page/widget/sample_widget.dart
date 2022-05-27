@@ -146,3 +146,149 @@ class BottomNaviBar extends StatelessWidget {
   }
 }
 
+class TopicHomePage extends StatelessWidget {
+  const TopicHomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Pollution prevention, Response, and \n compensation ",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.roboto(
+            fontSize: 19,
+            fontWeight: FontWeight.bold,
+            color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Container(
+          height: 31,
+          child: ElevatedButton(
+              onPressed: () {},
+              child: Text("Take Course"),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                          side: BorderSide(color: ThemeColors.THEME_COLOR))))),
+        )
+      ],
+    );
+  }
+}
+
+class CategoryViewCard extends StatelessWidget {
+  const CategoryViewCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+      child: InkWell(
+        onTap: () {},
+        child: Container(
+          width: MediaQuery.of(context).size.width*0.4,
+          height: 190,
+          decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          child: Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width*0.4,
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  // Image border
+                  child: Image.network(
+                    "https://media.istockphoto.com/photos/hands-holding-compass-by-sea-with-crashing-waves-picture-id184622521?k=20&m=184622521&s=612x612&w=0&h=Cdu9xyLxx0AuSetLFVzYeJcIGMUe6Yb_lFABBRkCUHQ=",
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Navigation",
+                          style: GoogleFonts.roboto(
+                            fontSize: 16,
+                            color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 1.0, vertical: 5.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 15,
+                            child: Image.asset(
+                              "assets/s.png",
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "7 Lectures",
+                            style: GoogleFonts.roboto(
+                              fontSize: 13.0,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 1.0, vertical: 1.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 15,
+                            child: Image.asset(
+                              "assets/people.png",
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "23 Learners",
+                            style: GoogleFonts.roboto(
+                              fontSize: 13.0,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

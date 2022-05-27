@@ -21,7 +21,9 @@ class _AppBarCurveState extends State<AppBarCurve> {
           child: Image(
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.fill,
-            image: const AssetImage("assets/app_bar_curve.png"),
+            image: widget.text != "Knowledge Base"
+                ? const AssetImage("assets/app_bar_curve.png")
+                : const AssetImage("assets/app_bar_back.png"),
           ),
         ),
         Positioned(
@@ -43,14 +45,18 @@ class _AppBarCurveState extends State<AppBarCurve> {
           ),
         ),
         Positioned(
-          top: MediaQuery.of(context).size.height * 0.15,
+          top:  widget.text != "Knowledge Base"
+              ? MediaQuery.of(context).size.height * 0.15 :
+          MediaQuery.of(context).size.height * 0.11,
           right: MediaQuery.of(context).size.width * 0.04,
           child: Container(
             width: MediaQuery.of(context).size.width * 0.25,
             child: Image(
               width: MediaQuery.of(context).size.width,
               fit: BoxFit.fill,
-              image: const AssetImage("assets/ship_image.png"),
+              image: widget.text != "Knowledge Base"
+                  ? const AssetImage("assets/ship_image.png")
+                  : const AssetImage("assets/ship.png"),
             ),
           ),
         ),
@@ -65,22 +71,34 @@ class _AppBarCurveState extends State<AppBarCurve> {
                     size: 25,
                   ),
                 ))
-            : Container(),
+            : widget.text == "Knowledge Base"
+                ? Positioned(
+                    top: MediaQuery.of(context).size.height * 0.25,
+                    left: MediaQuery.of(context).size.width * 0.06,
+                    child: Container(
+                      width: 25,
+                      child: Image.asset("assets/s.png"),
+                    ))
+                : Container(),
         Positioned(
           top: widget.text == "Login"
               ? MediaQuery.of(context).size.height * 0.25
               : widget.text == "Home"
                   ? MediaQuery.of(context).size.height * 0.25
-                  : MediaQuery.of(context).size.height * 0.22,
-          left: widget.text != "Home"
-              ? MediaQuery.of(context).size.width * 0.10
-              : MediaQuery.of(context).size.width * 0.13,
+                  : widget.text == "Knowledge Base"
+                      ? MediaQuery.of(context).size.height * 0.25
+                      : MediaQuery.of(context).size.height * 0.22,
+          left: widget.text == "Home"
+              ? MediaQuery.of(context).size.width * 0.13
+              : widget.text == "Knowledge Base"
+                  ? MediaQuery.of(context).size.width * 0.15
+                  : MediaQuery.of(context).size.width * 0.10,
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.4,
+            width: MediaQuery.of(context).size.width * 0.6,
             child: Text(
               widget.text,
               style: GoogleFonts.roboto(
-                fontSize: 30,
+                fontSize: widget.text == "Knowledge Base" ? 24 : 30,
                 shadows: <Shadow>[
                   const Shadow(
                     offset: Offset(1.0, 1.0),
