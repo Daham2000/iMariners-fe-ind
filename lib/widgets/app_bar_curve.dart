@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppBarCurve extends StatefulWidget {
   final String text;
+
   const AppBarCurve({Key? key, required this.text}) : super(key: key);
 
   @override
@@ -34,12 +35,24 @@ class _AppBarCurveState extends State<AppBarCurve> {
             ),
           ),
         ),
+        widget.text == "Home"
+            ? Positioned(
+                top: MediaQuery.of(context).size.height * 0.25,
+                left: MediaQuery.of(context).size.width * 0.06,
+                child: Container(
+                  child: Icon(Icons.home,color: Colors.white,size: 25,),
+                ))
+            : Container(),
         Positioned(
-          top: widget.text == "Login" ? MediaQuery.of(context).size.height * 0.25:
-          MediaQuery.of(context).size.height * 0.22,
-          left: MediaQuery.of(context).size.width * 0.10,
-          child: Container(
-            width: MediaQuery.of(context).size.width*0.4,
+          top: widget.text == "Login"
+              ? MediaQuery.of(context).size.height * 0.25
+              : widget.text == "Home"
+                  ? MediaQuery.of(context).size.height * 0.25
+                  : MediaQuery.of(context).size.height * 0.22,
+          left: widget.text != "Home" ? MediaQuery.of(context).size.width * 0.10 :
+          MediaQuery.of(context).size.width * 0.13,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.4,
             child: Text(
               widget.text,
               style: GoogleFonts.roboto(
