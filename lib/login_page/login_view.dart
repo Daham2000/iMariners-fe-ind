@@ -33,6 +33,7 @@ class _CounterPageState extends State<LoginView> {
               children: [
                 const AppBarCurve(
                   text: "Login",
+                  isContent: false,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),

@@ -4,8 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppBarCurve extends StatefulWidget {
   final String text;
+  final bool isContent;
 
-  const AppBarCurve({Key? key, required this.text}) : super(key: key);
+  const AppBarCurve({Key? key, required this.text, required this.isContent})
+      : super(key: key);
 
   @override
   _AppBarCurveState createState() => _AppBarCurveState();
@@ -45,9 +47,19 @@ class _AppBarCurveState extends State<AppBarCurve> {
           ),
         ),
         Positioned(
-          top:  widget.text != "Knowledge Base"
-              ? MediaQuery.of(context).size.height * 0.15 :
-          MediaQuery.of(context).size.height * 0.11,
+          top: MediaQuery.of(context).size.height * 0.25,
+          right: MediaQuery.of(context).size.width * 0.18,
+          child: InkWell(
+            onTap: () {},
+            child: Container(
+                width: MediaQuery.of(context).size.width * 0.07,
+                child: Image.asset("assets/below.png")),
+          ),
+        ),
+        Positioned(
+          top: widget.text != "Knowledge Base"
+              ? MediaQuery.of(context).size.height * 0.15
+              : MediaQuery.of(context).size.height * 0.11,
           right: MediaQuery.of(context).size.width * 0.04,
           child: Container(
             width: MediaQuery.of(context).size.width * 0.25,
@@ -81,13 +93,15 @@ class _AppBarCurveState extends State<AppBarCurve> {
                     ))
                 : Container(),
         Positioned(
-          top: widget.text == "Login"
+          top: widget.isContent == true
               ? MediaQuery.of(context).size.height * 0.25
-              : widget.text == "Home"
+              : widget.text == "Login"
                   ? MediaQuery.of(context).size.height * 0.25
-                  : widget.text == "Knowledge Base"
+                  : widget.text == "Home"
                       ? MediaQuery.of(context).size.height * 0.25
-                      : MediaQuery.of(context).size.height * 0.22,
+                      : widget.text == "Knowledge Base"
+                          ? MediaQuery.of(context).size.height * 0.25
+                          : MediaQuery.of(context).size.height * 0.22,
           left: widget.text == "Home"
               ? MediaQuery.of(context).size.width * 0.13
               : widget.text == "Knowledge Base"

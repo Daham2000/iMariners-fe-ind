@@ -28,6 +28,7 @@ class _KnowlageBaseViewState extends State<KnowlageBaseView> {
               children: [
                 const AppBarCurve(
                   text: "Knowledge Base",
+                  isContent: false,
                 ),
                 const SizedBox(
                   height: 20,

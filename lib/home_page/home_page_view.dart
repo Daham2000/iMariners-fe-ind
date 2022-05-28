@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 const AppBarCurve(
                   text: "Home",
+                  isContent: false,
                 ),
                 const SizedBox(
                   height: 40,

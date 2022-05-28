@@ -31,6 +31,7 @@ class _CounterPageState extends State<RegisterView> {
               children: [
                 const AppBarCurve(
                   text: "Create Your Account",
+                  isContent: false,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
