@@ -26,7 +26,7 @@ class CustomHomeButton extends StatelessWidget {
                   ? ThemeColors.HOMEBUTTONONE
                   : i == 2
                       ? ThemeColors.HOMEBUTTONTWO
-                      : ThemeColors.HOMEBUTTONTHREE,
+                      : i == 3 ? ThemeColors.ColregColor : ThemeColors.HOMEBUTTONTHREE,
             ),
             child: Row(
               children: [

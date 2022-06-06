@@ -54,7 +54,9 @@ class _HomePageState extends State<HomePage> {
                       CustomHomeButton(
                           i: 2, path: "assets/s.png", text: "Knowledge Base"),
                       CustomHomeButton(
-                          i: 3, path: "assets/e.png", text: "Telegram"),
+                          i: 3, path: "assets/colreg.png", text: "Colreg"),
+                      CustomHomeButton(
+                          i: 4, path: "assets/e.png", text: "Telegram"),
                     ],
                   ),
                 )

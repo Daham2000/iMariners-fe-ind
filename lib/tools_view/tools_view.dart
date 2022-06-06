@@ -72,137 +72,119 @@ class _ToolsViewState extends State<ToolsView> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white,
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, left: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                isNri == true
+                    ? const NriDesign()
+                    : Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            color: Colors.white,
+                          ),
+                          child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 5),
-                                child: Text(
-                                  "Joining Date",
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 15,
-                                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
-                                  ),
+                                padding: const EdgeInsets.only(top: 8, left: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      child: Text(
+                                        "Signon Date",
+                                        style: GoogleFonts.roboto(
+                                          fontSize: 15,
+                                          color: ThemeColors
+                                              .BACKGROUD_COLOR_BOTTOM,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      child: Text(
+                                        "Signoff Date",
+                                        style: GoogleFonts.roboto(
+                                          fontSize: 15,
+                                          color: ThemeColors
+                                              .BACKGROUD_COLOR_BOTTOM,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Text(
+                                        "Sea Time",
+                                        style: GoogleFonts.roboto(
+                                          fontSize: 15,
+                                          color: ThemeColors
+                                              .BACKGROUD_COLOR_BOTTOM,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Text(
+                                        "",
+                                        style: GoogleFonts.roboto(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                children: [
+                                  const DateTimeRow(),
+                                  const DateTimeRow(),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Text(
-                                  "Signoff Date",
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 15,
-                                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Text(
-                                  "Total Days",
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 15,
-                                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Text(
-                                  "",
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Column(
-                          children: [
-                            const DateTimeRow(),
-                            const DateTimeRow(),
-                          ],
-                        ),
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            width: 220,
-                            height: 33,
-                            decoration: BoxDecoration(
-                                color: ThemeColors.THEME_COLOR,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Add more calculations",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.roboto(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8, bottom: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                width: 139,
-                                height: 33,
-                                decoration: BoxDecoration(
-                                    color: ThemeColors.BUTTONRI,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                    const EdgeInsets.only(left: 8, bottom: 8),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Total : 38 days",
+                                      "Sea Time in days : 40 Days",
+                                      overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.roboto(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                      ),
+                                          fontSize: 15,
+                                          color: ThemeColors.COLORGRAY,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
                               ),
+                              const ButtonAddMoreCal(text:"Add more calculations"),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              const DateTimePick(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const ButtonAddMoreCal(text: "Calculate",),
+                              const SizedBox(
+                                height: 10,
+                              ),
                             ],
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                )
+                        ),
+                      ),
               ],
             ),
           );
