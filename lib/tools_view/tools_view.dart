@@ -7,6 +7,7 @@ import '../login_page/counter_cubit.dart';
 import '../login_page/counter_state.dart';
 import '../theme/colors.dart';
 import '../widgets/app_bar_curve.dart';
+import '../widgets/calculator_design.dart';
 
 class ToolsView extends StatefulWidget {
   const ToolsView({Key? key}) : super(key: key);
@@ -53,32 +54,8 @@ class _ToolsViewState extends State<ToolsView> {
                               isNri = true;
                             });
                           },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.41,
-                            height: 38,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30)),
-                              color: isNri == true
-                                  ? Colors.white
-                                  : ThemeColors.TOGGLE_COLOR,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "NRI Calculator",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: isNri == true
-                                        ? ThemeColors.TOGGLE_COLOR
-                                        : Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
+                          child: NriCalculator(
+                            isNri: isNri,
                           ),
                         ),
                         InkWell(
@@ -87,33 +64,141 @@ class _ToolsViewState extends State<ToolsView> {
                               isNri = false;
                             });
                           },
+                          child: SeaTimeCalDesign(
+                            isNri: isNri,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: Text(
+                                  "Joining Date",
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 15,
+                                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Text(
+                                  "Signoff Date",
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 15,
+                                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  "Total Days",
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 15,
+                                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  "",
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Column(
+                          children: [
+                            const DateTimeRow(),
+                            const DateTimeRow(),
+                          ],
+                        ),
+                        InkWell(
+                          onTap: () {},
                           child: Container(
-                            width: MediaQuery.of(context).size.width * 0.41,
-                            height: 38,
+                            width: 220,
+                            height: 33,
                             decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30)),
-                              color: isNri == false
-                                  ? Colors.white
-                                  : ThemeColors.TOGGLE_COLOR,                            ),
+                                color: ThemeColors.THEME_COLOR,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Sea time Calculator",
-                                  textAlign: TextAlign.center,
+                                  "Add more calculations",
+                                  overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.roboto(
-                                    fontSize: 20,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    color: isNri == false
-                                        ? ThemeColors.TOGGLE_COLOR
-                                        : Colors.white,
+                                    fontSize: 20,
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8, bottom: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                width: 139,
+                                height: 33,
+                                decoration: BoxDecoration(
+                                    color: ThemeColors.BUTTONRI,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Total : 38 days",
+                                      style: GoogleFonts.roboto(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
