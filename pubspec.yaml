@@ -38,8 +38,8 @@ dependencies:
   google_fonts: ^3.0.1
   flutter_svg: ^1.1.0
   expandable: ^5.0.1
-  advance_pdf_viewer: 2.0.0
   path_provider_android: 2.0.11
+  webview_flutter: ^3.0.4
 
 dev_dependencies:
   flutter_test:

@@ -46,16 +46,18 @@ class _AppBarCurveState extends State<AppBarCurve> {
                 child: Image.asset("assets/menu.png")),
           ),
         ),
-        Positioned(
-          top: MediaQuery.of(context).size.height * 0.25,
-          right: MediaQuery.of(context).size.width * 0.18,
-          child: InkWell(
-            onTap: () {},
-            child: Container(
-                width: MediaQuery.of(context).size.width * 0.07,
-                child: Image.asset("assets/below.png")),
-          ),
-        ),
+        widget.isContent
+            ? Positioned(
+                top: MediaQuery.of(context).size.height * 0.25,
+                right: MediaQuery.of(context).size.width * 0.18,
+                child: InkWell(
+                  onTap: () {},
+                  child: Container(
+                      width: MediaQuery.of(context).size.width * 0.07,
+                      child: Image.asset("assets/below.png")),
+                ),
+              )
+            : Container(),
         Positioned(
           top: widget.text != "Knowledge Base"
               ? MediaQuery.of(context).size.height * 0.15
@@ -91,7 +93,23 @@ class _AppBarCurveState extends State<AppBarCurve> {
                       width: 25,
                       child: Image.asset("assets/s.png"),
                     ))
-                : Container(),
+                : widget.text == "Telegram"
+                    ? Positioned(
+                        top: MediaQuery.of(context).size.height * 0.248,
+                        left: MediaQuery.of(context).size.width * 0.065,
+                        child: Container(
+                          width: 25,
+                          child: Image.asset("assets/telegram.png"),
+                        ))
+                    : widget.text == "Tools"
+                        ? Positioned(
+                            top: MediaQuery.of(context).size.height * 0.248,
+                            left: MediaQuery.of(context).size.width * 0.065,
+                            child: Container(
+                              width: 25,
+                              child: Image.asset("assets/t.png"),
+                            ))
+                        : Container(),
         Positioned(
           top: widget.isContent == true
               ? MediaQuery.of(context).size.height * 0.25
@@ -101,16 +119,26 @@ class _AppBarCurveState extends State<AppBarCurve> {
                       ? MediaQuery.of(context).size.height * 0.25
                       : widget.text == "Knowledge Base"
                           ? MediaQuery.of(context).size.height * 0.25
-                          : MediaQuery.of(context).size.height * 0.22,
+                          : widget.text == "Telegram"
+                              ? MediaQuery.of(context).size.height * 0.245
+                              : widget.text == "Tools"
+                                  ? MediaQuery.of(context).size.height * 0.245
+                                  : MediaQuery.of(context).size.height * 0.23,
           left: widget.text == "Home"
               ? MediaQuery.of(context).size.width * 0.13
               : widget.text == "Knowledge Base"
                   ? MediaQuery.of(context).size.width * 0.15
-                  : MediaQuery.of(context).size.width * 0.10,
+                  : widget.text == "Telegram"
+                      ? MediaQuery.of(context).size.width * 0.14
+                      : widget.text == "Tools"
+                          ? MediaQuery.of(context).size.width * 0.15
+                          : MediaQuery.of(context).size.width * 0.10,
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.6,
             child: Text(
-              widget.text,
+              widget.text == "Create Your Account"
+                  ? "Create Your\nAccount"
+                  : widget.text,
               style: GoogleFonts.roboto(
                 fontSize: widget.text == "Knowledge Base" ? 24 : 30,
                 shadows: <Shadow>[

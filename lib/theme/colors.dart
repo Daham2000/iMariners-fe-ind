@@ -14,4 +14,5 @@ class ThemeColors {
   static const HOMEBUTTONTHREE = const Color(0xFF00CE46);
   static const FORGOT_PASSWORD = const Color(0xFF0F405B);
   static const DOWNLOADBUTTON = const Color(0xFFE2F5FF);
+  static const TOGGLE_COLOR = const Color(0xFF076E85);
 }

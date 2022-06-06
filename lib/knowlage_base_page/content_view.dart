@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import '../home_page/widget/sample_widget.dart';
 import '../login_page/counter_cubit.dart';
 import '../login_page/counter_state.dart';
@@ -16,20 +16,21 @@ class ContentView extends StatefulWidget {
 }
 
 class _ContentViewState extends State<ContentView> {
-  bool _isLoading = true;
-  late PDFDocument document;
-
   @override
   void initState() {
     super.initState();
-    loadDocument();
   }
+  final Completer<WebViewController> _controller =
+  Completer<WebViewController>();
 
-  loadDocument() async {
-    document = await PDFDocument.fromURL(
-        'http://www.africau.edu/images/default/sample.pdf');
-    document.get();
-    setState(() => _isLoading = false);
+  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
+    return JavascriptChannel(
+        name: 'Toaster',
+        onMessageReceived: (JavascriptMessage message) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message.message)),
+          );
+        });
   }
 
   @override
@@ -49,20 +50,39 @@ class _ContentViewState extends State<ContentView> {
                 const SizedBox(
                   height: 25,
                 ),
-                _isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height*0.6,
-                        child: PDFViewer(
-                          document: document,
-                          scrollDirection: Axis.vertical,
-                          showIndicator: false,
-                          lazyLoad: false,
-                          showNavigation: false,
-                          showPicker: false,
-                        ),
-                      )
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 3,
+                  child: WebView(
+                    initialUrl: 'https://dahamblog.com/android-background-services-with-work-manager/',
+                    javascriptMode: JavascriptMode.unrestricted,
+                    onWebViewCreated: (WebViewController webViewController) {
+                      _controller.complete(webViewController);
+                    },
+                    onProgress: (int progress) {
+                      print('WebView is loading (progress : $progress%)');
+                    },
+                    javascriptChannels: <JavascriptChannel>{
+                      _toasterJavascriptChannel(context),
+                    },
+                    navigationDelegate: (NavigationRequest request) {
+                      if (request.url.startsWith('https://www.youtube.com/')) {
+                        print('blocking navigation to $request}');
+                        return NavigationDecision.prevent;
+                      }
+                      print('allowing navigation to $request');
+                      return NavigationDecision.navigate;
+                    },
+                    onPageStarted: (String url) {
+                      print('Page started loading: $url');
+                    },
+                    onPageFinished: (String url) {
+                      print('Page finished loading: $url');
+                    },
+                    gestureNavigationEnabled: true,
+                    backgroundColor: const Color(0x00000000),
+                  ),
+                ),
               ],
             ),
           );
