@@ -15,6 +15,6 @@ class LoginProvider extends BlocProvider<CounterCubit> {
   LoginProvider()
       : super(
           create: (context) => CounterCubit(),
-          child: const HomePage(),
+          child: const LoginView(),
         );
 }

@@ -1,5 +1,7 @@
-abstract class SuperCubit {
-  void increment(int count);
+import '../db/models/user_model.dart';
 
-  void decrement();
+abstract class SuperCubit {
+  void login(User user);
+
+  void registerUser(User user);
 }

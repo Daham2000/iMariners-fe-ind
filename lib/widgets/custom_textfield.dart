@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatefulWidget {
   final String text;
   final Icon icon;
+  final bool obscureText;
   final TextEditingController textEditingController;
 
   const CustomTextField(
       {Key? key,
       required this.text,
       required this.icon,
-      required this.textEditingController})
+      required this.textEditingController,
+      required this.obscureText})
       : super(key: key);
 
   @override
@@ -21,8 +23,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.86,
-      child: TextField(
+      child: TextFormField(
         controller: widget.textEditingController,
+        obscureText: widget.obscureText,
+        validator: (text) {
+          if (text == null || text.isEmpty) {
+            return "This field can't be empty";
+          }
+          return null;
+        },
         decoration: InputDecoration(
             prefixIcon: widget.icon,
             enabledBorder: OutlineInputBorder(
