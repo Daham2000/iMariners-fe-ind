@@ -123,7 +123,7 @@ class _AppBarCurveState extends State<AppBarCurve> {
                               ? MediaQuery.of(context).size.height * 0.245
                               : widget.text == "Tools"
                                   ? MediaQuery.of(context).size.height * 0.245
-                                  : MediaQuery.of(context).size.height * 0.23,
+                                  : MediaQuery.of(context).size.height * 0.22,
           left: widget.text == "Home"
               ? MediaQuery.of(context).size.width * 0.13
               : widget.text == "Knowledge Base"

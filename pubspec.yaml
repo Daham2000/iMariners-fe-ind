@@ -43,6 +43,8 @@ dependencies:
   flutter_datetime_picker: ^1.5.1
   http: ^0.13.4
   platform_device_id: ^1.0.1
+  flutter_spinkit: ^5.1.0
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:

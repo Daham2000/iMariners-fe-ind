@@ -16,7 +16,8 @@ class AuthApi {
       };
       final url = Uri.parse('${Strings.url}v1/user/sign-in');
       final response = await http.post(url,
-          headers: {"Content-Type": "application/json"}, body: json.encode(body));
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(body));
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
       return response.statusCode;
@@ -26,7 +27,7 @@ class AuthApi {
     }
   }
 
-  Future<bool> register(User user) async {
+  Future<int> register(User user) async {
     try {
       final body = {
         "email": user.email,
@@ -34,18 +35,53 @@ class AuthApi {
         "deviceId": user.deviceId,
         "password": user.password
       };
-      final url = Uri.parse('${Strings.url}/v1/user/sign-up');
-      final response = await http.post(url, body: body);
+      final url = Uri.parse('${Strings.url}v1/user/sign-up');
+      final response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(body));
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
+      return response.statusCode;
     } catch (e) {
       print(e.toString());
-      return false;
+      return 401;
+    }
+  }
+
+  Future<int> resetPasswordEmail(User user) async {
+    try {
+      final body = {
+        "email": user.email,
+      };
+      final url = Uri.parse('${Strings.url}v1/user/resetpassword');
+      final response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(body));
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return 401;
+    }
+  }
+
+  Future<int> checkCode(String email, String code) async {
+    try {
+      final body = {
+        "email": email,
+        "code": code,
+      };
+      final url = Uri.parse('${Strings.url}v1/user/checktoken');
+      final response = await http.patch(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(body));
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return 401;
     }
   }
 }

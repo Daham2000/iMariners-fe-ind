@@ -4,4 +4,6 @@ abstract class SuperCubit {
   void login(User user);
 
   void registerUser(User user);
+
+  void resetPasswordEmail(User user);
 }

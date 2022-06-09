@@ -15,13 +15,15 @@ class RegisterView extends StatefulWidget {
 }
 
 class _CounterPageState extends State<RegisterView> {
+  final _formKey = GlobalKey<FormState>();
+
+  final username = TextEditingController();
+  final email = TextEditingController();
+  final password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
-    final _formKey = GlobalKey<FormState>();
-
-    final username = TextEditingController();
-    final password = TextEditingController();
 
     return Scaffold(
       body: BlocBuilder<CounterCubit, CounterState>(
@@ -55,7 +57,7 @@ class _CounterPageState extends State<RegisterView> {
                         CustomTextField(
                             text: "Email Address",
                             icon: Icon(Icons.email, color: Colors.grey[400]),
-                            textEditingController: password,
+                            textEditingController: email,
                             obscureText: false),
                         const SizedBox(
                           height: 20,
@@ -73,6 +75,9 @@ class _CounterPageState extends State<RegisterView> {
                           children: [
                             ActionButton(
                               text: "Register",
+                              email: email.text,
+                              password: password.text,
+                              username: username.text,
                               bloc: counterCubit,
                               formKey: _formKey,
                             ),
@@ -93,7 +98,9 @@ class _CounterPageState extends State<RegisterView> {
                         const SizedBox(
                           height: 15,
                         ),
-                        const SignupText(),
+                        const SignupText(
+                          isLogin: false,
+                        ),
                       ],
                     ),
                   ),

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class SnackBarFactory {
   SnackBar getSnackBar({String? title, bool? isFail, double? fontSize}) {
     return SnackBar(
-      backgroundColor: isFail == true ? Color(0xFF4CD964) : Color(0xFFEC3939),
+      backgroundColor: isFail == true ? Color(0xFFEC3939) : Color(0xFF4CD964),
       margin: EdgeInsets.all(12),
       behavior: SnackBarBehavior.floating,
       elevation: 0,

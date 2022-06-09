@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../theme/colors.dart';
 import '../../widgets/snackbar_factory.dart';
 import '../counter_cubit.dart';
+import 'package:flutter/scheduler.dart';
 
 class RemindMeButton extends StatelessWidget {
   const RemindMeButton({Key? key}) : super(key: key);
@@ -27,8 +28,9 @@ class RemindMeButton extends StatelessWidget {
   }
 }
 
-class ActionButton extends StatelessWidget {
+class ActionButton extends StatefulWidget {
   String? text;
+  String? code;
   String? email;
   String? username;
   String? password;
@@ -38,6 +40,7 @@ class ActionButton extends StatelessWidget {
   ActionButton(
       {Key? key,
       this.text,
+      this.code,
       this.bloc,
       this.email,
       this.username,
@@ -46,53 +49,107 @@ class ActionButton extends StatelessWidget {
       : super(key: key);
 
   @override
+  _ActionButtonState createState() => _ActionButtonState();
+}
+
+class _ActionButtonState extends State<ActionButton> {
+  bool isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
     final double fontSize = MediaQuery.of(context).textScaleFactor;
 
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.7,
-      child: ElevatedButton(
-          onPressed: () async {
-            if (formKey.currentState.validate()) {
-              if (username == null) {
-                final int? result =
-                    await bloc?.login(User(email: email, password: password));
-                if (result != null && result == 200) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeProvider()),
-                  );
-                } else {
-                  if (result == 400) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBarFactory().getSnackBar(
-                      isFail: true,
-                      title: "Incorrect Email or Password",
-                      fontSize: fontSize,
-                    ));
+    return isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: ElevatedButton(
+                onPressed: () async {
+                  if (widget.code != null) {
+                    final result = await widget.bloc
+                        ?.codeCheck(widget.email ?? "", widget.code ?? "");
+                    if (result == 401) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBarFactory().getSnackBar(
+                        isFail: true,
+                        title: "Incorrect Code",
+                        fontSize: fontSize,
+                      ));
+                    }
                   }
-                }
-              } else {
-                final bool? result = await bloc?.registerUser(
-                    User(email: email, password: password, username: username));
-                if (result != null && result == true) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginProvider()),
-                  );
-                }
-              }
-            }
-          },
-          child: Text(
-            text ?? "",
-            style: GoogleFonts.roboto(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-          )),
-    );
+                  if (widget.text == "Send code") {
+                    await widget.bloc
+                        ?.resetPasswordEmail(User(email: widget.email));
+                  } else {
+                    if (widget.formKey.currentState.validate()) {
+                      if (widget.username == null) {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        final int? result = await widget.bloc?.login(User(
+                            email: widget.email, password: widget.password));
+                        setState(() {
+                          isLoading = false;
+                        });
+                        if (result != null && result == 200) {
+                          Future.microtask(() => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeProvider()),
+                              ));
+                        } else {
+                          if (result == 401) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBarFactory().getSnackBar(
+                              isFail: true,
+                              title: "Incorrect Email or Password",
+                              fontSize: fontSize,
+                            ));
+                          }
+                          if (result == 400) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBarFactory().getSnackBar(
+                              isFail: true,
+                              title:
+                                  "Another device is already logged in from this account",
+                              fontSize: fontSize,
+                            ));
+                          }
+                        }
+                      } else {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        final int? result = await widget.bloc?.registerUser(
+                            User(
+                                email: widget.email,
+                                password: widget.password,
+                                username: widget.username));
+                        setState(() {
+                          isLoading = false;
+                        });
+                        if (result == 201) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginProvider()),
+                          );
+                        }
+                      }
+                    }
+                  }
+                },
+                child: Text(
+                  widget.text ?? "",
+                  style: GoogleFonts.roboto(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                )),
+          );
   }
 }
 
@@ -101,15 +158,12 @@ class ForgotPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: InkWell(
-        onTap: () {},
-        child: Text(
-          "Forgot password",
-          style: GoogleFonts.roboto(
-              fontSize: 15.0,
-              decoration: TextDecoration.underline,
-              color: ThemeColors.FORGOT_PASSWORD),
-        ),
+      child: Text(
+        "Forgot password",
+        style: GoogleFonts.roboto(
+            fontSize: 15.0,
+            decoration: TextDecoration.underline,
+            color: ThemeColors.FORGOT_PASSWORD),
       ),
     );
   }
@@ -171,7 +225,9 @@ class SocialButton extends StatelessWidget {
 }
 
 class SignupText extends StatelessWidget {
-  const SignupText({Key? key}) : super(key: key);
+  final bool isLogin;
+
+  const SignupText({Key? key, required this.isLogin}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -179,14 +235,14 @@ class SignupText extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don’t Have an Account ?  ",
+          isLogin ? "Don’t Have an Account ?  " : "Already have an account? ",
           style: GoogleFonts.roboto(
             fontSize: 15.0,
             color: ThemeColors.TEXT_COLOR_TWO,
           ),
         ),
         Text(
-          "Sign Up",
+          isLogin ? "Sign up" : "Sign in",
           style: GoogleFonts.roboto(
             fontSize: 15.0,
             decoration: TextDecoration.underline,
