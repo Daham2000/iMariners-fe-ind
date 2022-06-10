@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../home_page/widget/sample_widget.dart';
 import '../login_page/counter_cubit.dart';
@@ -18,10 +20,19 @@ class ToolsView extends StatefulWidget {
 
 class _ToolsViewState extends State<ToolsView> {
   bool isNri = true;
+  List<DateTime> joiningDate = [];
+  List<DateTime> signOffDate = [];
+  int total = 0;
+  DateTime dateOne = DateTime.now();
+  DateTime dateTwo = DateTime.now();
+  DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
 
   @override
   Widget build(BuildContext context) {
     CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
+    String joiningDateI = dateFormat.format(dateOne);
+    String signOffDateI = dateFormat.format(dateTwo);
 
     return Scaffold(
       body: BlocBuilder<CounterCubit, CounterState>(
@@ -147,8 +158,20 @@ class _ToolsViewState extends State<ToolsView> {
                               ),
                               Column(
                                 children: [
-                                  // DateTimeRow(joiningDate: DateTime,),
-                                  // DateTimeRow(),
+                                  for (int i = 0; i < joiningDate.length; i++)
+                                    DateTimeRow(
+                                      joiningDateS: joiningDate[i],
+                                      signOffDateS: signOffDate[i],
+                                      isSeaTime: true,
+                                      myVoidCallback:(){
+                                        final difference = signOffDate[i].difference(joiningDate[i]).inDays + 1;
+                                        total -= difference;
+                                        setState(() {
+                                          joiningDate.removeAt(i);
+                                          signOffDate.removeAt(i);
+                                        });
+                                      },
+                                    ),
                                 ],
                               ),
                               const SizedBox(
@@ -161,7 +184,7 @@ class _ToolsViewState extends State<ToolsView> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Sea Time in days : 40 Days",
+                                      "Sea Time in days : ${total} Days",
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.roboto(
                                           fontSize: 15,
@@ -171,17 +194,137 @@ class _ToolsViewState extends State<ToolsView> {
                                   ],
                                 ),
                               ),
-                              const ButtonAddMoreCal(
-                                  text: "Add more calculations"),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              const DateTimePick(),
                               const SizedBox(
                                 height: 10,
                               ),
-                              const ButtonAddMoreCal(
-                                text: "Calculate",
+                              Text(
+                                "Add more calculations",
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.roboto(
+                                  color: ThemeColors.THEME_COLOR,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: Text(
+                                      "Signon Date",
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 15,
+                                        color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      DatePicker.showDatePicker(context,
+                                          showTitleActions: true,
+                                          minTime: DateTime(2000, 1, 1),
+                                          maxTime: DateTime(2030, 1, 1), onChanged: (date) {
+                                            setState(() {
+                                              dateOne = date;
+                                            });
+                                          }, onConfirm: (date) {
+                                            print('confirm $date');
+                                          }, currentTime: DateTime.now(), locale: LocaleType.en);
+                                    },
+                                    child: Container(
+                                      width: 130,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 1,
+                                          color: ThemeColors.COLOR_BORDER,
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 3),
+                                        child: Text(
+                                          joiningDateI.toString(),
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 15,
+                                            color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: Text(
+                                      "Signoff Date",
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 15,
+                                        color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      DatePicker.showDatePicker(context,
+                                          showTitleActions: true,
+                                          minTime: DateTime(2000, 1, 1),
+                                          maxTime: DateTime(2030, 1, 1), onChanged: (date) {
+                                            setState(() {
+                                              dateTwo = date;
+                                            });
+                                          }, onConfirm: (date) {
+                                            print('confirm $date');
+                                          }, currentTime: DateTime.now(), locale: LocaleType.en);
+                                    },
+                                    child: Container(
+                                      width: 130,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 1,
+                                          color: ThemeColors.COLOR_BORDER,
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 3),
+                                        child: Text(
+                                          signOffDateI.toString(),
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 15,
+                                            color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    joiningDate.add(dateOne);
+                                    signOffDate.add(dateTwo);
+                                    final difference = dateTwo.difference(dateOne).inDays + 1;
+                                    total += difference;
+                                  });
+                                },
+                                child: const ButtonAddMoreCal(
+                                  text: "Calculate",
+                                ),
                               ),
                               const SizedBox(
                                 height: 10,

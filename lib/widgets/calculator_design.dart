@@ -80,11 +80,13 @@ class DateTimeRow extends StatelessWidget {
   final DateTime joiningDateS;
   final DateTime signOffDateS;
   VoidCallback myVoidCallback;
+  bool isSeaTime;
 
   DateTimeRow(
       {Key? key,
       required this.joiningDateS,
       required this.signOffDateS,
+      required this.isSeaTime,
       required this.myVoidCallback})
       : super(key: key);
 
@@ -93,7 +95,17 @@ class DateTimeRow extends StatelessWidget {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     String joiningDateI = dateFormat.format(joiningDateS);
     String signOffDateI = dateFormat.format(signOffDateS);
-    final difference = signOffDateS.difference(joiningDateS).inDays + 1;
+    String difference = "";
+    if(isSeaTime){
+      int totalDays = signOffDateS.difference(joiningDateS).inDays+1;
+      int years = totalDays ~/ 365;
+      int months = (totalDays-years*365) ~/ 30;
+      int days = totalDays-years*365-months*30;
+      difference = (years==0 ? "${months}m ${days}d" : months==0 ? "${days}d" :
+      "${years}y ${months}m ${days}d");
+    }else{
+      difference = (signOffDateS.difference(joiningDateS).inDays + 1).toString();
+    }
 
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
@@ -129,28 +141,37 @@ class DateTimeRow extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    difference.toString(),
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.roboto(
-                      fontSize: 15,
-                      color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: 70,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          difference.toString(),
+                          textAlign: TextAlign.start,
+                          style: GoogleFonts.roboto(
+                            fontSize: 15,
+                            color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: InkWell(
-                    onTap: () {
-                      myVoidCallback();
-                    },
-                    child: Icon(
-                      Icons.delete_forever,
-                      color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                    SizedBox(width: 10,),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          myVoidCallback();
+                        },
+                        child: Icon(
+                          Icons.delete_forever,
+                          color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 )
               ],
             ),
@@ -167,18 +188,17 @@ class NriDesign extends StatefulWidget {
   @override
   _NriDesignState createState() => _NriDesignState();
 }
+int total = 0;
 
 class _NriDesignState extends State<NriDesign> {
   DateTime dateOne = DateTime.now();
   DateTime dateTwo = DateTime.now();
-  int total = 0;
 
   @override
   Widget build(BuildContext context) {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     String joiningDateI = dateFormat.format(dateOne);
     String signOffDateI = dateFormat.format(dateTwo);
-
 
     return Padding(
       padding: const EdgeInsets.all(14.0),
@@ -247,6 +267,7 @@ class _NriDesignState extends State<NriDesign> {
                 for (int i = 0; i < joiningDate.length; i++)
                   DateTimeRow(
                     joiningDateS: joiningDate[i],
+                    isSeaTime: false,
                     signOffDateS: signOffDate[i],
                     myVoidCallback:(){
                       final difference = signOffDate[i].difference(joiningDate[i]).inDays + 1;
@@ -331,7 +352,7 @@ class _NriDesignState extends State<NriDesign> {
                   ],
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 8,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
