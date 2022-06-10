@@ -27,7 +27,7 @@ class _CounterPageState extends State<LoginView> {
 
   @override
   void initState() {
-    // getDetails();
+    getDetails();
     super.initState();
   }
 
@@ -90,6 +90,7 @@ class _CounterPageState extends State<LoginView> {
     return Scaffold(
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) =>
+            pre.isDeviceAccReset != current.isDeviceAccReset ||
             pre.isPasswordReset != current.isPasswordReset ||
             pre.isCodeValid != current.isCodeValid ||
             pre.emailSend != current.emailSend,
@@ -115,13 +116,15 @@ class _CounterPageState extends State<LoginView> {
                                 height: 40,
                               ),
                               state.emailSend == false
-                                  ? state.isCodeValid == false ? getTextField(
-                                      text: "Email",
-                                      icon: Icon(Icons.person,
-                                          color: Colors.grey[400]),
-                                      ctrl: username,
-                                      obscureText: false,
-                                    ) : Container()
+                                  ? state.isCodeValid == false
+                                      ? getTextField(
+                                          text: "Email",
+                                          icon: Icon(Icons.person,
+                                              color: Colors.grey[400]),
+                                          ctrl: username,
+                                          obscureText: false,
+                                        )
+                                      : Container()
                                   : Container(),
                               const SizedBox(
                                 height: 20,
@@ -202,7 +205,17 @@ class _CounterPageState extends State<LoginView> {
                                           onTap: () async {
                                             counterCubit.setResetPassword();
                                           },
-                                          child: ForgotPassword(),
+                                          child: ForgotPassword(
+                                            text: "Forgot password",
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            counterCubit.setResetDevice();
+                                          },
+                                          child: ForgotPassword(
+                                            text: "Reset account device",
+                                          ),
                                         ),
                                       ],
                                     )

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 class CounterState {
   final int count;
   bool isPasswordReset;
+  bool isDeviceAccReset;
   bool isCodeCorrectResetPass;
   bool emailSend;
   bool isCodeValid;
@@ -11,6 +12,7 @@ class CounterState {
   CounterState({
     required this.count,
     required this.isPasswordReset,
+    required this.isDeviceAccReset,
     required this.isCodeCorrectResetPass,
     required this.emailSend,
     required this.isCodeValid,
@@ -20,6 +22,7 @@ class CounterState {
       : this(
           count: 0,
           isPasswordReset: false,
+          isDeviceAccReset: false,
           isCodeCorrectResetPass: false,
           emailSend: false,
           isCodeValid: false,
@@ -28,6 +31,7 @@ class CounterState {
   CounterState clone({
     int? count,
     bool? isPasswordReset,
+    bool? isDeviceAccReset,
     bool? isCodeCorrectResetPass,
     bool? emailSend,
     bool? isCodeValid,
@@ -35,6 +39,7 @@ class CounterState {
     return CounterState(
       count: count ?? this.count,
       isPasswordReset: isPasswordReset ?? this.isPasswordReset,
+      isDeviceAccReset: isDeviceAccReset ?? this.isDeviceAccReset,
       isCodeCorrectResetPass:
           isCodeCorrectResetPass ?? this.isCodeCorrectResetPass,
       emailSend: emailSend ?? this.emailSend,
@@ -45,6 +50,7 @@ class CounterState {
   static CounterState get initialState => CounterState(
         count: 0,
         isPasswordReset: false,
+        isDeviceAccReset: false,
         isCodeCorrectResetPass: false,
         emailSend: false,
         isCodeValid: false,

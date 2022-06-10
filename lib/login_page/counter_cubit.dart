@@ -17,7 +17,7 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     DateTime now = DateTime.now();
     user.lastLogin = now.toString();
     final int loginResult = await AuthApi().login(user, "user");
-    SharedMemory().setUser("user", user.email ?? "");
+    await SharedMemory().setUser("user", user.email ?? "");
     return loginResult;
   }
 
@@ -31,20 +31,39 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
 
   @override
   Future<int> resetPasswordEmail(User user) async {
-    int result = await AuthApi().resetPasswordEmail(user);
-    if (result == 200) {
-      emit(state.clone(emailSend: true));
+    if (state.isDeviceAccReset == true) {
+      print("isDeviceAccReset");
+      int result = await AuthApi().resetDeviceEmail(user);
+      if (result == 200) {
+        emit(state.clone(emailSend: true));
+      }
+      return result;
+    } else {
+      int result = await AuthApi().resetPasswordEmail(user);
+      if (result == 200) {
+        emit(state.clone(emailSend: true));
+      }
+      return result;
     }
-    return result;
   }
 
   Future<int> codeCheck(String email, String code) async {
     int result = await AuthApi().checkCode(email, code);
     if (result == 200) {
-      emit(state.clone(
-        isCodeValid: true,
-        emailSend: false,
-      ));
+      if (state.isDeviceAccReset == true) {
+        emit(state.clone(
+          isDeviceAccReset: false,
+          isCodeCorrectResetPass: false,
+          isPasswordReset: false,
+          emailSend: false,
+        ));
+      } else {
+        emit(state.clone(
+          isCodeValid: true,
+          isDeviceAccReset: false,
+          emailSend: false,
+        ));
+      }
     }
     return result;
   }
@@ -55,6 +74,13 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
   }
 
   setResetPassword() {
-    emit(state.clone(isPasswordReset: true));
+    emit(state.clone(isPasswordReset: true, isDeviceAccReset: false));
+  }
+
+  setResetDevice() {
+    emit(state.clone(
+      isDeviceAccReset: true,
+      isPasswordReset: true,
+    ));
   }
 }

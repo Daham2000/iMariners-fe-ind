@@ -197,12 +197,15 @@ class _ActionButtonState extends State<ActionButton> {
 }
 
 class ForgotPassword extends StatelessWidget {
+  final String text;
+  const ForgotPassword({Key? key, required this.text}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: Text(
-        "Forgot password",
+        text,
         style: GoogleFonts.roboto(
             fontSize: 15.0,
             decoration: TextDecoration.underline,

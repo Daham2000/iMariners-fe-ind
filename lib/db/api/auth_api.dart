@@ -66,6 +66,24 @@ class AuthApi {
     }
   }
 
+  Future<int> resetDeviceEmail(User user) async {
+    try {
+      final body = {
+        "email": user.email,
+      };
+      final url = Uri.parse('${Strings.url}v1/user/reset-device');
+      final response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(body));
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return 401;
+    }
+  }
+
   Future<int> checkCode(String email, String code) async {
     print(email);
     print(code);
