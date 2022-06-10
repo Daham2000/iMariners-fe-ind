@@ -17,10 +17,12 @@ class ToolsView extends StatefulWidget {
 }
 
 class _ToolsViewState extends State<ToolsView> {
-  bool isNri = false;
+  bool isNri = true;
 
   @override
   Widget build(BuildContext context) {
+    CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
+
     return Scaffold(
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) => pre.count != current.count,
@@ -73,7 +75,7 @@ class _ToolsViewState extends State<ToolsView> {
                   ),
                 ),
                 isNri == true
-                    ? const NriDesign()
+                    ? NriDesign()
                     : Padding(
                         padding: const EdgeInsets.all(14.0),
                         child: Container(
@@ -136,7 +138,7 @@ class _ToolsViewState extends State<ToolsView> {
                                           color: Colors.white,
                                         ),
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
@@ -145,8 +147,8 @@ class _ToolsViewState extends State<ToolsView> {
                               ),
                               Column(
                                 children: [
-                                  const DateTimeRow(),
-                                  const DateTimeRow(),
+                                  // DateTimeRow(joiningDate: DateTime,),
+                                  // DateTimeRow(),
                                 ],
                               ),
                               const SizedBox(
@@ -169,7 +171,8 @@ class _ToolsViewState extends State<ToolsView> {
                                   ],
                                 ),
                               ),
-                              const ButtonAddMoreCal(text:"Add more calculations"),
+                              const ButtonAddMoreCal(
+                                  text: "Add more calculations"),
                               const SizedBox(
                                 height: 20,
                               ),
@@ -177,7 +180,9 @@ class _ToolsViewState extends State<ToolsView> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              const ButtonAddMoreCal(text: "Calculate",),
+                              const ButtonAddMoreCal(
+                                text: "Calculate",
+                              ),
                               const SizedBox(
                                 height: 10,
                               ),

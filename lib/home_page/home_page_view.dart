@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                           color: ThemeColors.WELCOME,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       CustomHomeButton(

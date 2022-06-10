@@ -1,3 +1,4 @@
+import 'package:com_ind_imariners/tools_view/tools_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,13 +21,20 @@ class CustomHomeButton extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: 66,
         child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Future.microtask(() => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ToolsProvider()),
+                  ));
+            },
             style: ElevatedButton.styleFrom(
               primary: i == 1
                   ? ThemeColors.HOMEBUTTONONE
                   : i == 2
                       ? ThemeColors.HOMEBUTTONTWO
-                      : i == 3 ? ThemeColors.ColregColor : ThemeColors.HOMEBUTTONTHREE,
+                      : i == 3
+                          ? ThemeColors.ColregColor
+                          : ThemeColors.HOMEBUTTONTHREE,
             ),
             child: Row(
               children: [
@@ -189,11 +197,11 @@ class CategoryViewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       child: InkWell(
         onTap: () {},
         child: Container(
-          width: MediaQuery.of(context).size.width*0.4,
+          width: MediaQuery.of(context).size.width * 0.4,
           height: 190,
           decoration: const BoxDecoration(
               color: Colors.white,
@@ -201,7 +209,7 @@ class CategoryViewCard extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                width: MediaQuery.of(context).size.width*0.4,
+                width: MediaQuery.of(context).size.width * 0.4,
                 decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -215,8 +223,8 @@ class CategoryViewCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0, vertical: 10.0),
                 child: Column(
                   children: [
                     Row(
