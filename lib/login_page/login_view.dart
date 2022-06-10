@@ -1,14 +1,8 @@
-import 'package:com_ind_imariners/db/models/user_model.dart';
 import 'package:com_ind_imariners/login_page/widgets/sample_widget.dart';
-import 'package:com_ind_imariners/register_page/register_page_ui.dart';
-import 'package:com_ind_imariners/theme/colors.dart';
 import 'package:com_ind_imariners/utill/shared_memory.dart';
 import 'package:com_ind_imariners/widgets/app_bar_curve.dart';
-import 'package:com_ind_imariners/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../home_page/home_provider.dart';
 import '../register_page/register_provider.dart';
@@ -27,6 +21,7 @@ class _CounterPageState extends State<LoginView> {
 
   final username = TextEditingController();
   final password = TextEditingController();
+  final rePassword = TextEditingController();
   final code = TextEditingController();
   bool isLoading = false;
 
@@ -120,13 +115,13 @@ class _CounterPageState extends State<LoginView> {
                                 height: 40,
                               ),
                               state.emailSend == false
-                                  ? getTextField(
+                                  ? state.isCodeValid == false ? getTextField(
                                       text: "Email",
                                       icon: Icon(Icons.person,
                                           color: Colors.grey[400]),
                                       ctrl: username,
                                       obscureText: false,
-                                    )
+                                    ) : Container()
                                   : Container(),
                               const SizedBox(
                                 height: 20,
@@ -162,7 +157,32 @@ class _CounterPageState extends State<LoginView> {
                                             )
                                           ],
                                         )
-                                      : Container(),
+                                      : state.isCodeValid == true
+                                          ? Column(
+                                              children: [
+                                                getTextField(
+                                                  text: "Password",
+                                                  icon: Icon(Icons.person,
+                                                      color: Colors.grey[400]),
+                                                  ctrl: password,
+                                                  obscureText: false,
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                getTextField(
+                                                  text: "Password Confirm",
+                                                  icon: Icon(Icons.person,
+                                                      color: Colors.grey[400]),
+                                                  ctrl: rePassword,
+                                                  obscureText: false,
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                )
+                                              ],
+                                            )
+                                          : Container(),
                               state.isPasswordReset == false
                                   ? Column(
                                       crossAxisAlignment:
@@ -190,15 +210,25 @@ class _CounterPageState extends State<LoginView> {
                                       ? ActionButton(
                                           text: "Validate the code",
                                           code: code.text,
-                                          formKey: _formKey,
-                                          bloc: counterCubit,
-                                        )
-                                      : ActionButton(
-                                          text: "Send code",
                                           email: username.text,
                                           formKey: _formKey,
                                           bloc: counterCubit,
-                                        ),
+                                        )
+                                      : state.isCodeValid == true
+                                          ? ActionButton(
+                                              text: "Change password",
+                                              password: password.text,
+                                              email: username.text,
+                                              rePassword: rePassword.text,
+                                              formKey: _formKey,
+                                              bloc: counterCubit,
+                                            )
+                                          : ActionButton(
+                                              text: "Send code",
+                                              email: username.text,
+                                              formKey: _formKey,
+                                              bloc: counterCubit,
+                                            ),
                               state.isPasswordReset == false
                                   ? Column(
                                       children: [

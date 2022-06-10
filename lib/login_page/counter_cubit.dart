@@ -43,8 +43,14 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     if (result == 200) {
       emit(state.clone(
         isCodeValid: true,
+        emailSend: false,
       ));
     }
+    return result;
+  }
+
+  Future<int> changePassword(String email, String password) async {
+    int result = await AuthApi().changePassword(email, password);
     return result;
   }
 

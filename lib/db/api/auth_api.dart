@@ -67,12 +67,34 @@ class AuthApi {
   }
 
   Future<int> checkCode(String email, String code) async {
+    print(email);
+    print(code);
     try {
       final body = {
         "email": email,
-        "code": code,
+        "token": code,
       };
       final url = Uri.parse('${Strings.url}v1/user/checktoken');
+      final response = await http.patch(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(body));
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return 401;
+    }
+  }
+
+  Future<int> changePassword(String email, String password) async {
+    print("changePassword");
+    try {
+      final body = {
+        "email": email,
+        "password": password,
+      };
+      final url = Uri.parse('${Strings.url}v1/user/changepassword');
       final response = await http.patch(url,
           headers: {"Content-Type": "application/json"},
           body: json.encode(body));

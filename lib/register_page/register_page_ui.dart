@@ -55,18 +55,20 @@ class _CounterPageState extends State<RegisterView> {
                           height: 20,
                         ),
                         CustomTextField(
-                            text: "Email Address",
-                            icon: Icon(Icons.email, color: Colors.grey[400]),
-                            textEditingController: email,
-                            obscureText: false),
+                          text: "Email Address",
+                          icon: Icon(Icons.email, color: Colors.grey[400]),
+                          textEditingController: email,
+                          obscureText: false,
+                        ),
                         const SizedBox(
                           height: 20,
                         ),
                         CustomTextField(
-                            text: "Password",
-                            icon: Icon(Icons.lock, color: Colors.grey[400]),
-                            textEditingController: password,
-                            obscureText: true),
+                          text: "Password",
+                          icon: Icon(Icons.lock, color: Colors.grey[400]),
+                          textEditingController: password,
+                          obscureText: true,
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
