@@ -73,20 +73,27 @@ class SeaTimeCalDesign extends StatelessWidget {
   }
 }
 
-class DateTimeRow extends StatelessWidget {
-  final DateTime joiningDate;
-  final DateTime signOffDate;
+List<DateTime> joiningDate = [];
+List<DateTime> signOffDate = [];
 
-  const DateTimeRow(
-      {Key? key, required this.joiningDate, required this.signOffDate})
+class DateTimeRow extends StatelessWidget {
+  final DateTime joiningDateS;
+  final DateTime signOffDateS;
+  VoidCallback myVoidCallback;
+
+  DateTimeRow(
+      {Key? key,
+      required this.joiningDateS,
+      required this.signOffDateS,
+      required this.myVoidCallback})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-    String joiningDateI = dateFormat.format(joiningDate);
-    String signOffDateI = dateFormat.format(signOffDate);
-    final difference = signOffDate.difference(joiningDate).inDays + 1;
+    String joiningDateI = dateFormat.format(joiningDateS);
+    String signOffDateI = dateFormat.format(signOffDateS);
+    final difference = signOffDateS.difference(joiningDateS).inDays + 1;
 
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
@@ -136,7 +143,9 @@ class DateTimeRow extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      myVoidCallback();
+                    },
                     child: Icon(
                       Icons.delete_forever,
                       color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
@@ -163,29 +172,14 @@ class _NriDesignState extends State<NriDesign> {
   DateTime dateOne = DateTime.now();
   DateTime dateTwo = DateTime.now();
   int total = 0;
-  List<DateTime> joiningDate = [];
-  List<DateTime> signOffDate = [];
-
-  getDateTimeList() async {
-    final String? joiningDateJson = await SharedMemory().getUserDetails("joiningDate");
-    final signOffDateJson = await SharedMemory().getUserDetails("signOffDate");
-    setState(() {
-      joiningDate = decode(joiningDateJson);
-      signOffDate = decode(signOffDateJson);
-    });
-  }
-
-  static List<DateTime> decode(String? date) =>
-      (json.decode(date??"") as List<dynamic>)
-          .map<DateTime>((item) => DateTime.parse(item))
-          .toList();
 
   @override
   Widget build(BuildContext context) {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     String joiningDateI = dateFormat.format(dateOne);
     String signOffDateI = dateFormat.format(dateTwo);
-    getDateTimeList();
+
+
     return Padding(
       padding: const EdgeInsets.all(14.0),
       child: Container(
@@ -252,8 +246,17 @@ class _NriDesignState extends State<NriDesign> {
               children: [
                 for (int i = 0; i < joiningDate.length; i++)
                   DateTimeRow(
-                      joiningDate:joiningDate[i],
-                      signOffDate: signOffDate[i]),
+                    joiningDateS: joiningDate[i],
+                    signOffDateS: signOffDate[i],
+                    myVoidCallback:(){
+                      final difference = signOffDate[i].difference(joiningDate[i]).inDays + 1;
+                      total -= difference;
+                      setState(() {
+                        joiningDate.removeAt(i);
+                        signOffDate.removeAt(i);
+                      });
+                    },
+                  ),
               ],
             ),
             const SizedBox(
@@ -381,7 +384,7 @@ class _NriDesignState extends State<NriDesign> {
                 ),
               ],
             ),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             InkWell(
