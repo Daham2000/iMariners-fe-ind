@@ -1,3 +1,4 @@
+import 'package:com_ind_imariners/db/models/category_model.dart';
 import 'package:com_ind_imariners/login_page/counter_cubit.dart';
 import 'package:com_ind_imariners/login_page/counter_state.dart';
 import 'package:flutter/material.dart';
@@ -8,14 +9,15 @@ import '../theme/colors.dart';
 import '../widgets/app_bar_curve.dart';
 
 class KnowlageBaseView extends StatefulWidget {
-  const KnowlageBaseView({Key? key}) : super(key: key);
+  CategoryModel categoryModel;
+
+  KnowlageBaseView({Key? key, required this.categoryModel});
 
   @override
   _KnowlageBaseViewState createState() => _KnowlageBaseViewState();
 }
 
 class _KnowlageBaseViewState extends State<KnowlageBaseView> {
-  List categoryList = [1,1,1,1,1];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,12 +59,19 @@ class _KnowlageBaseViewState extends State<KnowlageBaseView> {
                         const SizedBox(
                           height: 5,
                         ),
-                        for ( int i=0; i<categoryList.length; i=i+2 )
+                        for (int i = 0;
+                            i < widget.categoryModel.data!.length;
+                            i = i + 2)
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              CategoryViewCard(),
-                              CategoryViewCard(),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CategoryViewCard(
+                                datum: widget.categoryModel.data![i],
+                              ),
+                              widget.categoryModel.data!.length > 1
+                                  ? CategoryViewCard(
+                                      datum: widget.categoryModel.data![i + 1])
+                                  : Container(),
                             ],
                           ),
                       ],

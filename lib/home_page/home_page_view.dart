@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../knowlage_base_page/KnowlageBaseViewPrivider.dart';
+import '../knowlage_base_page/knowlage_base_view.dart';
 import '../login_page/counter_state.dart';
+import '../tools_view/tools_provider.dart';
 import '../widgets/app_bar_curve.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,11 +19,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  @override
+  void initState() {
+    CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
+    counterCubit.loadCategories();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: BlocBuilder<CounterCubit, CounterState>(
-        buildWhen: (pre, current) => pre.count != current.count,
+        buildWhen: (pre, current) =>
+            pre.count != current.count ||
+            pre.categoryModel != current.categoryModel,
         builder: (ctx, state) {
           return SingleChildScrollView(
             child: Column(
@@ -49,10 +63,32 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      CustomHomeButton(
-                          i: 1, path: "assets/t.png", text: "Tools"),
-                      CustomHomeButton(
-                          i: 2, path: "assets/s.png", text: "Knowledge Base"),
+                      InkWell(
+                        onTap: () {
+                          Future.microtask(() => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ToolsProvider()),
+                              ));
+                        },
+                        child: CustomHomeButton(
+                            i: 1, path: "assets/t.png", text: "Tools"),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          if (state.categoryModel.data!.isNotEmpty) {
+                            Future.microtask(() => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => KnowlageBaseProvider(
+                                            categoryModel: state.categoryModel,
+                                          )),
+                                ));
+                          }
+                        },
+                        child: CustomHomeButton(
+                            i: 2, path: "assets/s.png", text: "Knowledge Base"),
+                      ),
                       CustomHomeButton(
                           i: 3, path: "assets/colreg.png", text: "Colreg"),
                       CustomHomeButton(

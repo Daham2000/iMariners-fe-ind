@@ -86,7 +86,6 @@ class _CounterPageState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
-
     return Scaffold(
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) =>

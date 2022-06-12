@@ -1,4 +1,5 @@
 import 'package:com_ind_imariners/db/api/auth_api.dart';
+import 'package:com_ind_imariners/db/api/category_api.dart';
 import 'package:com_ind_imariners/db/models/user_model.dart';
 import 'package:com_ind_imariners/utill/shared_memory.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,6 +82,18 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     emit(state.clone(
       isDeviceAccReset: true,
       isPasswordReset: true,
+    ));
+  }
+
+  Future<void> loadCategories() async {
+    emit(state.clone(
+      loading: true,
+    ));
+    final categories = await CategoryAPI().getAddCategories();
+    print("loadCategories: Done...");
+    emit(state.clone(
+      categoryModel: categories,
+      loading: false,
     ));
   }
 }

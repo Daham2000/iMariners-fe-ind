@@ -2,16 +2,13 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../db/models/category_model.dart';
 import '../theme/colors.dart';
 
 class ExpandedView extends StatelessWidget {
-  ExpandedView({Key? key}) : super(key: key);
-  final List strings = [
-    "Celestial Navigation",
-    "Terrestrial Navigation",
-    "SQA Formula Sheet",
-    "HNC/D Formula Sheet"
-  ];
+  final Datum datum;
+
+  ExpandedView({Key? key, required this.datum}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +24,7 @@ class ExpandedView extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                "https://media.istockphoto.com/photos/hands-holding-compass-by-sea-with-crashing-waves-picture-id184622521?k=20&m=184622521&s=612x612&w=0&h=Cdu9xyLxx0AuSetLFVzYeJcIGMUe6Yb_lFABBRkCUHQ=",
+                datum.image!,
                 width: 370,
                 height: 155,
                 fit: BoxFit.fill,
@@ -37,7 +34,8 @@ class ExpandedView extends StatelessWidget {
               header: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  "Navigation",
+                  datum.categoryName!,
+                  overflow: TextOverflow.clip,
                   style: GoogleFonts.roboto(
                     fontSize: 20,
                     color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
@@ -64,7 +62,7 @@ class ExpandedView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        for (final i in strings)
+                        for (final i in datum.subCategories)
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: Column(
@@ -73,7 +71,7 @@ class ExpandedView extends StatelessWidget {
                               children: [
                                 const Divider(),
                                 Text(
-                                  i,
+                                  i.name!,
                                   softWrap: true,
                                   maxLines: 1,
                                   textAlign: TextAlign.justify,
@@ -107,6 +105,7 @@ class ExpandedView extends StatelessWidget {
                             ),
                             child: Text(
                               "Download",
+                              overflow: TextOverflow.clip,
                               style: GoogleFonts.roboto(
                                 fontSize: 15,
                                 color: Colors.blueAccent,

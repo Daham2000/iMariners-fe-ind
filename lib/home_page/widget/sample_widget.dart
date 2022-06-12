@@ -1,7 +1,10 @@
+import 'package:com_ind_imariners/knowlage_base_page/content_view.dart';
 import 'package:com_ind_imariners/tools_view/tools_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../db/models/category_model.dart';
+import '../../knowlage_base_page/content_expand_view.dart';
 import '../../theme/colors.dart';
 
 class CustomHomeButton extends StatelessWidget {
@@ -20,38 +23,38 @@ class CustomHomeButton extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 66,
-        child: ElevatedButton(
-            onPressed: () {
-              Future.microtask(() => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ToolsProvider()),
-                  ));
-            },
-            style: ElevatedButton.styleFrom(
-              primary: i == 1
-                  ? ThemeColors.HOMEBUTTONONE
-                  : i == 2
-                      ? ThemeColors.HOMEBUTTONTWO
-                      : i == 3
-                          ? ThemeColors.ColregColor
-                          : ThemeColors.HOMEBUTTONTHREE,
-            ),
-            child: Row(
-              children: [
-                Image.asset(
-                  path,
-                  width: 40,
+        decoration: BoxDecoration(
+          color: i == 1
+              ? ThemeColors.HOMEBUTTONONE
+              : i == 2
+                  ? ThemeColors.HOMEBUTTONTWO
+                  : i == 3
+                      ? ThemeColors.ColregColor
+                      : ThemeColors.HOMEBUTTONTHREE,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Row(
+            children: [
+              Image.asset(
+                path,
+                width: 40,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Text(
+                text,
+                style: GoogleFonts.roboto(
+                  fontSize: 23,
                   color: Colors.white,
                 ),
-                SizedBox(
-                  width: 12,
-                ),
-                Text(
-                  text,
-                  style: GoogleFonts.roboto(fontSize: 23),
-                )
-              ],
-            )),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -192,17 +195,27 @@ class TopicHomePage extends StatelessWidget {
 }
 
 class CategoryViewCard extends StatelessWidget {
-  const CategoryViewCard({Key? key}) : super(key: key);
+  final Datum datum;
+
+  CategoryViewCard({Key? key, required Datum this.datum}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Future.microtask(() => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ContentExpandView(
+                          datum: datum,
+                        )),
+              ));
+        },
         child: Container(
           width: MediaQuery.of(context).size.width * 0.4,
-          height: 190,
+          height: 150,
           decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -217,7 +230,7 @@ class CategoryViewCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   // Image border
                   child: Image.network(
-                    "https://media.istockphoto.com/photos/hands-holding-compass-by-sea-with-crashing-waves-picture-id184622521?k=20&m=184622521&s=612x612&w=0&h=Cdu9xyLxx0AuSetLFVzYeJcIGMUe6Yb_lFABBRkCUHQ=",
+                    datum.image!,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -231,7 +244,8 @@ class CategoryViewCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Navigation",
+                          datum.categoryName!,
+                          overflow: TextOverflow.clip,
                           style: GoogleFonts.roboto(
                             fontSize: 16,
                             color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
@@ -239,56 +253,6 @@ class CategoryViewCard extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 1.0, vertical: 5.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 15,
-                            child: Image.asset(
-                              "assets/s.png",
-                              color: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "7 Lectures",
-                            style: GoogleFonts.roboto(
-                              fontSize: 13.0,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 1.0, vertical: 1.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 15,
-                            child: Image.asset(
-                              "assets/people.png",
-                              color: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "23 Learners",
-                            style: GoogleFonts.roboto(
-                              fontSize: 13.0,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                   ],
                 ),
