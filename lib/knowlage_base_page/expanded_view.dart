@@ -1,3 +1,4 @@
+import 'package:com_ind_imariners/knowlage_base_page/content_view.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -62,27 +63,38 @@ class ExpandedView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        for (final i in datum.subCategories)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Divider(),
-                                Text(
-                                  i.name!,
-                                  softWrap: true,
-                                  maxLines: 1,
-                                  textAlign: TextAlign.justify,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: ThemeColors.EXPANED_TEXT_COLOR,
+                        for (final i in datum.subCategories!)
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ContentView(
+                                            link: i.categoryContentLink==null ? [] : i.categoryContentLink!,
+                                          )));
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Divider(),
+                                  Text(
+                                    i.name!,
+                                    softWrap: true,
+                                    maxLines: 1,
+                                    textAlign: TextAlign.justify,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: ThemeColors.EXPANED_TEXT_COLOR,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           )
                       ],

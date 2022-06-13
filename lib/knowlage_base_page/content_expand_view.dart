@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../db/models/category_model.dart';
 import '../home_page/widget/sample_widget.dart';
-import '../login_page/counter_cubit.dart';
-import '../login_page/counter_state.dart';
 import '../theme/colors.dart';
 import '../widgets/app_bar_curve.dart';
 import 'expanded_view.dart';

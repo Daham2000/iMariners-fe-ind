@@ -59,7 +59,7 @@ class _KnowlageBaseViewState extends State<KnowlageBaseView> {
                         const SizedBox(
                           height: 5,
                         ),
-                        for (int i = 0;
+                        for (int i = 1;
                             i < widget.categoryModel.data!.length;
                             i = i + 2)
                           Row(
@@ -68,7 +68,7 @@ class _KnowlageBaseViewState extends State<KnowlageBaseView> {
                               CategoryViewCard(
                                 datum: widget.categoryModel.data![i],
                               ),
-                              widget.categoryModel.data!.length > 1
+                              widget.categoryModel.data!.length > 2
                                   ? CategoryViewCard(
                                       datum: widget.categoryModel.data![i + 1])
                                   : Container(),

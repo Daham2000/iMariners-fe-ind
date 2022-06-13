@@ -10,12 +10,12 @@ String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
   UserModel({
-    required this.user,
-    required this.status,
+    this.user,
+    this.status,
   });
 
-  User user;
-  int status;
+  User? user;
+  int? status;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         user: User.fromJson(json["user"]),
@@ -23,7 +23,7 @@ class UserModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "user": user.toJson(),
+        "user": user!.toJson(),
         "status": status,
       };
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:com_ind_imariners/db/models/category_model.dart';
+import 'package:com_ind_imariners/db/models/telegramModel.dart';
 import 'package:http/http.dart' as http;
 
 import '../../utill/strings.dart';
@@ -25,6 +26,27 @@ class CategoryAPI {
       return categoryModel;
     }catch(e){
       return categoryModel;
+    }
+  }
+
+  Future<TelegramModel> getGroups() async {
+    final url = Uri.parse('${Strings.url}v1/groups');
+    TelegramModel telegramModel = TelegramModel();
+    try {
+      final response = await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+      );
+      if (response.statusCode == 200) {
+        final jsonString = response.body;
+        final jsonMap = json.decode(jsonString);
+        telegramModel = TelegramModel.fromJson(jsonMap);
+      }
+      return telegramModel;
+    }catch(e){
+      return telegramModel;
     }
   }
 

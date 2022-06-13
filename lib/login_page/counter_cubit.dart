@@ -90,7 +90,6 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
       loading: true,
     ));
     final categories = await CategoryAPI().getAddCategories();
-    print("loadCategories: Done...");
     emit(state.clone(
       categoryModel: categories,
       loading: false,

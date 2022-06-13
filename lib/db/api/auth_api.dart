@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 class AuthApi {
   Future<int> login(User user, String role) async {
+    UserModel userModel;
     try {
       final body = {
         "email": user.email,
@@ -20,6 +21,11 @@ class AuthApi {
           body: json.encode(body));
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
+      if (response.statusCode == 200) {
+        final jsonString = response.body;
+        final jsonMap = json.decode(jsonString);
+        userModel = UserModel.fromJson(jsonMap);
+      }
       return response.statusCode;
     } catch (e) {
       print(e.toString());

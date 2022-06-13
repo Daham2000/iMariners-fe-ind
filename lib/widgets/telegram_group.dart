@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/colors.dart';
 
 class GroupUI extends StatelessWidget {
-  const GroupUI({Key? key}) : super(key: key);
+  final String? name;
+  final String? link;
+
+  const GroupUI({Key? key, required this.name, required this.link})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +37,7 @@ class GroupUI extends StatelessWidget {
                     width: 10,
                   ),
                   Text(
-                    "Group 1",
+                    name!,
                     style: GoogleFonts.roboto(
                       color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
                       fontSize: 18,
@@ -44,7 +49,7 @@ class GroupUI extends StatelessWidget {
                 height: 10,
               ),
               Text(
-                "https://dhjshjbjgisseootjjjymnmnfmdnkk.com",
+                link!,
                 style: GoogleFonts.roboto(
                   color: Colors.blue,
                   fontSize: 18,
@@ -54,7 +59,10 @@ class GroupUI extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      final Uri url = Uri.parse(link!);
+                      launchUrl(url,mode: LaunchMode.externalNonBrowserApplication);
+                    },
                     child: Text("Join"),
                     style: ElevatedButton.styleFrom(
                       primary: ThemeColors.HOMEBUTTONTHREE, // background

@@ -26,28 +26,24 @@ class CategoryModel {
 
 class Datum {
   Datum({
-     this.id,
+    this.id,
     this.categoryId,
-     this.image,
-     this.categoryName,
-     this.categoryLearners,
-     this.hasSubCategories,
+    this.image,
+    this.categoryName,
+    this.categoryLearners,
+    this.hasSubCategories,
     this.content,
-     required this.subCategories,
-     this.createdAt,
-     this.updatedAt,
+    this.subCategories
   });
 
   int? id;
   dynamic categoryId;
   String? image;
   String? categoryName;
-  int? categoryLearners;
+  dynamic categoryLearners;
   bool? hasSubCategories;
-  dynamic? content;
-  List<DatumSubCategory> subCategories = [];
-  DateTime? createdAt;
-  DateTime? updatedAt;
+  dynamic content;
+  List<DatumSubCategory>? subCategories;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     id: json["id"],
@@ -58,8 +54,6 @@ class Datum {
     hasSubCategories: json["hasSubCategories"],
     content: json["content"],
     subCategories: List<DatumSubCategory>.from(json["subCategories"].map((x) => DatumSubCategory.fromJson(x))),
-    createdAt: DateTime.parse(json["createdAt"]),
-    updatedAt: DateTime.parse(json["updatedAt"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -70,9 +64,7 @@ class Datum {
     "categoryLearners": categoryLearners,
     "hasSubCategories": hasSubCategories,
     "content": content,
-    "subCategories": List<dynamic>.from(subCategories.map((x) => x.toJson())),
-    "createdAt": createdAt?.toIso8601String(),
-    "updatedAt": updatedAt?.toIso8601String(),
+    "subCategories": List<dynamic>.from(subCategories!.map((x) => x.toJson()))
   };
 }
 
@@ -80,36 +72,36 @@ class DatumSubCategory {
   DatumSubCategory({
     this.name,
     this.hasSubCategories,
-    required this.categoryContentLink,
-    required this.subCategories,
+    this.subCategories,
+    this.categoryContentLink,
   });
 
   String? name;
   bool? hasSubCategories;
-  List<String> categoryContentLink = [];
-  List<SubCategorySubCategory> subCategories = [];
+  List<SubCategorySubCategory>? subCategories;
+  List<String>? categoryContentLink;
 
   factory DatumSubCategory.fromJson(Map<String, dynamic> json) => DatumSubCategory(
     name: json["name"],
     hasSubCategories: json["hasSubCategories"],
-    categoryContentLink: List<String>.from(json["categoryContentLink"].map((x) => x)),
     subCategories: List<SubCategorySubCategory>.from(json["subCategories"].map((x) => SubCategorySubCategory.fromJson(x))),
+    categoryContentLink: json["categoryContentLink"] == null ? null : List<String>.from(json["categoryContentLink"].map((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {
     "name": name,
     "hasSubCategories": hasSubCategories,
-    "categoryContentLink": List<dynamic>.from(categoryContentLink.map((x) => x)),
-    "subCategories": List<dynamic>.from(subCategories.map((x) => x.toJson())),
+    "subCategories": List<dynamic>.from(subCategories!.map((x) => x.toJson())),
+    "categoryContentLink": categoryContentLink == null ? null : List<dynamic>.from(categoryContentLink!.map((x) => x)),
   };
 }
 
 class SubCategorySubCategory {
   SubCategorySubCategory({
-    required this.name,
+    this.name,
   });
 
-  String name;
+  String? name;
 
   factory SubCategorySubCategory.fromJson(Map<String, dynamic> json) => SubCategorySubCategory(
     name: json["name"],
