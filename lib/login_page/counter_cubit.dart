@@ -2,6 +2,7 @@ import 'package:com_ind_imariners/db/api/auth_api.dart';
 import 'package:com_ind_imariners/db/api/category_api.dart';
 import 'package:com_ind_imariners/db/models/user_model.dart';
 import 'package:com_ind_imariners/utill/shared_memory.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,6 +31,12 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     user.deviceId = deviceId;
     int result = await AuthApi().register(user);
     return result;
+  }
+
+  void setOffline(ConnectivityResult result){
+    print(result);
+    loadCategories(result==ConnectivityResult.none);
+    emit(state.clone(isOffline: result==ConnectivityResult.none));
   }
 
   @override
@@ -92,6 +99,8 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
       loading: true,
     ));
     if (isOffline) {
+      emit(state.clone(isOffline: isOffline));
+
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? categoryList = await prefs.getString('category_list');
       if (categoryList != null) {

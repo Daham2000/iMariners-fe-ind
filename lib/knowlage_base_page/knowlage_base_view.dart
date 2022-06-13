@@ -59,7 +59,7 @@ class _KnowlageBaseViewState extends State<KnowlageBaseView> {
                         const SizedBox(
                           height: 5,
                         ),
-                        for (int i = 1;
+                        for (int i = 0;
                             i < widget.categoryModel.data!.length;
                             i = i + 2)
                           Row(

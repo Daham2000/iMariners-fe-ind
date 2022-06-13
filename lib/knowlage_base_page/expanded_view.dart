@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com_ind_imariners/knowlage_base_page/content_view.dart';
+import 'package:com_ind_imariners/utill/shared_memory.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../db/models/category_model.dart';
 import '../theme/colors.dart';
 import '../widgets/snackbar_factory.dart';
+import 'package:http/http.dart' as http;
 
 class ExpandedView extends StatelessWidget {
   final Datum datum;
@@ -74,7 +76,7 @@ class ExpandedView extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => ContentView(
-                                        name: i.name!,
+                                            name: i.name!,
                                             link: i.categoryContentLink == null
                                                 ? []
                                                 : i.categoryContentLink!,
@@ -131,7 +133,7 @@ class ExpandedView extends StatelessWidget {
                                     await SharedPreferences.getInstance();
 
                                 final String? categoryList =
-                                    await prefs.getString('category_list');
+                                    prefs.getString('category_list');
 
                                 if (categoryList != null) {
                                   final List<Datum> c =
@@ -140,15 +142,67 @@ class ExpandedView extends StatelessWidget {
                                       .where((i) =>
                                           i.categoryName == datum.categoryName)
                                       .toList();
-
                                   if (cc.isEmpty) {
+                                    for (int i = 0;
+                                        i < datum.subCategories!.length;
+                                        i++) {
+                                      print(datum.subCategories![i].categoryContentLink);
+                                      for (int ii = 0;
+                                          ii <
+                                              datum.subCategories![i]
+                                                  .categoryContentLink!.length;
+                                          ii++) {
+                                        if (datum.subCategories![i]
+                                            .categoryContentLink![0]
+                                            .startsWith("https://")) {
+                                          final url = Uri.parse(
+                                              '${datum.subCategories![i].categoryContentLink![0]}');
+                                          final response = await http.get(url);
+                                          if (response.body != null) {
+                                            datum.subCategories![i]
+                                                    .categoryContentLink![0] =
+                                                response.body;
+                                            print( datum.subCategories![i]
+                                                .categoryContentLink![0]);
+                                          }
+                                        }
+                                      }
+                                    }
                                     c.add(datum);
-                                    final String encodedData = Datum.encode(c);
+                                    final String encodedData =
+                                    Datum.encode(c);
 
                                     await prefs.setString(
                                         'category_list', encodedData);
                                   }
                                 } else {
+                                  for (int i = 0;
+                                  i < datum.subCategories!.length;
+                                  i++) {
+                                    print(datum.subCategories![i].categoryContentLink);
+                                    for (int ii = 0;
+                                    ii <
+                                        datum.subCategories![i]
+                                            .categoryContentLink!.length;
+                                    ii++) {
+                                      if (datum.subCategories![i]
+                                          .categoryContentLink![0]
+                                          .startsWith("https://")) {
+                                        final url = Uri.parse(
+                                            '${datum.subCategories![i].categoryContentLink![0]}');
+                                        final response = await http.get(url);
+                                        if (response.body != null) {
+                                          datum.subCategories![i]
+                                              .categoryContentLink![0] =
+                                              response.body;
+                                          print( datum.subCategories![i]
+                                              .categoryContentLink![0]);
+                                        }
+                                      }
+                                    }
+                                  }
+                                  print(datum.subCategories![0]
+                                      .categoryContentLink![0]);
                                   final String encodedData =
                                       Datum.encode([datum]);
 

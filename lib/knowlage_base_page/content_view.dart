@@ -54,14 +54,23 @@ class _ContentViewState extends State<ContentView> {
   }
 
   Future<void> loadHtml() async {
-    final url = Uri.parse('${widget.link[0]}');
-    final response = await http.get(
-        url
-    );
-    setState(() {
-      html = Html(
-        data: response.body,
+    if(widget.link[0].startsWith("https://")){
+      final url = Uri.parse('${widget.link[0]}');
+      final response = await http.get(
+          url
       );
-    });
+      setState(() {
+        html = Html(
+          data: response.body,
+        );
+      });
+    }else{
+      setState(() {
+        html = Html(
+          data: widget.link[0],
+        );
+      });
+    }
+
   }
 }

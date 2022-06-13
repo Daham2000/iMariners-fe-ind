@@ -24,8 +24,8 @@ class SharedMemory {
     return user;
   }
 
-  Future<void> clearAllData() async {
+  Future<void> clearAllData(String key) async {
     sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences?.clear();
+    sharedPreferences?.remove(key);
   }
 }

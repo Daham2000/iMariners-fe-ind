@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:com_ind_imariners/home_page/widget/sample_widget.dart';
 import 'package:com_ind_imariners/login_page/counter_cubit.dart';
 import 'package:com_ind_imariners/theme/colors.dart';
@@ -14,6 +16,7 @@ import '../login_page/counter_state.dart';
 import '../telegram_view/telegram_view.dart';
 import '../tools_view/tools_provider.dart';
 import '../widgets/app_bar_curve.dart';
+import '../widgets/snackbar_factory.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,10 +27,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  late CounterCubit counterCubit;
 
   @override
   void initState() {
+    counterCubit = BlocProvider.of<CounterCubit>(context);
     loadCategories();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(counterCubit.setOffline);
     super.initState();
   }
 
@@ -35,12 +43,10 @@ class _HomePageState extends State<HomePage> {
     late ConnectivityResult result;
     try {
       result = await _connectivity.checkConnectivity();
-      CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
-      await counterCubit.loadCategories(result.name=="none");
+      await counterCubit.loadCategories(result.name == "none");
     } on PlatformException catch (e) {
       return;
     }
-
   }
 
   @override
@@ -49,6 +55,7 @@ class _HomePageState extends State<HomePage> {
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) =>
             pre.count != current.count ||
+            pre.isOffline != current.isOffline ||
             pre.categoryModel != current.categoryModel,
         builder: (ctx, state) {
           return SingleChildScrollView(
@@ -93,15 +100,21 @@ class _HomePageState extends State<HomePage> {
                         onTap: () {
                           if (state.categoryModel.data!.isNotEmpty) {
                             if (state.categoryModel.data!.length > 1) {
-                              Future.microtask(() => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            KnowlageBaseProvider(
-                                              categoryModel:
-                                                  state.categoryModel,
-                                            )),
-                                  ));
+                              final List<Datum> cc = state.categoryModel.data!
+                                  .where((i) => i.categoryName != "Colreg")
+                                  .toList();
+                              CategoryModel ca =
+                                  CategoryModel(message: "200", data: cc);
+                              if (cc.isNotEmpty) {
+                                Future.microtask(() => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              KnowlageBaseProvider(
+                                                categoryModel: ca,
+                                              )),
+                                    ));
+                              }
                             }
                           }
                         },
@@ -111,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                       InkWell(
                         onTap: () {
                           if (state.categoryModel.data!.isNotEmpty) {
-                            if (state.categoryModel.data!.length > 1) {
+                            if (state.categoryModel.data!.length >= 1) {
                               final List<Datum> cc = state.categoryModel.data!
                                   .where((i) => i.categoryName == "Colreg")
                                   .toList();
@@ -134,11 +147,22 @@ class _HomePageState extends State<HomePage> {
                       ),
                       InkWell(
                         onTap: () {
-                          Future.microtask(() => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TelegramView()),
-                              ));
+                          if(state.isOffline){
+                            final double fontSize = MediaQuery.of(context).textScaleFactor;
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBarFactory().getSnackBar(
+                              isFail: false,
+                              title: "Your are offline",
+                              fontSize: fontSize,
+                            ));
+                          }else{
+                            Future.microtask(() => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TelegramView()),
+                            ));
+                          }
+
                         },
                         child: const CustomHomeButton(
                             i: 4, path: "assets/e.png", text: "Telegram"),
