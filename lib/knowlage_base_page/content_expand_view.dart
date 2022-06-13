@@ -6,9 +6,10 @@ import '../widgets/app_bar_curve.dart';
 import 'expanded_view.dart';
 
 class ContentExpandView extends StatefulWidget {
+  final String text;
   final Datum datum;
 
-  const ContentExpandView({Key? key, required this.datum}) : super(key: key);
+  const ContentExpandView({Key? key, required this.datum, required this.text}) : super(key: key);
 
   @override
   _ContentExpandViewState createState() => _ContentExpandViewState();
@@ -22,8 +23,8 @@ class _ContentExpandViewState extends State<ContentExpandView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const AppBarCurve(
-              text: "Knowledge Base",
+            AppBarCurve(
+              text: widget.text,
               isContent: false,
             ),
             const SizedBox(

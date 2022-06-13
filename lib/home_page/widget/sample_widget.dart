@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com_ind_imariners/knowlage_base_page/content_view.dart';
 import 'package:com_ind_imariners/tools_view/tools_provider.dart';
 import 'package:flutter/material.dart';
@@ -210,6 +211,7 @@ class CategoryViewCard extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) => ContentExpandView(
                           datum: datum,
+                          text: "Knowledge Base",
                         )),
               ));
         },
@@ -229,9 +231,9 @@ class CategoryViewCard extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   // Image border
-                  child: Image.network(
-                    datum.image!,
+                  child: CachedNetworkImage(
                     fit: BoxFit.contain,
+                    imageUrl: datum.image!,
                   ),
                 ),
               ),

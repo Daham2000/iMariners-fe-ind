@@ -22,6 +22,8 @@ class CategoryModel {
     "message": message,
     "data": List<dynamic>.from(data!.map((x) => x.toJson())),
   };
+
+
 }
 
 class Datum {
@@ -44,6 +46,29 @@ class Datum {
   bool? hasSubCategories;
   dynamic content;
   List<DatumSubCategory>? subCategories;
+
+  static Map<String, dynamic> toMap(Datum music) => {
+    "id": music.id,
+    "categoryId": music.categoryId,
+    "image": music.image,
+    "categoryName": music.categoryName,
+    "categoryLearners": music.categoryLearners,
+    "hasSubCategories": music.hasSubCategories,
+    "content": music.content,
+    "subCategories": List<dynamic>.from(music.subCategories!.map((x) => x.toJson()))
+  };
+
+
+  static String encode(List<Datum> musics) => json.encode(
+    musics
+        .map<Map<String, dynamic>>((music) => Datum.toMap(music))
+        .toList(),
+  );
+
+  static List<Datum> decode(String musics) =>
+      (json.decode(musics) as List<dynamic>)
+          .map<Datum>((item) => Datum.fromJson(item))
+          .toList();
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     id: json["id"],
@@ -111,3 +136,4 @@ class SubCategorySubCategory {
     "name": name,
   };
 }
+

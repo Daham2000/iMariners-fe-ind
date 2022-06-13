@@ -1,14 +1,15 @@
-import 'package:com_ind_imariners/db/models/category_model.dart';
 import 'package:com_ind_imariners/home_page/widget/sample_widget.dart';
 import 'package:com_ind_imariners/login_page/counter_cubit.dart';
 import 'package:com_ind_imariners/theme/colors.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../db/models/category_model.dart';
 import '../knowlage_base_page/KnowlageBaseViewPrivider.dart';
 import '../knowlage_base_page/content_expand_view.dart';
-import '../knowlage_base_page/knowlage_base_view.dart';
 import '../login_page/counter_state.dart';
 import '../telegram_view/telegram_view.dart';
 import '../tools_view/tools_provider.dart';
@@ -22,11 +23,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final Connectivity _connectivity = Connectivity();
+
   @override
   void initState() {
-    CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
-    counterCubit.loadCategories();
+    loadCategories();
     super.initState();
+  }
+
+  loadCategories() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+      CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
+      await counterCubit.loadCategories(result.name=="none");
+    } on PlatformException catch (e) {
+      return;
+    }
+
   }
 
   @override
@@ -91,25 +105,31 @@ class _HomePageState extends State<HomePage> {
                             }
                           }
                         },
-                        child: CustomHomeButton(
+                        child: const CustomHomeButton(
                             i: 2, path: "assets/s.png", text: "Knowledge Base"),
                       ),
                       InkWell(
                         onTap: () {
                           if (state.categoryModel.data!.isNotEmpty) {
                             if (state.categoryModel.data!.length > 1) {
-                              Future.microtask(() => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ContentExpandView(
-                                              datum:
-                                                  state.categoryModel.data![0],
-                                            )),
-                                  ));
+                              final List<Datum> cc = state.categoryModel.data!
+                                  .where((i) => i.categoryName == "Colreg")
+                                  .toList();
+                              if (cc.isNotEmpty) {
+                                Future.microtask(() => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ContentExpandView(
+                                                datum: cc[0],
+                                                text: "Colreg",
+                                              )),
+                                    ));
+                              }
                             }
                           }
                         },
-                        child: CustomHomeButton(
+                        child: const CustomHomeButton(
                             i: 3, path: "assets/colreg.png", text: "Colreg"),
                       ),
                       InkWell(
@@ -120,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                                     builder: (context) => TelegramView()),
                               ));
                         },
-                        child: CustomHomeButton(
+                        child: const CustomHomeButton(
                             i: 4, path: "assets/e.png", text: "Telegram"),
                       ),
                     ],

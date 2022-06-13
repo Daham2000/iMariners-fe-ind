@@ -4,7 +4,9 @@ import 'package:com_ind_imariners/db/models/user_model.dart';
 import 'package:com_ind_imariners/utill/shared_memory.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../db/models/category_model.dart';
 import 'counter_state.dart';
 import 'super_cubit.dart';
 
@@ -85,14 +87,29 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     ));
   }
 
-  Future<void> loadCategories() async {
+  Future<void> loadCategories(bool isOffline) async {
     emit(state.clone(
       loading: true,
     ));
-    final categories = await CategoryAPI().getAddCategories();
-    emit(state.clone(
-      categoryModel: categories,
-      loading: false,
-    ));
+    if (isOffline) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? categoryList = await prefs.getString('category_list');
+      if (categoryList != null) {
+        final List<Datum> c = Datum.decode(categoryList);
+        emit(state.clone(
+          categoryModel: CategoryModel(
+            message: "200",
+            data: c,
+          ),
+          loading: false,
+        ));
+      }
+    } else {
+      final categories = await CategoryAPI().getAddCategories();
+      emit(state.clone(
+        categoryModel: categories,
+        loading: false,
+      ));
+    }
   }
 }

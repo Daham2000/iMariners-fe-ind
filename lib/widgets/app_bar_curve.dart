@@ -46,18 +46,6 @@ class _AppBarCurveState extends State<AppBarCurve> {
                 child: Image.asset("assets/menu.png")),
           ),
         ),
-        widget.isContent
-            ? Positioned(
-                top: MediaQuery.of(context).size.height * 0.25,
-                right: MediaQuery.of(context).size.width * 0.18,
-                child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                      width: MediaQuery.of(context).size.width * 0.07,
-                      child: Image.asset("assets/below.png")),
-                ),
-              )
-            : Container(),
         Positioned(
           top: widget.text != "Knowledge Base"
               ? MediaQuery.of(context).size.height * 0.15
@@ -139,8 +127,9 @@ class _AppBarCurveState extends State<AppBarCurve> {
               widget.text == "Create Your Account"
                   ? "Create Your\nAccount"
                   : widget.text,
+              overflow: TextOverflow.clip,
               style: GoogleFonts.roboto(
-                fontSize: widget.text == "Knowledge Base" ? 24 : 30,
+                fontSize: widget.text == "Knowledge Base" ? 24 : widget.isContent ? 23 : 30,
                 shadows: <Shadow>[
                   const Shadow(
                     offset: Offset(1.0, 1.0),

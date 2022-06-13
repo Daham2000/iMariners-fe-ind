@@ -4,13 +4,12 @@ import '../home_page/widget/sample_widget.dart';
 import '../theme/colors.dart';
 import '../widgets/app_bar_curve.dart';
 import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' as htmlparser;
-import 'package:html/dom.dart' as dom;
 
 class ContentView extends StatefulWidget {
+  final String name;
   final List<String> link;
 
-  const ContentView({Key? key, required this.link}) : super(key: key);
+  const ContentView({Key? key, required this.link, required this.name}) : super(key: key);
 
   @override
   _ContentViewState createState() => _ContentViewState();
@@ -38,8 +37,8 @@ class _ContentViewState extends State<ContentView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const AppBarCurve(
-              text: "Navigation",
+            AppBarCurve(
+              text: widget.name,
               isContent: true,
             ),
             const SizedBox(
@@ -59,7 +58,6 @@ class _ContentViewState extends State<ContentView> {
     final response = await http.get(
         url
     );
-    dom.Document document = htmlparser.parse(response.body);
     setState(() {
       html = Html(
         data: response.body,
