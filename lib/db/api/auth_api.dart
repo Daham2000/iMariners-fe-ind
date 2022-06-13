@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:com_ind_imariners/db/models/user_model.dart';
 import 'package:com_ind_imariners/utill/strings.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthApi {
   Future<int> login(User user, String role) async {
@@ -25,6 +26,8 @@ class AuthApi {
         final jsonString = response.body;
         final jsonMap = json.decode(jsonString);
         userModel = UserModel.fromJson(jsonMap);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userObject', jsonEncode(userModel));
       }
       return response.statusCode;
     } catch (e) {
@@ -124,6 +127,27 @@ class AuthApi {
           body: json.encode(body));
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return 401;
+    }
+  }
+
+  Future<int> logout(int? id) async {
+    try {
+      final url = Uri.parse('${Strings.url}v1/user/sign-out/${id}');
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+      );
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      if(response.statusCode==200){
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.remove('userObject');
+        await prefs.remove('user');
+      }
       return response.statusCode;
     } catch (e) {
       print(e.toString());

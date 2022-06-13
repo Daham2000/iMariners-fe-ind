@@ -1,5 +1,4 @@
 import 'package:com_ind_imariners/db/models/user_model.dart';
-import 'package:com_ind_imariners/home_page/home_page_view.dart';
 import 'package:com_ind_imariners/home_page/home_provider.dart';
 import 'package:com_ind_imariners/login_page/login_provider.dart';
 import 'package:flutter/material.dart';
@@ -8,16 +7,28 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../theme/colors.dart';
 import '../../widgets/snackbar_factory.dart';
 import '../counter_cubit.dart';
-import 'package:flutter/scheduler.dart';
 
-class RemindMeButton extends StatelessWidget {
+class RemindMeButton extends StatefulWidget {
   const RemindMeButton({Key? key}) : super(key: key);
+
+  @override
+  _RemindMeButtonState createState() => _RemindMeButtonState();
+}
+
+class _RemindMeButtonState extends State<RemindMeButton> {
+  bool status = false;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Checkbox(value: false, onChanged: (v) {}),
+        Checkbox(
+            value: status,
+            onChanged: (v) {
+              setState(() {
+                status = !status;
+              });
+            }),
         Text(
           "Reminder me",
           style:
@@ -68,8 +79,8 @@ class _ActionButtonState extends State<ActionButton> {
             width: MediaQuery.of(context).size.width * 0.7,
             child: ElevatedButton(
                 onPressed: () async {
-                  if(widget.text=="Change password"){
-                    if(widget.password!=widget.rePassword){
+                  if (widget.text == "Change password") {
+                    if (widget.password != widget.rePassword) {
                       print(widget.password);
                       print(widget.email);
                       ScaffoldMessenger.of(context)
@@ -78,10 +89,10 @@ class _ActionButtonState extends State<ActionButton> {
                         title: "Password does not match",
                         fontSize: fontSize,
                       ));
-                    }else{
+                    } else {
                       if (widget.formKey.currentState.validate()) {
-                        final result = await widget.bloc
-                            ?.changePassword(widget.email ?? "", widget.password ?? "");
+                        final result = await widget.bloc?.changePassword(
+                            widget.email ?? "", widget.password ?? "");
                         if (result == 401) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBarFactory().getSnackBar(
@@ -105,7 +116,7 @@ class _ActionButtonState extends State<ActionButton> {
                         }
                       }
                     }
-                  }else{
+                  } else {
                     if (widget.code != null) {
                       final result = await widget.bloc
                           ?.codeCheck(widget.email ?? "", widget.code ?? "");
@@ -117,7 +128,7 @@ class _ActionButtonState extends State<ActionButton> {
                           fontSize: fontSize,
                         ));
                       }
-                    }else{
+                    } else {
                       if (widget.text == "Send code") {
                         await widget.bloc
                             ?.resetPasswordEmail(User(email: widget.email));
@@ -128,16 +139,17 @@ class _ActionButtonState extends State<ActionButton> {
                               isLoading = true;
                             });
                             final int? result = await widget.bloc?.login(User(
-                                email: widget.email, password: widget.password));
+                                email: widget.email,
+                                password: widget.password));
                             setState(() {
                               isLoading = false;
                             });
                             if (result != null && result == 200) {
                               Future.microtask(() => Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeProvider()),
-                              ));
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeProvider()),
+                                  ));
                             } else {
                               if (result == 401) {
                                 ScaffoldMessenger.of(context)
@@ -152,7 +164,7 @@ class _ActionButtonState extends State<ActionButton> {
                                     .showSnackBar(SnackBarFactory().getSnackBar(
                                   isFail: true,
                                   title:
-                                  "Another device is already logged in from this account",
+                                      "Another device is already logged in from this account",
                                   fontSize: fontSize,
                                 ));
                               }
@@ -180,9 +192,7 @@ class _ActionButtonState extends State<ActionButton> {
                         }
                       }
                     }
-
                   }
-
                 },
                 child: Text(
                   widget.text ?? "",
@@ -198,6 +208,7 @@ class _ActionButtonState extends State<ActionButton> {
 
 class ForgotPassword extends StatelessWidget {
   final String text;
+
   const ForgotPassword({Key? key, required this.text}) : super(key: key);
 
   @override

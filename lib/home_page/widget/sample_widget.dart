@@ -1,10 +1,17 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:com_ind_imariners/db/api/auth_api.dart';
+import 'package:com_ind_imariners/home_page/home_provider.dart';
 import 'package:com_ind_imariners/knowlage_base_page/content_view.dart';
+import 'package:com_ind_imariners/login_page/login_provider.dart';
 import 'package:com_ind_imariners/tools_view/tools_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../db/models/category_model.dart';
+import '../../db/models/user_model.dart';
 import '../../knowlage_base_page/content_expand_view.dart';
 import '../../theme/colors.dart';
 
@@ -83,21 +90,29 @@ class BottomNaviBar extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/home.png",
-                    width: 25,
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: 'Home',
-                      style: GoogleFonts.roboto(
-                          fontSize: 10,
-                          color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+              child: InkWell(
+                onTap: () {
+                  Future.microtask(() => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeProvider()),
+                      ));
+                },
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/home.png",
+                      width: 25,
                     ),
-                  ),
-                ],
+                    RichText(
+                      text: TextSpan(
+                        text: 'Home',
+                        style: GoogleFonts.roboto(
+                            fontSize: 10,
+                            color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -134,21 +149,37 @@ class BottomNaviBar extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/Shutdown.png",
-                    width: 25,
-                  ),
-                  Text(
-                    "Logout",
-                    style: GoogleFonts.roboto(
-                        fontSize: 12,
-                        color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
-                  )
-                ],
+            InkWell(
+              onTap: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                final String? s = prefs.getString('userObject');
+                Map<String, dynamic> userMap = jsonDecode(s ?? "");
+                final user = UserModel.fromJson(userMap);
+                final int status = await AuthApi().logout(user.user?.id);
+                if (status == 200) {
+                  Future.microtask(() => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LoginProvider()),
+                      ));
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/Shutdown.png",
+                      width: 25,
+                    ),
+                    Text(
+                      "Logout",
+                      style: GoogleFonts.roboto(
+                          fontSize: 12,
+                          color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+                    )
+                  ],
+                ),
               ),
             ),
           ],
