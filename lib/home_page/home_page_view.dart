@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   late CounterCubit counterCubit;
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
 
   @override
   void initState() {
@@ -49,9 +50,15 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void openDrawer() {
+    _key.currentState!.openDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
+      drawer: const DrawerApp(),
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) =>
             pre.count != current.count ||
@@ -62,9 +69,10 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AppBarCurve(
+                AppBarCurve(
                   text: "Home",
                   isContent: false,
+                  openDrawer: openDrawer,
                 ),
                 const SizedBox(
                   height: 40,
@@ -147,22 +155,22 @@ class _HomePageState extends State<HomePage> {
                       ),
                       InkWell(
                         onTap: () {
-                          if(state.isOffline){
-                            final double fontSize = MediaQuery.of(context).textScaleFactor;
+                          if (state.isOffline) {
+                            final double fontSize =
+                                MediaQuery.of(context).textScaleFactor;
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(SnackBarFactory().getSnackBar(
                               isFail: false,
                               title: "Your are offline",
                               fontSize: fontSize,
                             ));
-                          }else{
+                          } else {
                             Future.microtask(() => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TelegramView()),
-                            ));
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TelegramView()),
+                                ));
                           }
-
                         },
                         child: const CustomHomeButton(
                             i: 4, path: "assets/e.png", text: "Telegram"),

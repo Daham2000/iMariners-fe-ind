@@ -30,6 +30,12 @@ class _ContentViewState extends State<ContentView> {
     super.initState();
   }
 
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+
+  void openDrawer() {
+    _key.currentState!.openDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +46,7 @@ class _ContentViewState extends State<ContentView> {
             AppBarCurve(
               text: widget.name,
               isContent: true,
+              openDrawer: openDrawer,
             ),
             const SizedBox(
               height: 25,

@@ -15,6 +15,7 @@ class TelegramView extends StatefulWidget {
 
 class _TelegramViewState extends State<TelegramView> {
   TelegramModel telegramModel = TelegramModel(groups: []);
+  bool loading = false;
 
   @override
   void initState() {
@@ -23,37 +24,52 @@ class _TelegramViewState extends State<TelegramView> {
   }
 
   Future<void> loadGroups() async {
+    setState(() {
+      loading = true;
+    });
     final c = await CategoryAPI().getGroups();
     setState(() {
       telegramModel = c;
+      loading = false;
     });
+  }
+
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+
+  void openDrawer() {
+    _key.currentState!.openDrawer();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
+      drawer: DrawerApp(),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const AppBarCurve(
-              text: "Telegram",
-              isContent: false,
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            Column(
-              children: [
-                for (int i = 0; i < telegramModel.groups!.length; i++)
-                  GroupUI(
-                    name: telegramModel.groups![i].name,
-                    link: telegramModel.groups![i].link,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AppBarCurve(
+                    text: "Telegram",
+                    openDrawer: openDrawer,
+                    isContent: false,
                   ),
-              ],
-            )
-          ],
-        ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  loading
+                      ? Center(child: CircularProgressIndicator())
+                      : Column(
+                    children: [
+                      for (int i = 0; i < telegramModel.groups!.length; i++)
+                        GroupUI(
+                          name: telegramModel.groups![i].name,
+                          link: telegramModel.groups![i].link,
+                        ),
+                    ],
+                  )
+                ],
+              ),
       ),
       backgroundColor: ThemeColors.BACKGROUD_COLOR,
       bottomNavigationBar: const BottomNaviBar(),

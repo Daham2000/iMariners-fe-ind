@@ -20,21 +20,27 @@ class _CounterPageState extends State<RegisterView> {
   final username = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
 
+  void openDrawer() {
+    _key.currentState!.openDrawer();
+  }
   @override
   Widget build(BuildContext context) {
     CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
 
     return Scaffold(
+      key: _key,
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) => pre.count != current.count,
         builder: (ctx, state) {
           return SingleChildScrollView(
             child: Column(
               children: [
-                const AppBarCurve(
+                AppBarCurve(
                   text: "Create Your Account",
                   isContent: false,
+                  openDrawer: openDrawer,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),

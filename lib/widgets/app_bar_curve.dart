@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../theme/colors.dart';
+
 class AppBarCurve extends StatefulWidget {
   final String text;
   final bool isContent;
+  final VoidCallback openDrawer;
 
-  const AppBarCurve({Key? key, required this.text, required this.isContent})
+  const AppBarCurve(
+      {Key? key,
+      required this.text,
+      required this.isContent,
+      required this.openDrawer})
       : super(key: key);
 
   @override
@@ -40,7 +47,9 @@ class _AppBarCurveState extends State<AppBarCurve> {
           top: MediaQuery.of(context).size.height * 0.055,
           left: MediaQuery.of(context).size.width * 0.01,
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              widget.openDrawer();
+            },
             child: Container(
                 width: MediaQuery.of(context).size.width * 0.07,
                 child: Image.asset("assets/menu.png")),
@@ -129,7 +138,11 @@ class _AppBarCurveState extends State<AppBarCurve> {
                   : widget.text,
               overflow: TextOverflow.clip,
               style: GoogleFonts.roboto(
-                fontSize: widget.text == "Knowledge Base" ? 24 : widget.isContent ? 23 : 30,
+                fontSize: widget.text == "Knowledge Base"
+                    ? 24
+                    : widget.isContent
+                        ? 23
+                        : 30,
                 shadows: <Shadow>[
                   const Shadow(
                     offset: Offset(1.0, 1.0),
@@ -147,3 +160,117 @@ class _AppBarCurveState extends State<AppBarCurve> {
     );
   }
 }
+
+class DrawerApp extends StatelessWidget {
+  const DrawerApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 35, bottom: 10),
+      child: Drawer(
+        width: 200,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            SizedBox(
+              height: 50,
+            ),
+            ListTile(
+              title: Text(
+                'Upgrade',
+                overflow: TextOverflow.clip,
+                style: GoogleFonts.roboto(
+                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+              ),
+              leading: Icon(
+                Icons.upgrade_outlined,
+                color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text(
+                'Setings',
+                overflow: TextOverflow.clip,
+                style: GoogleFonts.roboto(
+                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+              ),
+              leading: Icon(
+                Icons.settings,
+                color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text(
+                'Theme',
+                overflow: TextOverflow.clip,
+                style: GoogleFonts.roboto(
+                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+              ),
+              leading: Icon(
+                Icons.toggle_off,
+                color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text(
+                'Contact us',
+                overflow: TextOverflow.clip,
+                style: GoogleFonts.roboto(
+                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+              ),
+              leading: Icon(
+                Icons.person,
+                color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text(
+                'Feature requests',
+                overflow: TextOverflow.clip,
+                style: GoogleFonts.roboto(
+                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+              ),
+              leading: Icon(
+                Icons.request_page,
+                color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text(
+                'Share app',
+                overflow: TextOverflow.clip,
+                style: GoogleFonts.roboto(
+                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+              ),
+              leading: Icon(
+                Icons.share,
+                color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text(
+                'Privacy policy',
+                overflow: TextOverflow.clip,
+                style: GoogleFonts.roboto(
+                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+              ),
+              leading: Icon(
+                Icons.local_police_sharp,
+                color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+              ),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

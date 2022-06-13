@@ -82,7 +82,11 @@ class _CounterPageState extends State<LoginView> {
       isLoading = false;
     });
   }
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
 
+  void openDrawer() {
+    _key.currentState!.openDrawer();
+  }
   @override
   Widget build(BuildContext context) {
     CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
@@ -97,9 +101,10 @@ class _CounterPageState extends State<LoginView> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                const AppBarCurve(
+                AppBarCurve(
                   text: "Login",
                   isContent: false,
+                  openDrawer: openDrawer,
                 ),
                 isLoading
                     ? const Center(

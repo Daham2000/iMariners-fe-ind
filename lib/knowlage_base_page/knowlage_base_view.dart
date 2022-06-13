@@ -18,9 +18,18 @@ class KnowlageBaseView extends StatefulWidget {
 }
 
 class _KnowlageBaseViewState extends State<KnowlageBaseView> {
+
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+
+  void openDrawer() {
+    _key.currentState!.openDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
+      drawer: DrawerApp(),
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) => pre.count != current.count,
         builder: (ctx, state) {
@@ -28,9 +37,10 @@ class _KnowlageBaseViewState extends State<KnowlageBaseView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const AppBarCurve(
+                AppBarCurve(
                   text: "Knowledge Base",
                   isContent: false,
+                  openDrawer: openDrawer,
                 ),
                 const SizedBox(
                   height: 20,

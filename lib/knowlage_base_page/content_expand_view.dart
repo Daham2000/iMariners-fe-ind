@@ -16,9 +16,16 @@ class ContentExpandView extends StatefulWidget {
 }
 
 class _ContentExpandViewState extends State<ContentExpandView> {
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+
+  void openDrawer() {
+    _key.currentState!.openDrawer();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
+      drawer: DrawerApp(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -26,6 +33,7 @@ class _ContentExpandViewState extends State<ContentExpandView> {
             AppBarCurve(
               text: widget.text,
               isContent: false,
+              openDrawer: openDrawer,
             ),
             const SizedBox(
               height: 25,

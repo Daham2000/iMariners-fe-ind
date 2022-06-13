@@ -26,15 +26,21 @@ class _ToolsViewState extends State<ToolsView> {
   DateTime dateOne = DateTime.now();
   DateTime dateTwo = DateTime.now();
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
 
+  void openDrawer() {
+    _key.currentState!.openDrawer();
+  }
 
   @override
   Widget build(BuildContext context) {
-    CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
+    // CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
     String joiningDateI = dateFormat.format(dateOne);
     String signOffDateI = dateFormat.format(dateTwo);
 
     return Scaffold(
+      key: _key,
+      drawer: DrawerApp(),
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) => pre.count != current.count,
         builder: (ctx, state) {
@@ -42,8 +48,9 @@ class _ToolsViewState extends State<ToolsView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const AppBarCurve(
+                AppBarCurve(
                   text: "Tools",
+                  openDrawer: openDrawer,
                   isContent: false,
                 ),
                 const SizedBox(
