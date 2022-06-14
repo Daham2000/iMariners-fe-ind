@@ -6,6 +6,7 @@ import '../db/models/category_model.dart';
 class CounterState {
   final int count;
   bool isPasswordReset;
+  bool isDarkMode;
   bool isOffline;
   bool loading;
   bool isDeviceAccReset;
@@ -16,6 +17,7 @@ class CounterState {
 
   CounterState({
     required this.count,
+    required this.isDarkMode,
     required this.isPasswordReset,
     required this.isOffline,
     required this.loading,
@@ -30,6 +32,7 @@ class CounterState {
       : this(
           count: 0,
           isPasswordReset: false,
+          isDarkMode: false,
           isOffline: false,
           loading: false,
           isDeviceAccReset: false,
@@ -42,6 +45,7 @@ class CounterState {
   CounterState clone({
     int? count,
     bool? isPasswordReset,
+    bool? isDarkMode,
     bool? isOffline,
     bool? loading,
     bool? isDeviceAccReset,
@@ -53,6 +57,7 @@ class CounterState {
     return CounterState(
       count: count ?? this.count,
       categoryModel: categoryModel ?? this.categoryModel,
+      isDarkMode: isDarkMode ?? this.isDarkMode,
       isOffline: isOffline ?? this.isOffline,
       isPasswordReset: isPasswordReset ?? this.isPasswordReset,
       loading: loading ?? this.loading,
@@ -68,6 +73,7 @@ class CounterState {
         count: 0,
         categoryModel: CategoryModel(),
         isPasswordReset: false,
+        isDarkMode: false,
         isOffline: false,
         loading: false,
         isDeviceAccReset: false,

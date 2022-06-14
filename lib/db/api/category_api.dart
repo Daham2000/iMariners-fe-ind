@@ -7,24 +7,31 @@ import 'package:http/http.dart' as http;
 import '../../utill/strings.dart';
 
 class CategoryAPI {
-
-  Future<CategoryModel> getAddCategories() async {
-    final url = Uri.parse('${Strings.url}v1/category');
+  Future<CategoryModel> getAddCategories({String? query}) async {
+    print("getAddCategories");
     CategoryModel categoryModel = CategoryModel();
     try {
+      var url = Uri.parse('${Strings.url}v1/category');
+      if (query != null) {
+        print('${query.substring(0,1).toUpperCase()}${query.substring(1,query.length-1)}');
+        final queryParameters = {
+          'query': '${query.substring(0,1).toUpperCase()}${query.substring(1,query.length-1)}',
+        };
+        url = Uri.https('${Strings.url2}', "v1/category", queryParameters);
+      }
       final response = await http.get(
-          url,
-          headers: {
-            'Content-Type': 'application/json'
-          }
+        url,
+        headers: {'Content-Type': 'application/json'},
       );
+      print(response.body);
       if (response.statusCode == 200) {
         final jsonString = response.body;
         final jsonMap = json.decode(jsonString);
         categoryModel = CategoryModel.fromJson(jsonMap);
       }
       return categoryModel;
-    }catch(e){
+    } catch (e) {
+      print(e.toString());
       return categoryModel;
     }
   }
@@ -33,22 +40,16 @@ class CategoryAPI {
     final url = Uri.parse('${Strings.url}v1/groups');
     TelegramModel telegramModel = TelegramModel();
     try {
-      final response = await http.get(
-          url,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-      );
+      final response =
+          await http.get(url, headers: {'Content-Type': 'application/json'});
       if (response.statusCode == 200) {
         final jsonString = response.body;
         final jsonMap = json.decode(jsonString);
         telegramModel = TelegramModel.fromJson(jsonMap);
       }
       return telegramModel;
-    }catch(e){
+    } catch (e) {
       return telegramModel;
     }
   }
-
-
 }

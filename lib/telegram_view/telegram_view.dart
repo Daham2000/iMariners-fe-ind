@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../db/api/category_api.dart';
 import '../db/models/telegramModel.dart';
 import '../home_page/widget/sample_widget.dart';
+import '../main.dart';
 import '../theme/colors.dart';
 import '../widgets/app_bar_curve.dart';
 
@@ -40,26 +41,39 @@ class _TelegramViewState extends State<TelegramView> {
     _key.currentState!.openDrawer();
   }
 
+  void changeTheme() {
+    setState(() {
+      MyApp.themeNotifier.value = MyApp.themeNotifier.value == ThemeMode.light
+          ? ThemeMode.dark
+          : ThemeMode.light;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
-      drawer: DrawerApp(),
+      backgroundColor: MyApp.themeNotifier.value == ThemeMode.light
+          ? ThemeColors.BACKGROUD_COLOR
+          : Colors.grey,
+      drawer: DrawerApp(
+        changeTheme: changeTheme,
+      ),
       body: SingleChildScrollView(
         child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AppBarCurve(
-                    text: "Telegram",
-                    openDrawer: openDrawer,
-                    isContent: false,
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  loading
-                      ? Center(child: CircularProgressIndicator())
-                      : Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AppBarCurve(
+              text: "Telegram",
+              openDrawer: openDrawer,
+              isContent: false,
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            loading
+                ? Center(child: CircularProgressIndicator())
+                : Column(
                     children: [
                       for (int i = 0; i < telegramModel.groups!.length; i++)
                         GroupUI(
@@ -68,10 +82,9 @@ class _TelegramViewState extends State<TelegramView> {
                         ),
                     ],
                   )
-                ],
-              ),
+          ],
+        ),
       ),
-      backgroundColor: ThemeColors.BACKGROUD_COLOR,
       bottomNavigationBar: const BottomNaviBar(),
     );
   }

@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../home_page/widget/sample_widget.dart';
 import '../login_page/counter_cubit.dart';
 import '../login_page/counter_state.dart';
+import '../main.dart';
 import '../theme/colors.dart';
 import '../widgets/app_bar_curve.dart';
 import '../widgets/calculator_design.dart';
@@ -31,16 +32,27 @@ class _ToolsViewState extends State<ToolsView> {
   void openDrawer() {
     _key.currentState!.openDrawer();
   }
+  void changeTheme() {
+    setState(() {
+      MyApp.themeNotifier.value = MyApp.themeNotifier.value == ThemeMode.light
+          ? ThemeMode.dark
+          : ThemeMode.light;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    // CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
+    CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
     String joiningDateI = dateFormat.format(dateOne);
     String signOffDateI = dateFormat.format(dateTwo);
 
     return Scaffold(
       key: _key,
-      drawer: DrawerApp(),
+      backgroundColor: MyApp.themeNotifier.value == ThemeMode.light
+          ? ThemeColors.BACKGROUD_COLOR
+          : Colors.grey,
+      drawer: DrawerApp(changeTheme: changeTheme,),
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) => pre.count != current.count,
         builder: (ctx, state) {
@@ -345,7 +357,6 @@ class _ToolsViewState extends State<ToolsView> {
           );
         },
       ),
-      backgroundColor: ThemeColors.BACKGROUD_COLOR,
       bottomNavigationBar: const BottomNaviBar(),
     );
   }

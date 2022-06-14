@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../home_page/widget/sample_widget.dart';
+import '../main.dart';
 import '../theme/colors.dart';
 import '../widgets/app_bar_curve.dart';
 
@@ -18,18 +19,37 @@ class KnowlageBaseView extends StatefulWidget {
 }
 
 class _KnowlageBaseViewState extends State<KnowlageBaseView> {
+  late CounterCubit counterCubit;
 
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+  @override
+  void initState() {
+    counterCubit = BlocProvider.of<CounterCubit>(context);
+    super.initState();
+  }
 
   void openDrawer() {
     _key.currentState!.openDrawer();
+  }
+
+  void changeTheme() {
+    setState(() {
+      MyApp.themeNotifier.value = MyApp.themeNotifier.value == ThemeMode.light
+          ? ThemeMode.dark
+          : ThemeMode.light;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
-      drawer: DrawerApp(),
+      backgroundColor: MyApp.themeNotifier.value == ThemeMode.light
+          ? ThemeColors.BACKGROUD_COLOR
+          : Colors.grey,
+      drawer: DrawerApp(
+        changeTheme: changeTheme,
+      ),
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) => pre.count != current.count,
         builder: (ctx, state) {
@@ -45,7 +65,6 @@ class _KnowlageBaseViewState extends State<KnowlageBaseView> {
                 const SizedBox(
                   height: 20,
                 ),
-                const TopicHomePage(),
                 const SizedBox(
                   height: 15,
                 ),
@@ -93,7 +112,6 @@ class _KnowlageBaseViewState extends State<KnowlageBaseView> {
           );
         },
       ),
-      backgroundColor: ThemeColors.BACKGROUD_COLOR,
       bottomNavigationBar: const BottomNaviBar(),
     );
   }

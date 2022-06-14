@@ -1,8 +1,16 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:com_ind_imariners/db/models/category_model.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../db/api/category_api.dart';
+import '../main.dart';
 import '../theme/colors.dart';
+import 'snackbar_factory.dart';
+import 'package:http/http.dart' as http;
 
 class AppBarCurve extends StatefulWidget {
   final String text;
@@ -35,26 +43,34 @@ class _AppBarCurveState extends State<AppBarCurve> {
                 : const AssetImage("assets/app_bar_back.png"),
           ),
         ),
-        Positioned(
-          top: MediaQuery.of(context).size.height * -0.038,
-          left: MediaQuery.of(context).size.width * 0,
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.29,
-            child: SvgPicture.asset("assets/appbar_rec.svg"),
-          ),
-        ),
-        Positioned(
-          top: MediaQuery.of(context).size.height * 0.055,
-          left: MediaQuery.of(context).size.width * 0.01,
-          child: InkWell(
-            onTap: () {
-              widget.openDrawer();
-            },
-            child: Container(
-                width: MediaQuery.of(context).size.width * 0.07,
-                child: Image.asset("assets/menu.png")),
-          ),
-        ),
+        widget.text != "Login"
+            ? widget.text != "Create Your Account"
+                ? Positioned(
+                    top: MediaQuery.of(context).size.height * -0.038,
+                    left: MediaQuery.of(context).size.width * 0,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.29,
+                      child: SvgPicture.asset("assets/appbar_rec.svg"),
+                    ),
+                  )
+                : Container()
+            : Container(),
+        widget.text != "Login"
+            ? widget.text != "Create Your Account"
+                ? Positioned(
+                    top: MediaQuery.of(context).size.height * 0.055,
+                    left: MediaQuery.of(context).size.width * 0.01,
+                    child: InkWell(
+                      onTap: () {
+                        widget.openDrawer();
+                      },
+                      child: Container(
+                          width: MediaQuery.of(context).size.width * 0.07,
+                          child: Image.asset("assets/menu.png")),
+                    ),
+                  )
+                : Container()
+            : Container(),
         Positioned(
           top: widget.text != "Knowledge Base"
               ? MediaQuery.of(context).size.height * 0.15
@@ -162,7 +178,10 @@ class _AppBarCurveState extends State<AppBarCurve> {
 }
 
 class DrawerApp extends StatelessWidget {
-  const DrawerApp({Key? key}) : super(key: key);
+
+  final VoidCallback changeTheme;
+
+  const DrawerApp({Key? key, required this.changeTheme}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -191,16 +210,99 @@ class DrawerApp extends StatelessWidget {
             ),
             ListTile(
               title: Text(
-                'Setings',
+                'Download all',
                 overflow: TextOverflow.clip,
                 style: GoogleFonts.roboto(
                     color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
               ),
               leading: Icon(
-                Icons.settings,
+                Icons.download_rounded,
                 color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
               ),
-              onTap: () {},
+              onTap: () async {
+                final Connectivity _connectivity = Connectivity();
+                ConnectivityResult result =
+                    await _connectivity.checkConnectivity();
+                if (result != "none") {
+                  final categories = await CategoryAPI().getAddCategories();
+
+                  final double fontSize =
+                      MediaQuery.of(context).textScaleFactor;
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBarFactory().getSnackBar(
+                    isFail: false,
+                    title: "Downloading...",
+                    fontSize: fontSize,
+                  ));
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+
+                  final String? categoryList = prefs.getString('category_list');
+
+                  for (Datum datum in categories.data ?? []) {
+                    if (categoryList != null) {
+                      final List<Datum> c = Datum.decode(categoryList);
+                      final List<Datum> cc = c
+                          .where((i) => i.categoryName == datum.categoryName)
+                          .toList();
+                      if (cc.isEmpty) {
+                        for (int i = 0; i < datum.subCategories!.length; i++) {
+                          print(datum.subCategories![i].categoryContentLink);
+                          for (int ii = 0;
+                              ii <
+                                  datum.subCategories![i].categoryContentLink!
+                                      .length;
+                              ii++) {
+                            if (datum.subCategories![i].categoryContentLink![0]
+                                .startsWith("https://")) {
+                              final url = Uri.parse(
+                                  '${datum.subCategories![i].categoryContentLink![0]}');
+                              final response = await http.get(url);
+                              if (response.body != null) {
+                                datum.subCategories![i]
+                                    .categoryContentLink![0] = response.body;
+                                print(datum
+                                    .subCategories![i].categoryContentLink![0]);
+                              }
+                            }
+                          }
+                        }
+                        c.add(datum);
+                        final String encodedData = Datum.encode(c);
+
+                        await prefs.setString('category_list', encodedData);
+                      }
+                    } else {
+                      for (int i = 0; i < datum.subCategories!.length; i++) {
+                        print(datum.subCategories![i].categoryContentLink);
+                        for (int ii = 0;
+                            ii <
+                                datum.subCategories![i].categoryContentLink!
+                                    .length;
+                            ii++) {
+                          if (datum.subCategories![i].categoryContentLink![0]
+                              .startsWith("https://")) {
+                            final url = Uri.parse(
+                                '${datum.subCategories![i].categoryContentLink![0]}');
+                            final response = await http.get(url);
+                            if (response.body != null) {
+                              datum.subCategories![i].categoryContentLink![0] =
+                                  response.body;
+                              print(datum
+                                  .subCategories![i].categoryContentLink![0]);
+                            }
+                          }
+                        }
+                      }
+                      print(datum.subCategories![0].categoryContentLink![0]);
+                      final String encodedData = Datum.encode([datum]);
+
+                      await prefs.setString('category_list', encodedData);
+                    }
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                  }
+                }
+              },
             ),
             ListTile(
               title: Text(
@@ -213,7 +315,9 @@ class DrawerApp extends StatelessWidget {
                 Icons.toggle_off,
                 color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
               ),
-              onTap: () {},
+              onTap: () async {
+                changeTheme();
+              },
             ),
             ListTile(
               title: Text(
@@ -273,4 +377,3 @@ class DrawerApp extends StatelessWidget {
     );
   }
 }
-

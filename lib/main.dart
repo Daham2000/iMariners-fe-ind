@@ -8,14 +8,30 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+// Using "static" so that we can easily access it later
+  static final ValueNotifier<ThemeMode> themeNotifier =
+  ValueNotifier(ThemeMode.light);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'iMariners',
-      theme: PrimaryTheme.generateTheme(context),
-      debugShowCheckedModeBanner: false,
-      home: LoginProvider(),
-    );
+    // return MaterialApp(
+    //   title: 'iMariners',
+    //   theme: PrimaryTheme.generateTheme(context),
+    //   debugShowCheckedModeBanner: false,
+    //   home: LoginProvider(),
+    // );
+    return ValueListenableBuilder<ThemeMode>(
+        valueListenable: themeNotifier,
+        builder: (_, ThemeMode currentMode, __) {
+          return MaterialApp(
+            // Remove the debug banner
+            debugShowCheckedModeBanner: false,
+            title: 'iMariners',
+            theme: ThemeData(primarySwatch: Colors.amber),
+            darkTheme: ThemeData.dark(),
+            themeMode: currentMode,
+            home: LoginProvider(),
+          );
+        });
   }
 }

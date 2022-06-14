@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com_ind_imariners/knowlage_base_page/content_view.dart';
-import 'package:com_ind_imariners/utill/shared_memory.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';

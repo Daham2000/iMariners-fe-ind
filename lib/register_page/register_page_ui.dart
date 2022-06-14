@@ -1,3 +1,4 @@
+import 'package:com_ind_imariners/login_page/login_provider.dart';
 import 'package:com_ind_imariners/login_page/widgets/sample_widget.dart';
 import 'package:com_ind_imariners/widgets/app_bar_curve.dart';
 import 'package:com_ind_imariners/widgets/custom_textfield.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../login_page/counter_cubit.dart';
 import '../login_page/counter_state.dart';
+import '../theme/colors.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -31,6 +33,7 @@ class _CounterPageState extends State<RegisterView> {
 
     return Scaffold(
       key: _key,
+      backgroundColor: ThemeColors.BACKGROUD_COLOR,
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) => pre.count != current.count,
         builder: (ctx, state) {
@@ -106,8 +109,19 @@ class _CounterPageState extends State<RegisterView> {
                         const SizedBox(
                           height: 15,
                         ),
-                        const SignupText(
-                          isLogin: false,
+                        InkWell(
+                          onTap: (){
+                            Future.microtask(
+                                    () => Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          LoginProvider()),
+                                ));
+                          },
+                          child: SignupText(
+                            isLogin: false,
+                          ),
                         ),
                       ],
                     ),

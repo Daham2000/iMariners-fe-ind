@@ -21,7 +21,9 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     DateTime now = DateTime.now();
     user.lastLogin = now.toString();
     final int loginResult = await AuthApi().login(user, "user");
-    await SharedMemory().setUser("user", user.email ?? "");
+    if(loginResult==200){
+      await SharedMemory().setUser("user", user.email ?? "");
+    }
     return loginResult;
   }
 
@@ -85,6 +87,10 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
 
   setResetPassword() {
     emit(state.clone(isPasswordReset: true, isDeviceAccReset: false));
+  }
+
+  changeTheme(){
+    emit(state.clone(isDarkMode:!state.isDarkMode));
   }
 
   setResetDevice() {

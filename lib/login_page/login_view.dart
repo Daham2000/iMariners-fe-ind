@@ -1,4 +1,5 @@
 import 'package:com_ind_imariners/login_page/widgets/sample_widget.dart';
+import 'package:com_ind_imariners/theme/colors.dart';
 import 'package:com_ind_imariners/utill/shared_memory.dart';
 import 'package:com_ind_imariners/widgets/app_bar_curve.dart';
 import 'package:flutter/material.dart';
@@ -294,6 +295,7 @@ class _CounterPageState extends State<LoginView> {
           );
         },
       ),
+      backgroundColor: ThemeColors.BACKGROUD_COLOR,
     );
   }
 }

@@ -49,6 +49,7 @@ dependencies:
   flutter_html: ^2.2.0
   connectivity_plus: ^2.3.3
   cached_network_image: ^3.2.1
+  adaptive_theme: ^3.0.0
 
 dev_dependencies:
   flutter_test:

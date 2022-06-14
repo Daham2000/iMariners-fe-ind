@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com_ind_imariners/db/api/auth_api.dart';
 import 'package:com_ind_imariners/home_page/home_provider.dart';
-import 'package:com_ind_imariners/knowlage_base_page/content_view.dart';
 import 'package:com_ind_imariners/login_page/login_provider.dart';
-import 'package:com_ind_imariners/tools_view/tools_provider.dart';
+import 'package:com_ind_imariners/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -132,21 +131,30 @@ class BottomNaviBar extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/search_icon.png",
-                    width: 25,
-                  ),
-                  Text(
-                    "Search",
-                    style: GoogleFonts.roboto(
-                        fontSize: 12,
-                        color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
-                  )
-                ],
+            InkWell(
+              onTap: () {
+                Future.microtask(() => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchBar()),
+                    ));
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/search_icon.png",
+                      width: 25,
+                    ),
+                    Text(
+                      "Search",
+                      style: GoogleFonts.roboto(
+                          fontSize: 12,
+                          color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+                    )
+                  ],
+                ),
               ),
             ),
             InkWell(
@@ -213,7 +221,13 @@ class TopicHomePage extends StatelessWidget {
         Container(
           height: 31,
           child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Future.microtask(() => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SearchBar()),
+                ));
+              },
               child: Text("Take Course"),
               style: ButtonStyle(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(

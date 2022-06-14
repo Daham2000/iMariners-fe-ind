@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:adaptive_theme/adaptive_theme.dart';
 
 import 'package:com_ind_imariners/home_page/widget/sample_widget.dart';
 import 'package:com_ind_imariners/login_page/counter_cubit.dart';
@@ -13,6 +14,7 @@ import '../db/models/category_model.dart';
 import '../knowlage_base_page/KnowlageBaseViewPrivider.dart';
 import '../knowlage_base_page/content_expand_view.dart';
 import '../login_page/counter_state.dart';
+import '../main.dart';
 import '../telegram_view/telegram_view.dart';
 import '../tools_view/tools_provider.dart';
 import '../widgets/app_bar_curve.dart';
@@ -54,15 +56,26 @@ class _HomePageState extends State<HomePage> {
     _key.currentState!.openDrawer();
   }
 
+  void changeTheme() {
+    setState(() {
+      MyApp.themeNotifier.value = MyApp.themeNotifier.value == ThemeMode.light
+          ? ThemeMode.dark
+          : ThemeMode.light;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
-      drawer: const DrawerApp(),
+      drawer: DrawerApp(
+        changeTheme: changeTheme,
+      ),
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) =>
             pre.count != current.count ||
             pre.isOffline != current.isOffline ||
+            pre.isDarkMode != current.isDarkMode ||
             pre.categoryModel != current.categoryModel,
         builder: (ctx, state) {
           return SingleChildScrollView(
@@ -183,7 +196,9 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
-      backgroundColor: ThemeColors.BACKGROUD_COLOR,
+      backgroundColor: MyApp.themeNotifier.value == ThemeMode.light
+          ? ThemeColors.BACKGROUD_COLOR
+          : Colors.grey,
       bottomNavigationBar: const BottomNaviBar(),
     );
   }
