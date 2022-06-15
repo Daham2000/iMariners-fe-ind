@@ -14,24 +14,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return MaterialApp(
-    //   title: 'iMariners',
-    //   theme: PrimaryTheme.generateTheme(context),
-    //   debugShowCheckedModeBanner: false,
-    //   home: LoginProvider(),
-    // );
-    return ValueListenableBuilder<ThemeMode>(
-        valueListenable: themeNotifier,
-        builder: (_, ThemeMode currentMode, __) {
-          return MaterialApp(
-            // Remove the debug banner
-            debugShowCheckedModeBanner: false,
-            title: 'iMariners',
-            theme: ThemeData(primarySwatch: Colors.amber),
-            darkTheme: ThemeData.dark(),
-            themeMode: currentMode,
-            home: LoginProvider(),
-          );
-        });
+    return MaterialApp(
+      title: 'iMariners',
+      theme: PrimaryTheme.generateTheme(context),
+      debugShowCheckedModeBanner: false,
+      home: LoginProvider(),
+    );
   }
 }

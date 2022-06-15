@@ -1,4 +1,3 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:com_ind_imariners/db/models/category_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +6,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../db/api/category_api.dart';
-import '../main.dart';
 import '../theme/colors.dart';
-import 'snackbar_factory.dart';
-import 'package:http/http.dart' as http;
+  import 'snackbar_factory.dart';
+  import 'package:http/http.dart' as http;
 
-class AppBarCurve extends StatefulWidget {
+  class AppBarCurve extends StatefulWidget {
   final String text;
-  final bool isContent;
+  final isContent;
   final VoidCallback openDrawer;
 
   const AppBarCurve(
@@ -178,13 +176,21 @@ class _AppBarCurveState extends State<AppBarCurve> {
 }
 
 class DrawerApp extends StatelessWidget {
-
   final VoidCallback changeTheme;
 
   const DrawerApp({Key? key, required this.changeTheme}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final double fontSize = MediaQuery.of(context).textScaleFactor;
+    openSnackBar(BuildContext context, double fontSize) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBarFactory().getSnackBar(
+        isFail: false,
+        title: "Downloading...",
+        fontSize: fontSize,
+      ));
+    }
+
     return Padding(
       padding: const EdgeInsets.only(top: 35, bottom: 10),
       child: Drawer(
@@ -215,25 +221,20 @@ class DrawerApp extends StatelessWidget {
                 style: GoogleFonts.roboto(
                     color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
               ),
-              leading: Icon(
+              leading: const Icon(
                 Icons.download_rounded,
                 color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
               ),
               onTap: () async {
+                Navigator.pop(context);
+                openSnackBar(context, fontSize);
+
                 final Connectivity _connectivity = Connectivity();
                 ConnectivityResult result =
                     await _connectivity.checkConnectivity();
                 if (result != "none") {
                   final categories = await CategoryAPI().getAddCategories();
 
-                  final double fontSize =
-                      MediaQuery.of(context).textScaleFactor;
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBarFactory().getSnackBar(
-                    isFail: false,
-                    title: "Downloading...",
-                    fontSize: fontSize,
-                  ));
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
 
@@ -299,7 +300,6 @@ class DrawerApp extends StatelessWidget {
 
                       await prefs.setString('category_list', encodedData);
                     }
-                    ScaffoldMessenger.of(context).clearSnackBars();
                   }
                 }
               },

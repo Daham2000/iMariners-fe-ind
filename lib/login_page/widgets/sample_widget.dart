@@ -2,6 +2,7 @@ import 'package:com_ind_imariners/db/models/user_model.dart';
 import 'package:com_ind_imariners/home_page/home_provider.dart';
 import 'package:com_ind_imariners/login_page/login_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../theme/colors.dart';
@@ -270,7 +271,14 @@ class SocialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        final result = await FacebookAuth.i.login(
+            permissions: ["email", "public_profile", "user_friends"]
+        );
+        print(result.message);
+        print(result.status);
+        print(result.accessToken);
+      },
       child: ClipOval(
         child: SizedBox(
           height: 40, // Image radius

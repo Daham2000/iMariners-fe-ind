@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:adaptive_theme/adaptive_theme.dart';
 
 import 'package:com_ind_imariners/home_page/widget/sample_widget.dart';
 import 'package:com_ind_imariners/login_page/counter_cubit.dart';

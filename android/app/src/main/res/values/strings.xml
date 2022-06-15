@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="facebook_app_id">444148923730387</string>
+    <string name="app_name">imariners</string>
+    <string name="fb_login_protocol_scheme">fb444148923730387</string>
+    <string name="facebook_client_token">c1e8ff69233dafe8bfcfb4b7e4c5b5df</string>
+</resources>
