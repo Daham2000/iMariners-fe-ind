@@ -10,7 +10,6 @@ class FontSizeHandle {
   }
 
   double getAppBarFontSizeMain(double fontSize, String text, bool isContent) {
-    print(fontSize);
     if (text == "Knowledge Base") {
       if (fontSize > 0.9) {
         return 19;

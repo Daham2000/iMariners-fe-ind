@@ -21,7 +21,7 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     DateTime now = DateTime.now();
     user.lastLogin = now.toString();
     final int loginResult = await AuthApi().login(user);
-    if(loginResult==200){
+    if (loginResult == 200) {
       await SharedMemory().setUser("user", user.email ?? "");
     }
     return loginResult;
@@ -35,10 +35,10 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     return result;
   }
 
-  void setOffline(ConnectivityResult result){
+  void setOffline(ConnectivityResult result) {
     print(result);
-    loadCategories(result==ConnectivityResult.none);
-    emit(state.clone(isOffline: result==ConnectivityResult.none));
+    loadCategories(result == ConnectivityResult.none);
+    emit(state.clone(isOffline: result == ConnectivityResult.none));
   }
 
   @override
@@ -89,8 +89,8 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     emit(state.clone(isPasswordReset: true, isDeviceAccReset: false));
   }
 
-  changeTheme(){
-    emit(state.clone(isDarkMode:!state.isDarkMode));
+  changeTheme() {
+    emit(state.clone(isDarkMode: !state.isDarkMode));
   }
 
   setResetDevice() {
@@ -126,5 +126,9 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
         loading: false,
       ));
     }
+  }
+
+  searchContent(bool isSearching) {
+    emit(state.clone(isSearching: isSearching));
   }
 }

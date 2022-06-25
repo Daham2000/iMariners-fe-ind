@@ -7,6 +7,6 @@ class KnowlageBaseProvider extends BlocProvider<CounterCubit> {
   KnowlageBaseProvider({required CategoryModel categoryModel})
       : super(
           create: (context) => CounterCubit(),
-          child: KnowlageBaseView(categoryModel: categoryModel),
+          child: KnowledgeBaseView(categoryModel: categoryModel),
         );
 }

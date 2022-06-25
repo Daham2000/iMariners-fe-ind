@@ -231,7 +231,6 @@ class DrawerApp extends StatelessWidget {
                 color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
               ),
               onTap: () async {
-                Navigator.pop(context);
                 openSnackBar(context, fontSize);
 
                 final Connectivity _connectivity = Connectivity();

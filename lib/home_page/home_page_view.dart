@@ -28,7 +28,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final Connectivity _connectivity = Connectivity();
-  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   late CounterCubit counterCubit;
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
 
@@ -36,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     counterCubit = BlocProvider.of<CounterCubit>(context);
     loadCategories();
-    _connectivitySubscription =
+    StreamSubscription<ConnectivityResult> _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(counterCubit.setOffline);
     super.initState();
   }

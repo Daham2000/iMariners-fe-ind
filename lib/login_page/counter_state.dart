@@ -13,6 +13,7 @@ class CounterState {
   bool isCodeCorrectResetPass;
   bool emailSend;
   bool isCodeValid;
+  bool isSearching;
   CategoryModel categoryModel;
 
   CounterState({
@@ -25,6 +26,7 @@ class CounterState {
     required this.isCodeCorrectResetPass,
     required this.emailSend,
     required this.isCodeValid,
+    required this.isSearching,
     required this.categoryModel,
   });
 
@@ -39,6 +41,7 @@ class CounterState {
           isCodeCorrectResetPass: false,
           emailSend: false,
           isCodeValid: false,
+          isSearching: false,
           categoryModel: CategoryModel(),
         );
 
@@ -52,6 +55,7 @@ class CounterState {
     bool? isCodeCorrectResetPass,
     bool? emailSend,
     bool? isCodeValid,
+    bool? isSearching,
     CategoryModel? categoryModel,
   }) {
     return CounterState(
@@ -61,6 +65,7 @@ class CounterState {
       isOffline: isOffline ?? this.isOffline,
       isPasswordReset: isPasswordReset ?? this.isPasswordReset,
       loading: loading ?? this.loading,
+      isSearching: isSearching ?? this.isSearching,
       isDeviceAccReset: isDeviceAccReset ?? this.isDeviceAccReset,
       isCodeCorrectResetPass:
           isCodeCorrectResetPass ?? this.isCodeCorrectResetPass,
@@ -80,5 +85,6 @@ class CounterState {
         isCodeCorrectResetPass: false,
         emailSend: false,
         isCodeValid: false,
+        isSearching: false,
       );
 }

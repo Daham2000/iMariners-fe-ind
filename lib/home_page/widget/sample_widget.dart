@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../db/models/category_model.dart';
 import '../../db/models/user_model.dart';
 import '../../knowlage_base_page/content_expand_view.dart';
+import '../../login_page/counter_cubit.dart';
 import '../../theme/colors.dart';
 
 class CustomHomeButton extends StatelessWidget {
@@ -198,7 +199,9 @@ class BottomNaviBar extends StatelessWidget {
 }
 
 class TopicHomePage extends StatelessWidget {
-  const TopicHomePage({Key? key}) : super(key: key);
+  final CounterCubit counterCubit;
+
+  const TopicHomePage({Key? key, required this.counterCubit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -222,18 +225,15 @@ class TopicHomePage extends StatelessWidget {
           height: 31,
           child: ElevatedButton(
               onPressed: () {
-                Future.microtask(() => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SearchBar()),
-                ));
+                counterCubit.searchContent(true);
+                print(counterCubit.state.isSearching);
               },
-              child: Text("Take Course"),
               style: ButtonStyle(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50.0),
-                          side: BorderSide(color: ThemeColors.THEME_COLOR))))),
+                          side: BorderSide(color: ThemeColors.THEME_COLOR)))),
+              child: const Text("Take Course")),
         )
       ],
     );
@@ -270,6 +270,7 @@ class CategoryViewCard extends StatelessWidget {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width * 0.4,
+                height: 100,
                 decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -277,7 +278,7 @@ class CategoryViewCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   // Image border
                   child: CachedNetworkImage(
-                    fit: BoxFit.contain,
+                    fit: BoxFit.fill,
                     imageUrl: datum.image!,
                   ),
                 ),
