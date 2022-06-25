@@ -1,4 +1,5 @@
 
+import 'package:com_ind_imariners/utill/font_size_hanlder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +14,7 @@ class NriCalculator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double fontSize = MediaQuery.of(context).textScaleFactor;
     return Container(
       width: MediaQuery.of(context).size.width * 0.41,
       height: 38,
@@ -27,7 +29,7 @@ class NriCalculator extends StatelessWidget {
             "NRI Calculator",
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
-              fontSize: 20,
+              fontSize: FontSizeHandle().getAppBarFontSize(fontSize),
               fontWeight: FontWeight.bold,
               color: isNri == true ? ThemeColors.TOGGLE_COLOR : Colors.white,
             ),
@@ -45,6 +47,7 @@ class SeaTimeCalDesign extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double fontSize = MediaQuery.of(context).textScaleFactor;
     return Container(
       width: MediaQuery.of(context).size.width * 0.41,
       height: 38,
@@ -58,8 +61,9 @@ class SeaTimeCalDesign extends StatelessWidget {
           Text(
             "Sea time Calculator",
             textAlign: TextAlign.center,
+            overflow: TextOverflow.clip,
             style: GoogleFonts.roboto(
-              fontSize: 20,
+              fontSize: FontSizeHandle().getAppBarFontSize(fontSize),
               fontWeight: FontWeight.bold,
               color: isNri == false ? ThemeColors.TOGGLE_COLOR : Colors.white,
             ),
@@ -196,6 +200,7 @@ class _NriDesignState extends State<NriDesign> {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     String joiningDateI = dateFormat.format(dateOne);
     String signOffDateI = dateFormat.format(dateTwo);
+    final double fontSize = MediaQuery.of(context).textScaleFactor;
 
     return Padding(
       padding: const EdgeInsets.all(14.0),
@@ -439,7 +444,7 @@ class _NriDesignState extends State<NriDesign> {
                           "Total : ${total} days",
                           style: GoogleFonts.roboto(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: FontSizeHandle().getAppBarFontSize(fontSize),
                           ),
                         ),
                       ],

@@ -46,6 +46,7 @@ class _ToolsViewState extends State<ToolsView> {
     CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
     String joiningDateI = dateFormat.format(dateOne);
     String signOffDateI = dateFormat.format(dateTwo);
+    final double fontSize = MediaQuery.of(context).textScaleFactor;
 
     return Scaffold(
       key: _key,
@@ -357,7 +358,6 @@ class _ToolsViewState extends State<ToolsView> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNaviBar(),
     );
   }
 }

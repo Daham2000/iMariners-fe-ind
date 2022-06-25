@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com_ind_imariners/knowlage_base_page/content_view.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -7,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../db/models/category_model.dart';
+import '../db/models/user_model.dart';
 import '../theme/colors.dart';
 import '../widgets/snackbar_factory.dart';
 import 'package:http/http.dart' as http;
@@ -115,37 +118,84 @@ class ExpandedView extends StatelessWidget {
                       children: [
                         ElevatedButton(
                             onPressed: () async {
+                              final SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              final double fontSize =
+                                  MediaQuery.of(context).textScaleFactor;
                               final Connectivity _connectivity = Connectivity();
                               ConnectivityResult result =
                                   await _connectivity.checkConnectivity();
-                              if (result != "none") {
-                                final double fontSize =
-                                    MediaQuery.of(context).textScaleFactor;
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBarFactory().getSnackBar(
-                                  isFail: false,
-                                  title: "Downloading...",
-                                  fontSize: fontSize,
-                                ));
+                              if (result != ConnectivityResult.none) {
+                                final String? sharedUserData =
+                                    prefs.getString('userObject');
+                                final jsonMap =
+                                    json.decode(sharedUserData ?? "");
+                                UserModel userModel =
+                                    UserModel.fromJson(jsonMap);
 
-                                final SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
+                                //check if admin or user
+                                if ((userModel.user?.email ==
+                                        "imariners@hotmail.com") ||
+                                    userModel.user?.lastPayment != null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBarFactory().getSnackBar(
+                                    isFail: false,
+                                    title: "Downloading...",
+                                    fontSize: fontSize,
+                                  ));
 
-                                final String? categoryList =
-                                    prefs.getString('category_list');
+                                  final String? categoryList =
+                                      prefs.getString('category_list');
 
-                                if (categoryList != null) {
-                                  final List<Datum> c =
-                                      Datum.decode(categoryList);
-                                  final List<Datum> cc = c
-                                      .where((i) =>
-                                          i.categoryName == datum.categoryName)
-                                      .toList();
-                                  if (cc.isEmpty) {
+                                  if (categoryList != null) {
+                                    final List<Datum> c =
+                                        Datum.decode(categoryList);
+                                    final List<Datum> cc = c
+                                        .where((i) =>
+                                            i.categoryName ==
+                                            datum.categoryName)
+                                        .toList();
+                                    if (cc.isEmpty) {
+                                      for (int i = 0;
+                                          i < datum.subCategories!.length;
+                                          i++) {
+                                        print(datum.subCategories![i]
+                                            .categoryContentLink);
+                                        for (int ii = 0;
+                                            ii <
+                                                datum
+                                                    .subCategories![i]
+                                                    .categoryContentLink!
+                                                    .length;
+                                            ii++) {
+                                          if (datum.subCategories![i]
+                                              .categoryContentLink![0]
+                                              .startsWith("https://")) {
+                                            final url = Uri.parse(
+                                                '${datum.subCategories![i].categoryContentLink![0]}');
+                                            final response =
+                                                await http.get(url);
+                                            if (response.body != null) {
+                                              datum.subCategories![i]
+                                                      .categoryContentLink![0] =
+                                                  response.body;
+                                              print(datum.subCategories![i]
+                                                  .categoryContentLink![0]);
+                                            }
+                                          }
+                                        }
+                                      }
+                                      c.add(datum);
+                                      final String encodedData =
+                                          Datum.encode(c);
+
+                                      await prefs.setString(
+                                          'category_list', encodedData);
+                                    }
+                                  } else {
                                     for (int i = 0;
                                         i < datum.subCategories!.length;
                                         i++) {
-                                      print(datum.subCategories![i].categoryContentLink);
                                       for (int ii = 0;
                                           ii <
                                               datum.subCategories![i]
@@ -161,54 +211,32 @@ class ExpandedView extends StatelessWidget {
                                             datum.subCategories![i]
                                                     .categoryContentLink![0] =
                                                 response.body;
-                                            print( datum.subCategories![i]
-                                                .categoryContentLink![0]);
                                           }
                                         }
                                       }
                                     }
-                                    c.add(datum);
                                     final String encodedData =
-                                    Datum.encode(c);
+                                        Datum.encode([datum]);
 
                                     await prefs.setString(
                                         'category_list', encodedData);
                                   }
                                 } else {
-                                  for (int i = 0;
-                                  i < datum.subCategories!.length;
-                                  i++) {
-                                    print(datum.subCategories![i].categoryContentLink);
-                                    for (int ii = 0;
-                                    ii <
-                                        datum.subCategories![i]
-                                            .categoryContentLink!.length;
-                                    ii++) {
-                                      if (datum.subCategories![i]
-                                          .categoryContentLink![0]
-                                          .startsWith("https://")) {
-                                        final url = Uri.parse(
-                                            '${datum.subCategories![i].categoryContentLink![0]}');
-                                        final response = await http.get(url);
-                                        if (response.body != null) {
-                                          datum.subCategories![i]
-                                              .categoryContentLink![0] =
-                                              response.body;
-                                          print( datum.subCategories![i]
-                                              .categoryContentLink![0]);
-                                        }
-                                      }
-                                    }
-                                  }
-                                  print(datum.subCategories![0]
-                                      .categoryContentLink![0]);
-                                  final String encodedData =
-                                      Datum.encode([datum]);
-
-                                  await prefs.setString(
-                                      'category_list', encodedData);
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBarFactory().getSnackBar(
+                                    isFail: true,
+                                    title:
+                                    "To download the content please subscribe to the Premium version",
+                                    fontSize: fontSize,
+                                  ));
                                 }
-                                ScaffoldMessenger.of(context).clearSnackBars();
+                              }else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBarFactory().getSnackBar(
+                                      isFail: true,
+                                      title: "Sorry you are offline",
+                                      fontSize: fontSize,
+                                    ));
                               }
                             },
                             style: ElevatedButton.styleFrom(

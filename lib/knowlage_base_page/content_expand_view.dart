@@ -60,7 +60,7 @@ class _ContentExpandViewState extends State<ContentExpandView> {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNaviBar(),
+      // bottomNavigationBar: const BottomNaviBar(),
     );
   }
 }

@@ -112,7 +112,7 @@ class _KnowlageBaseViewState extends State<KnowlageBaseView> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNaviBar(),
+      // bottomNavigationBar: const BottomNaviBar(),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:com_ind_imariners/db/models/category_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../db/api/auth_api.dart';
 import '../db/api/category_api.dart';
+import '../db/models/user_model.dart';
+import '../login_page/login_provider.dart';
 import '../theme/colors.dart';
-  import 'snackbar_factory.dart';
+  import '../utill/font_size_hanlder.dart';
+import 'snackbar_factory.dart';
   import 'package:http/http.dart' as http;
 
   class AppBarCurve extends StatefulWidget {
@@ -29,6 +35,8 @@ import '../theme/colors.dart';
 class _AppBarCurveState extends State<AppBarCurve> {
   @override
   Widget build(BuildContext context) {
+    final double fontSize = MediaQuery.of(context).textScaleFactor;
+
     return Stack(
       children: [
         Container(
@@ -85,42 +93,42 @@ class _AppBarCurveState extends State<AppBarCurve> {
             ),
           ),
         ),
-        widget.text == "Home"
-            ? Positioned(
-                top: MediaQuery.of(context).size.height * 0.25,
-                left: MediaQuery.of(context).size.width * 0.06,
-                child: Container(
-                  child: Icon(
-                    Icons.home,
-                    color: Colors.white,
-                    size: 25,
-                  ),
-                ))
-            : widget.text == "Knowledge Base"
-                ? Positioned(
-                    top: MediaQuery.of(context).size.height * 0.248,
-                    left: MediaQuery.of(context).size.width * 0.065,
-                    child: Container(
-                      width: 25,
-                      child: Image.asset("assets/s.png"),
-                    ))
-                : widget.text == "Telegram"
-                    ? Positioned(
-                        top: MediaQuery.of(context).size.height * 0.248,
-                        left: MediaQuery.of(context).size.width * 0.065,
-                        child: Container(
-                          width: 25,
-                          child: Image.asset("assets/telegram.png"),
-                        ))
-                    : widget.text == "Tools"
-                        ? Positioned(
-                            top: MediaQuery.of(context).size.height * 0.248,
-                            left: MediaQuery.of(context).size.width * 0.065,
-                            child: Container(
-                              width: 25,
-                              child: Image.asset("assets/t.png"),
-                            ))
-                        : Container(),
+        // widget.text == "Home"
+        //     ? Positioned(
+        //         top: MediaQuery.of(context).size.height * 0.25,
+        //         left: MediaQuery.of(context).size.width * 0.06,
+        //         child: Container(
+        //           child: Icon(
+        //             Icons.home,
+        //             color: Colors.white,
+        //             size: 25,
+        //           ),
+        //         ))
+        //     : widget.text == "Knowledge Base"
+        //         ? Positioned(
+        //             top: MediaQuery.of(context).size.height * 0.248,
+        //             left: MediaQuery.of(context).size.width * 0.065,
+        //             child: Container(
+        //               width: 25,
+        //               child: Image.asset("assets/s.png"),
+        //             ))
+        //         : widget.text == "Telegram"
+        //             ? Positioned(
+        //                 top: MediaQuery.of(context).size.height * 0.248,
+        //                 left: MediaQuery.of(context).size.width * 0.065,
+        //                 child: Container(
+        //                   width: 25,
+        //                   child: Image.asset("assets/telegram.png"),
+        //                 ))
+        //             : widget.text == "Tools"
+        //                 ? Positioned(
+        //                     top: MediaQuery.of(context).size.height * 0.248,
+        //                     left: MediaQuery.of(context).size.width * 0.065,
+        //                     child: Container(
+        //                       width: 25,
+        //                       child: Image.asset("assets/t.png"),
+        //                     ))
+        //                 : Container(),
         Positioned(
           top: widget.isContent == true
               ? MediaQuery.of(context).size.height * 0.25
@@ -152,11 +160,8 @@ class _AppBarCurveState extends State<AppBarCurve> {
                   : widget.text,
               overflow: TextOverflow.clip,
               style: GoogleFonts.roboto(
-                fontSize: widget.text == "Knowledge Base"
-                    ? 24
-                    : widget.isContent
-                        ? 23
-                        : 30,
+                fontSize: FontSizeHandle().getAppBarFontSizeMain(
+                    fontSize, widget.text, widget.isContent),
                 shadows: <Shadow>[
                   const Shadow(
                     offset: Offset(1.0, 1.0),
@@ -370,6 +375,32 @@ class DrawerApp extends StatelessWidget {
                 color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
               ),
               onTap: () {},
+            ),
+            ListTile(
+              title: Text(
+                'Logout',
+                overflow: TextOverflow.clip,
+                style: GoogleFonts.roboto(
+                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+              ),
+              leading: const Icon(
+                Icons.person,
+                color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+              ),
+              onTap: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                final String? s = prefs.getString('userObject');
+                Map<String, dynamic> userMap = jsonDecode(s ?? "");
+                final user = UserModel.fromJson(userMap);
+                final int status = await AuthApi().logout(user.user?.id);
+                if (status == 200) {
+                  Future.microtask(() => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LoginProvider()),
+                  ));
+                }
+              },
             ),
           ],
         ),

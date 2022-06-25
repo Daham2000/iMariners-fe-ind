@@ -6,12 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthApi {
-  Future<int> login(User user, String role) async {
+  Future<int> login(User user) async {
     UserModel userModel;
     try {
       final body = {
         "email": user.email,
-        "role": role,
+        "role": user.email != "imariners@hotmail.com" ? "user" : "admin",
         "deviceId": user.deviceId,
         "lastLogin": user.lastLogin,
         "password": user.password
@@ -143,7 +143,7 @@ class AuthApi {
       );
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
-      if(response.statusCode==200){
+      if (response.statusCode == 200) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.remove('userObject');
         await prefs.remove('user');

@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: MyApp.themeNotifier.value == ThemeMode.light
           ? ThemeColors.BACKGROUD_COLOR
           : Colors.grey,
-      bottomNavigationBar: const BottomNaviBar(),
+      // bottomNavigationBar: const BottomNaviBar(),
     );
   }
 }

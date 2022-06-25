@@ -17,7 +17,7 @@ class GroupUI extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Container(
         width: 352,
-        height: 181,
+        height: 110,
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -45,18 +45,11 @@ class GroupUI extends StatelessWidget {
                   )
                 ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                link!,
-                style: GoogleFonts.roboto(
-                  color: Colors.blue,
-                  fontSize: 18,
-                ),
+              const SizedBox(
+                height: 6,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
                     onPressed: () {

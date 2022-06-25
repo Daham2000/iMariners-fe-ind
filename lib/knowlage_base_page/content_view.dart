@@ -71,7 +71,7 @@ class _ContentViewState extends State<ContentView> {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNaviBar(),
+      // bottomNavigationBar: const BottomNaviBar(),
     );
   }
 

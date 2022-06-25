@@ -72,7 +72,7 @@ class _TelegramViewState extends State<TelegramView> {
               height: 25,
             ),
             loading
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : Column(
                     children: [
                       for (int i = 0; i < telegramModel.groups!.length; i++)
@@ -85,7 +85,7 @@ class _TelegramViewState extends State<TelegramView> {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNaviBar(),
+      // bottomNavigationBar: const BottomNaviBar(),
     );
   }
 }

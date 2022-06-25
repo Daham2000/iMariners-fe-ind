@@ -20,7 +20,7 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     user.deviceId = deviceId ?? "";
     DateTime now = DateTime.now();
     user.lastLogin = now.toString();
-    final int loginResult = await AuthApi().login(user, "user");
+    final int loginResult = await AuthApi().login(user);
     if(loginResult==200){
       await SharedMemory().setUser("user", user.email ?? "");
     }
