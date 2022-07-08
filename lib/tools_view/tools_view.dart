@@ -9,6 +9,7 @@ import '../login_page/counter_cubit.dart';
 import '../login_page/counter_state.dart';
 import '../main.dart';
 import '../theme/colors.dart';
+import '../utill/font_size_hanlder.dart';
 import '../widgets/app_bar_curve.dart';
 import '../widgets/calculator_design.dart';
 
@@ -24,6 +25,8 @@ class _ToolsViewState extends State<ToolsView> {
   List<DateTime> joiningDate = [];
   List<DateTime> signOffDate = [];
   int total = 0;
+  String months = "";
+  String days = "";
   DateTime dateOne = DateTime.now();
   DateTime dateTwo = DateTime.now();
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
@@ -189,6 +192,10 @@ class _ToolsViewState extends State<ToolsView> {
                                         setState(() {
                                           joiningDate.removeAt(i);
                                           signOffDate.removeAt(i);
+                                          if(difference>=30){
+                                            months = (total/30).toStringAsFixed(0);
+                                            days = (total%30).toString();
+                                          }
                                         });
                                       },
                                     ),
@@ -335,12 +342,16 @@ class _ToolsViewState extends State<ToolsView> {
                               ),
                               InkWell(
                                 onTap: () {
+                                  final difference = dateTwo.difference(dateOne).inDays + 1;
                                   setState(() {
                                     joiningDate.add(dateOne);
                                     signOffDate.add(dateTwo);
-                                    final difference = dateTwo.difference(dateOne).inDays + 1;
                                     total += difference;
                                   });
+                                  if(difference>=30){
+                                    months = (total/30).toStringAsFixed(0);
+                                    days = (total%30).toString();
+                                  }
                                 },
                                 child: const ButtonAddMoreCal(
                                   text: "Calculate",
@@ -349,6 +360,35 @@ class _ToolsViewState extends State<ToolsView> {
                               const SizedBox(
                                 height: 10,
                               ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8, bottom: 8),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      height: 33,
+                                      decoration: BoxDecoration(
+                                          color: ThemeColors.BUTTONRI,
+                                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                                            child: Text(
+                                              total>=30 ? "Total : ${months} Months ${days} days" :"Total : ${total} days",
+                                              style: GoogleFonts.roboto(
+                                                color: Colors.white,
+                                                fontSize: FontSizeHandle().getAppBarFontSize(fontSize),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         ),

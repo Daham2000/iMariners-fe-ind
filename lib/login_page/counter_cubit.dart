@@ -101,12 +101,8 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
   }
 
   Future<void> loadCategories(bool isOffline) async {
-    emit(state.clone(
-      loading: true,
-    ));
     if (isOffline) {
       emit(state.clone(isOffline: isOffline));
-
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? categoryList = await prefs.getString('category_list');
       if (categoryList != null) {
@@ -120,6 +116,9 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
         ));
       }
     } else {
+      emit(state.clone(
+        loading: true,
+      ));
       final categories = await CategoryAPI().getAddCategories();
       emit(state.clone(
         categoryModel: categories,

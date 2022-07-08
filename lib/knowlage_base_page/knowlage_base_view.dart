@@ -160,7 +160,7 @@ class _KnowledgeBaseViewState extends State<KnowledgeBaseView> {
                                         CategoryViewCard(
                                           datum: searchCategoryModel.data![i],
                                         ),
-                                        searchCategoryModel.data!.length > 2
+                                        searchCategoryModel.data!.length > i+1
                                             ? CategoryViewCard(
                                                 datum: searchCategoryModel
                                                     .data![i + 1])

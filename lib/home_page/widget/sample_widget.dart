@@ -32,13 +32,14 @@ class CustomHomeButton extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: 66,
         decoration: BoxDecoration(
-          color: i == 1
-              ? ThemeColors.HOMEBUTTONONE
-              : i == 2
-                  ? ThemeColors.HOMEBUTTONTWO
-                  : i == 3
-                      ? ThemeColors.ColregColor
-                      : ThemeColors.HOMEBUTTONTHREE,
+          color: ThemeColors.THEME_COLOR,
+          // color: i == 1
+          //     ? ThemeColors.HOMEBUTTONONE
+          //     : i == 2
+          //     ? ThemeColors.HOMEBUTTONTWO
+          //     : i == 3
+          //     ? ThemeColors.ColregColor
+          //     : ThemeColors.HOMEBUTTONTHREE,
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         child: Padding(
@@ -209,18 +210,6 @@ class TopicHomePage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          "Pollution prevention, Response, and \n compensation ",
-          textAlign: TextAlign.center,
-          style: GoogleFonts.roboto(
-            fontSize: 19,
-            fontWeight: FontWeight.bold,
-            color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
-          ),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
         Container(
           height: 31,
           child: ElevatedButton(

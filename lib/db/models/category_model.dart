@@ -55,7 +55,7 @@ class Datum {
     "categoryLearners": music.categoryLearners,
     "hasSubCategories": music.hasSubCategories,
     "content": music.content,
-    "subCategories": List<dynamic>.from(music.subCategories!.map((x) => x.toJson()))
+    "subCategories": music.subCategories==null ? [] :List<dynamic>.from(music.subCategories!.map((x) => x.toJson()))
   };
 
 
@@ -78,7 +78,7 @@ class Datum {
     categoryLearners: json["categoryLearners"],
     hasSubCategories: json["hasSubCategories"],
     content: json["content"],
-    subCategories: List<DatumSubCategory>.from(json["subCategories"].map((x) => DatumSubCategory.fromJson(x))),
+    subCategories: json["subCategories"]==null ? [] : List<DatumSubCategory>.from(json["subCategories"].map((x) => DatumSubCategory.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -109,8 +109,8 @@ class DatumSubCategory {
   factory DatumSubCategory.fromJson(Map<String, dynamic> json) => DatumSubCategory(
     name: json["name"],
     hasSubCategories: json["hasSubCategories"],
-    subCategories: List<SubCategorySubCategory>.from(json["subCategories"].map((x) => SubCategorySubCategory.fromJson(x))),
-    categoryContentLink: json["categoryContentLink"] == null ? null : List<String>.from(json["categoryContentLink"].map((x) => x)),
+    subCategories: json["subCategories"]==null ? [] : List<SubCategorySubCategory>.from(json["subCategories"].map((x) => SubCategorySubCategory.fromJson(x))),
+    categoryContentLink: json["categoryContentLink"] == null ? [] : List<String>.from(json["categoryContentLink"].map((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {
@@ -124,12 +124,16 @@ class DatumSubCategory {
 class SubCategorySubCategory {
   SubCategorySubCategory({
     this.name,
+    this.categoryContentLink,
   });
 
   String? name;
+  String? categoryContentLink;
+
 
   factory SubCategorySubCategory.fromJson(Map<String, dynamic> json) => SubCategorySubCategory(
     name: json["name"],
+    categoryContentLink: json["categoryContentLink"]==null ? "": json["categoryContentLink"],
   );
 
   Map<String, dynamic> toJson() => {

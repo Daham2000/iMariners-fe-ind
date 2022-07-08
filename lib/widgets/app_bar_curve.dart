@@ -12,11 +12,11 @@ import '../db/api/category_api.dart';
 import '../db/models/user_model.dart';
 import '../login_page/login_provider.dart';
 import '../theme/colors.dart';
-  import '../utill/font_size_hanlder.dart';
+import '../utill/font_size_hanlder.dart';
 import 'snackbar_factory.dart';
-  import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;
 
-  class AppBarCurve extends StatefulWidget {
+class AppBarCurve extends StatefulWidget {
   final String text;
   final isContent;
   final VoidCallback openDrawer;
@@ -387,18 +387,22 @@ class DrawerApp extends StatelessWidget {
                 color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
               ),
               onTap: () async {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBarFactory().getSnackBar(
+                  isFail: false,
+                  title: "Logging out...",
+                  fontSize: fontSize,
+                ));
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 final String? s = prefs.getString('userObject');
+                print(s);
                 Map<String, dynamic> userMap = jsonDecode(s ?? "");
                 final user = UserModel.fromJson(userMap);
                 final int status = await AuthApi().logout(user.user?.id);
-                if (status == 200) {
-                  Future.microtask(() => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => LoginProvider()),
-                  ));
-                }
+                Future.microtask(() => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginProvider()),
+                    ));
               },
             ),
           ],

@@ -72,6 +72,7 @@ class _HomePageState extends State<HomePage> {
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) =>
             pre.count != current.count ||
+            pre.loading != current.loading ||
             pre.isOffline != current.isOffline ||
             pre.isDarkMode != current.isDarkMode ||
             pre.categoryModel != current.categoryModel,
@@ -88,107 +89,121 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(
                   height: 40,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Welcome",
-                        textAlign: TextAlign.start,
-                        style: GoogleFonts.roboto(
-                          fontSize: 23,
-                          color: ThemeColors.WELCOME,
+                state.loading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Welcome",
+                              textAlign: TextAlign.start,
+                              style: GoogleFonts.roboto(
+                                fontSize: 23,
+                                color: ThemeColors.WELCOME,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                if (state.categoryModel.data!.isNotEmpty) {
+                                  if (state.categoryModel.data!.length >= 1) {
+                                    final List<Datum> cc = state
+                                        .categoryModel.data!
+                                        .where(
+                                            (i) => i.categoryName == "Colreg")
+                                        .toList();
+                                    if (cc.isNotEmpty) {
+                                      Future.microtask(() => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ContentExpandView(
+                                                      datum: cc[0],
+                                                      text: "Colreg",
+                                                    )),
+                                          ));
+                                    }
+                                  }
+                                }
+                              },
+                              child: const CustomHomeButton(
+                                  i: 3,
+                                  path: "assets/colreg.png",
+                                  text: "Colreg"),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                if (state.categoryModel.data!.isNotEmpty) {
+                                  if (state.categoryModel.data!.length > 1) {
+                                    final List<Datum> cc = state
+                                        .categoryModel.data!
+                                        .where(
+                                            (i) => i.categoryName != "Colreg")
+                                        .toList();
+                                    CategoryModel ca =
+                                        CategoryModel(message: "200", data: cc);
+                                    if (cc.isNotEmpty) {
+                                      Future.microtask(() => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    KnowlageBaseProvider(
+                                                      categoryModel: ca,
+                                                    )),
+                                          ));
+                                    }
+                                  }
+                                }
+                              },
+                              child: const CustomHomeButton(
+                                  i: 2,
+                                  path: "assets/s.png",
+                                  text: "Knowledge Base"),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Future.microtask(() => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ToolsProvider()),
+                                    ));
+                              },
+                              child: CustomHomeButton(
+                                  i: 1, path: "assets/t.png", text: "Tools"),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                if (state.isOffline) {
+                                  final double fontSize =
+                                      MediaQuery.of(context).textScaleFactor;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBarFactory().getSnackBar(
+                                    isFail: false,
+                                    title: "Your are offline",
+                                    fontSize: fontSize,
+                                  ));
+                                } else {
+                                  Future.microtask(() => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TelegramView()),
+                                      ));
+                                }
+                              },
+                              child: const CustomHomeButton(
+                                  i: 4, path: "assets/e.png", text: "Telegram"),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Future.microtask(() => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ToolsProvider()),
-                              ));
-                        },
-                        child: CustomHomeButton(
-                            i: 1, path: "assets/t.png", text: "Tools"),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (state.categoryModel.data!.isNotEmpty) {
-                            if (state.categoryModel.data!.length > 1) {
-                              final List<Datum> cc = state.categoryModel.data!
-                                  .where((i) => i.categoryName != "Colreg")
-                                  .toList();
-                              CategoryModel ca =
-                                  CategoryModel(message: "200", data: cc);
-                              if (cc.isNotEmpty) {
-                                Future.microtask(() => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              KnowlageBaseProvider(
-                                                categoryModel: ca,
-                                              )),
-                                    ));
-                              }
-                            }
-                          }
-                        },
-                        child: const CustomHomeButton(
-                            i: 2, path: "assets/s.png", text: "Knowledge Base"),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (state.categoryModel.data!.isNotEmpty) {
-                            if (state.categoryModel.data!.length >= 1) {
-                              final List<Datum> cc = state.categoryModel.data!
-                                  .where((i) => i.categoryName == "Colreg")
-                                  .toList();
-                              if (cc.isNotEmpty) {
-                                Future.microtask(() => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ContentExpandView(
-                                                datum: cc[0],
-                                                text: "Colreg",
-                                              )),
-                                    ));
-                              }
-                            }
-                          }
-                        },
-                        child: const CustomHomeButton(
-                            i: 3, path: "assets/colreg.png", text: "Colreg"),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (state.isOffline) {
-                            final double fontSize =
-                                MediaQuery.of(context).textScaleFactor;
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBarFactory().getSnackBar(
-                              isFail: false,
-                              title: "Your are offline",
-                              fontSize: fontSize,
-                            ));
-                          } else {
-                            Future.microtask(() => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => TelegramView()),
-                                ));
-                          }
-                        },
-                        child: const CustomHomeButton(
-                            i: 4, path: "assets/e.png", text: "Telegram"),
-                      ),
-                    ],
-                  ),
-                )
+                      )
               ],
             ),
           );

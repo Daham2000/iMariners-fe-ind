@@ -25,41 +25,12 @@ class _CounterPageState extends State<LoginView> {
   final rePassword = TextEditingController();
   final code = TextEditingController();
   bool isLoading = false;
+  bool passwordObscureText = true;
 
   @override
   void initState() {
     getDetails();
     super.initState();
-  }
-
-  Widget getTextField(
-      {required TextEditingController ctrl,
-      required bool obscureText,
-      required Icon icon,
-      required String text}) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.86,
-      child: TextFormField(
-        controller: ctrl,
-        obscureText: obscureText,
-        validator: (text) {
-          if (text == null || text.isEmpty) {
-            return "This field can't be empty";
-          }
-          return null;
-        },
-        decoration: InputDecoration(
-            prefixIcon: icon,
-            enabledBorder: OutlineInputBorder(
-              // width: 0.0 produces a thin "hairline" border
-              borderSide: const BorderSide(color: Colors.grey, width: 0.5),
-              borderRadius: BorderRadius.circular(50.0),
-            ),
-            hintStyle: TextStyle(color: Colors.grey[400]),
-            hintText: text,
-            fillColor: Colors.white70),
-      ),
-    );
   }
 
   @override
@@ -83,13 +54,64 @@ class _CounterPageState extends State<LoginView> {
       isLoading = false;
     });
   }
+
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
 
   void openDrawer() {
     _key.currentState!.openDrawer();
   }
+
+  void hidePassword() {
+    setState(() {
+      passwordObscureText = !passwordObscureText;
+    });
+  }
+
+  Widget getTextField(
+      {required TextEditingController ctrl,
+        required bool obscureText,
+        required Icon icon,
+        required String text}) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.86,
+      child: TextFormField(
+        controller: ctrl,
+        obscureText: text == "Password"
+            ? passwordObscureText : obscureText,
+        validator: (text) {
+          if (text == null || text.isEmpty) {
+            return "This field can't be empty";
+          }
+          return null;
+        },
+        decoration: InputDecoration(
+            prefixIcon: icon,
+            suffixIcon: text == "Password"
+                ? InkWell(
+              onTap: () {
+                hidePassword();
+              },
+              child: Icon(Icons.remove_red_eye),
+            )
+                : Container(
+              width: 10,
+            ),
+            enabledBorder: OutlineInputBorder(
+              // width: 0.0 produces a thin "hairline" border
+              borderSide: const BorderSide(color: Colors.grey, width: 0.5),
+              borderRadius: BorderRadius.circular(50.0),
+            ),
+            hintStyle: TextStyle(color: Colors.grey[400]),
+            hintText: text,
+            fillColor: Colors.white70),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+
+
     CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
     return Scaffold(
       body: BlocBuilder<CounterCubit, CounterState>(
