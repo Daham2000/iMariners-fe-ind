@@ -154,4 +154,25 @@ class AuthApi {
       return 401;
     }
   }
+
+  Future<int> contactUs(String subject, String message) async {
+    try {
+      final url = Uri.parse('${Strings.url}v1/contact-us');
+      final body = {
+        "subject": subject,
+        "message": message,
+      };
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(body)
+      );
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return 401;
+    }
+  }
 }

@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:com_ind_imariners/db/models/category_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../contact_us_page/contact_us_view.dart';
 import '../db/api/auth_api.dart';
 import '../db/api/category_api.dart';
 import '../db/models/user_model.dart';
@@ -334,7 +336,12 @@ class DrawerApp extends StatelessWidget {
                 Icons.person,
                 color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
               ),
-              onTap: () {},
+              onTap: () {
+                Future.microtask(() => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ContactUsPage()),
+                ));
+              },
             ),
             ListTile(
               title: Text(
@@ -360,7 +367,15 @@ class DrawerApp extends StatelessWidget {
                 Icons.share,
                 color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
               ),
-              onTap: () {},
+              onTap: () async {
+                Navigator.pop(context);
+                await FlutterShare.share(
+                    title: 'Share iMariners with friends',
+                    text: 'Share iMariners with friends',
+                    linkUrl: 'https://imariners.com/',
+                    chooserTitle: 'Share iMariners with friends'
+                );
+              },
             ),
             ListTile(
               title: Text(
