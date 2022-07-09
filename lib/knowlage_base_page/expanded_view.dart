@@ -104,7 +104,7 @@ class ExpandedView extends StatelessWidget {
                           : i.categoryContentLink![0],
                       <Entry>[
                         for (final ii in i.subCategories!)
-                          Entry(ii.name ?? "", i.categoryContentLink![0]),
+                          Entry(ii.name ?? "", ii.categoryContentLink??""),
                       ],
                     ),
                 ],

@@ -338,9 +338,9 @@ class DrawerApp extends StatelessWidget {
               ),
               onTap: () {
                 Future.microtask(() => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ContactUsPage()),
-                ));
+                      context,
+                      MaterialPageRoute(builder: (context) => ContactUsPage()),
+                    ));
               },
             ),
             ListTile(
@@ -363,17 +363,17 @@ class DrawerApp extends StatelessWidget {
                 style: GoogleFonts.roboto(
                     color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
               ),
-              leading: Icon(
+              leading: const Icon(
                 Icons.share,
                 color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
               ),
               onTap: () async {
                 Navigator.pop(context);
                 await FlutterShare.share(
-                    title: 'Share iMariners with friends',
-                    text: 'Share iMariners with friends',
-                    linkUrl: 'https://imariners.com/',
-                    chooserTitle: 'Share iMariners with friends'
+                  title: 'Share iMariners with friends',
+                  text: 'Share iMariners with friends',
+                  linkUrl: 'https://imariners.com/',
+                  chooserTitle: 'Share iMariners with friends',
                 );
               },
             ),
