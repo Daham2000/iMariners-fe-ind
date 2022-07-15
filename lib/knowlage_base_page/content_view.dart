@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import '../home_page/widget/sample_widget.dart';
 import '../main.dart';
 import '../theme/colors.dart';
 import '../widgets/app_bar_curve.dart';

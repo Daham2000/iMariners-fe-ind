@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
-  final String text;
-  final Icon icon;
-  final bool obscureText;
-  final TextEditingController textEditingController;
+  String text;
+  Icon icon;
+  bool obscureText;
+  TextEditingController textEditingController;
 
-  const CustomTextField(
+  CustomTextField(
       {Key? key,
       required this.text,
       required this.icon,
@@ -34,6 +34,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
         },
         decoration: InputDecoration(
             prefixIcon: widget.icon,
+            suffixIcon: widget.text == "Password"
+                ? InkWell(
+              onTap: () {
+                setState(() {
+                  widget.obscureText = !widget.obscureText;
+                });
+              },
+              child: Icon(Icons.remove_red_eye),
+            )
+                : Container(
+              width: 10,
+            ),
             enabledBorder: OutlineInputBorder(
               // width: 0.0 produces a thin "hairline" border
               borderSide: const BorderSide(color: Colors.grey, width: 0.5),

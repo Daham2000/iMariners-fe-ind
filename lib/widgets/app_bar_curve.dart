@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:com_ind_imariners/db/models/category_model.dart';
+import 'package:com_ind_imariners/pirvacy_policy_page/privacy_policy_view.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -384,11 +385,17 @@ class DrawerApp extends StatelessWidget {
                 style: GoogleFonts.roboto(
                     color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
               ),
-              leading: Icon(
+              leading: const Icon(
                 Icons.local_police_sharp,
                 color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
               ),
-              onTap: () {},
+              onTap: () {
+                Future.microtask(() => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PrivacyPolicyView()),
+                    ));
+              },
             ),
             ListTile(
               title: Text(
