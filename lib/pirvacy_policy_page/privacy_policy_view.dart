@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_html/flutter_html.dart';
+import 'package:http/http.dart' as http;
 import '../main.dart';
 import '../widgets/app_bar_curve.dart';
 
@@ -25,9 +26,23 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
     });
   }
 
+  String htmlCode = "";
+  Widget html = Html(
+    data: """
+  <h3>Loading the content please wait</h3>
+  """,
+  );
+
+  @override
+  void initState() {
+    loadHtml();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       drawer: DrawerApp(
         changeTheme: changeTheme,
       ),
@@ -39,9 +54,35 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
               isContent: false,
               openDrawer: openDrawer,
             ),
+            const SizedBox(
+              height: 25,
+            ),
+            html != null ? html : Container(),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> loadHtml() async {
+    if ("https://contents-1.s3.ap-south-1.amazonaws.com/privacy.html.txt"
+        .startsWith("https://")) {
+      final url = Uri.parse(
+          'https://contents-1.s3.ap-south-1.amazonaws.com/privacy.html.txt');
+      final response = await http.get(url);
+      print(response);
+      setState(() {
+        html = Html(
+          data: response.body,
+        );
+      });
+    } else {
+      setState(() {
+        html = Html(
+          data:
+              'https://contents-1.s3.ap-south-1.amazonaws.com/privacy.html.txt',
+        );
+      });
+    }
   }
 }
