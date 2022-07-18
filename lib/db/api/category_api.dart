@@ -8,7 +8,6 @@ import '../../utill/strings.dart';
 
 class CategoryAPI {
   Future<CategoryModel> getAddCategories({String? query}) async {
-    print("getAddCategories");
     CategoryModel categoryModel = CategoryModel();
     try {
       var url = Uri.parse('${Strings.url}v1/category');
@@ -18,12 +17,16 @@ class CategoryAPI {
           'query': '${query.substring(0,1).toUpperCase()}${query.substring(1,query.length-1)}',
         };
         url = Uri.https('${Strings.url2}', "v1/category", queryParameters);
+      }else{
+        final queryParameters = {
+          'query': '',
+        };
+        url = Uri.https('${Strings.url2}', "v1/category", queryParameters);
       }
       final response = await http.get(
         url,
         headers: {'Content-Type': 'application/json'},
       );
-      print(response.body);
       if (response.statusCode == 200) {
         final jsonString = response.body;
         final jsonMap = json.decode(jsonString);

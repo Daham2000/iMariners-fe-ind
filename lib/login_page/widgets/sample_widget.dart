@@ -4,6 +4,7 @@ import 'package:com_ind_imariners/login_page/login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../theme/colors.dart';
 import '../../widgets/snackbar_factory.dart';
@@ -265,19 +266,46 @@ class OrField extends StatelessWidget {
 
 class SocialButton extends StatelessWidget {
   final String path;
+  CounterCubit? bloc;
 
-  const SocialButton({Key? key, required this.path}) : super(key: key);
+  SocialButton({Key? key, required this.path, this.bloc}) : super(key: key);
+
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email'],
+  );
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        final result = await FacebookAuth.i.login(
-            permissions: ["email", "public_profile", "user_friends"]
-        );
-        print(result.message);
-        print(result.status);
-        print(result.accessToken);
+        if (path == "assets/Google.jpg") {
+          try {
+            final googleSignInAccount = await _googleSignIn.signIn();
+            if (googleSignInAccount?.email != null) {
+              await bloc?.registerUser(User(
+                  email: googleSignInAccount?.email,
+                  password: "123456",
+                  username: googleSignInAccount?.displayName));
+              final int? resultLogin = await bloc?.login(
+                  User(email: googleSignInAccount?.email, password: "123456"));
+              print(resultLogin);
+              if (resultLogin != null && resultLogin == 200) {
+                Future.microtask(() => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeProvider()),
+                    ));
+              }
+            }
+          } catch (error) {
+            print("error: " + error.toString());
+          }
+        } else {
+          final result = await FacebookAuth.i
+              .login(permissions: ["email", "public_profile", "user_friends"]);
+          print(result.message);
+          print(result.status);
+          print(result.accessToken);
+        }
       },
       child: ClipOval(
         child: SizedBox(

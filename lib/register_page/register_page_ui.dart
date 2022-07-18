@@ -27,6 +27,7 @@ class _CounterPageState extends State<RegisterView> {
   void openDrawer() {
     _key.currentState!.openDrawer();
   }
+
   @override
   Widget build(BuildContext context) {
     CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
@@ -98,25 +99,29 @@ class _CounterPageState extends State<RegisterView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            SocialButton(path: "assets/Google.jpg"),
+                          children: [
+                            SocialButton(
+                              path: "assets/Google.jpg",
+                              bloc: counterCubit,
+                            ),
                             SizedBox(
                               width: 15.0,
                             ),
-                            SocialButton(path: "assets/facebook.png")
+                            SocialButton(
+                              path: "assets/facebook.png",
+                              bloc: counterCubit,
+                            )
                           ],
                         ),
                         const SizedBox(
                           height: 15,
                         ),
                         InkWell(
-                          onTap: (){
-                            Future.microtask(
-                                    () => Navigator.pushReplacement(
+                          onTap: () {
+                            Future.microtask(() => Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          LoginProvider()),
+                                      builder: (context) => LoginProvider()),
                                 ));
                           },
                           child: SignupText(

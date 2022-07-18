@@ -278,14 +278,14 @@ class _CounterPageState extends State<LoginView> {
                                               MainAxisAlignment.center,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             SocialButton(
-                                                path: "assets/Google.jpg"),
+                                                path: "assets/Google.jpg",bloc: counterCubit,),
                                             SizedBox(
                                               width: 15.0,
                                             ),
                                             SocialButton(
-                                                path: "assets/facebook.png")
+                                                path: "assets/facebook.png",bloc: counterCubit,)
                                           ],
                                         ),
                                         const SizedBox(

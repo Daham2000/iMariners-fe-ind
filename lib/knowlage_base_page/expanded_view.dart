@@ -104,7 +104,7 @@ class ExpandedView extends StatelessWidget {
                           : i.categoryContentLink![0],
                       <Entry>[
                         for (final ii in i.subCategories!)
-                          Entry(ii.name ?? "", ii.categoryContentLink??""),
+                          Entry(ii.name ?? "", ii.categoryContentLink ?? ""),
                       ],
                     ),
                 ],
@@ -140,10 +140,10 @@ class ExpandedView extends StatelessWidget {
                               title: "Downloading...",
                               fontSize: fontSize,
                             ));
-
+                            await prefs.remove(
+                                'category_list');
                             final String? categoryList =
                                 prefs.getString('category_list');
-
                             if (categoryList != null) {
                               final List<Datum> c = Datum.decode(categoryList);
                               final List<Datum> cc = c
@@ -154,8 +154,36 @@ class ExpandedView extends StatelessWidget {
                                 for (int i = 0;
                                     i < datum.subCategories!.length;
                                     i++) {
-                                  print(datum
-                                      .subCategories![i].categoryContentLink);
+                                  //Download subcategory content
+                                  for (int ii = 0;
+                                      ii <
+                                          datum.subCategories![i].subCategories!
+                                              .length;
+                                      ii++) {
+                                    print(datum
+                                        .subCategories![i]
+                                        .subCategories?[ii]
+                                        .categoryContentLink);
+                                    if (datum.subCategories![i]
+                                        .subCategories![ii].categoryContentLink!
+                                        .startsWith("https://")) {
+                                      final url = Uri.parse(
+                                          '${datum.subCategories![i].subCategories?[ii].categoryContentLink}');
+                                      final response = await http.get(url);
+                                      if (response.body != null) {
+                                        datum
+                                                .subCategories![i]
+                                                .subCategories?[ii]
+                                                .categoryContentLink =
+                                            response.body;
+                                        print(datum
+                                            .subCategories![i]
+                                            .subCategories?[ii]
+                                            .categoryContentLink);
+                                      }
+                                    }
+                                  }
+                                  //Download category contents
                                   for (int ii = 0;
                                       ii <
                                           datum.subCategories![i]
@@ -187,6 +215,32 @@ class ExpandedView extends StatelessWidget {
                               for (int i = 0;
                                   i < datum.subCategories!.length;
                                   i++) {
+                                for (int ii = 0;
+                                    ii <
+                                        datum.subCategories![i].subCategories!
+                                            .length;
+                                    ii++) {
+                                  if (datum.subCategories![i].subCategories![ii]
+                                      .categoryContentLink!
+                                      .startsWith("https://")) {
+
+                                    final url = Uri.parse(
+                                        '${datum.subCategories![i].subCategories?[ii].categoryContentLink}');
+                                    final response = await http.get(url);
+                                    if (response.body != null) {
+                                      datum.subCategories![i].subCategories?[ii]
+                                          .categoryContentLink = response.body;
+                                      print(datum
+                                          .subCategories![i]
+                                          .subCategories?[ii]
+                                          .categoryContentLink);
+                                      print(datum
+                                          .subCategories![i]
+                                          .subCategories?[ii]
+                                          .name);
+                                    }
+                                  }
+                                }
                                 for (int ii = 0;
                                     ii <
                                         datum.subCategories![i]
