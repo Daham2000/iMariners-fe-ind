@@ -104,7 +104,7 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     if (isOffline) {
       emit(state.clone(isOffline: isOffline));
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? categoryList = await prefs.getString('category_list');
+      final String? categoryList = prefs.getString('category_list');
       if (categoryList != null) {
         final List<Datum> c = Datum.decode(categoryList);
         emit(state.clone(

@@ -45,7 +45,7 @@ class Datum {
   dynamic categoryLearners;
   bool? hasSubCategories;
   dynamic content;
-  List<DatumSubCategory>? subCategories;
+  List<DatumSubCategory>?subCategories;
 
   static Map<String, dynamic> toMap(Datum music) => {
     "id": music.id,
@@ -138,6 +138,7 @@ class SubCategorySubCategory {
 
   Map<String, dynamic> toJson() => {
     "name": name,
+    "categoryContentLink": categoryContentLink,
   };
 }
 

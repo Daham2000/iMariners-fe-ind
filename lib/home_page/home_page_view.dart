@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                             InkWell(
                               onTap: () {
                                 if (state.categoryModel.data!.isNotEmpty) {
-                                  if (state.categoryModel.data!.length > 1) {
+                                  if (state.categoryModel.data!.length >= 1) {
                                     final List<Datum> cc = state
                                         .categoryModel.data!
                                         .where(

@@ -134,7 +134,7 @@ class _AppBarCurveState extends State<AppBarCurve> {
         //                 : Container(),
         Positioned(
           top: widget.isContent == true
-              ? MediaQuery.of(context).size.height * 0.25
+              ? MediaQuery.of(context).size.height * 0.22
               : widget.text == "Login"
                   ? MediaQuery.of(context).size.height * 0.25
                   : widget.text == "Home"
@@ -146,7 +146,8 @@ class _AppBarCurveState extends State<AppBarCurve> {
                               : widget.text == "Tools"
                                   ? MediaQuery.of(context).size.height * 0.245
                                   : MediaQuery.of(context).size.height * 0.22,
-          left: widget.text == "Home"
+          left: widget.isContent == true
+              ? MediaQuery.of(context).size.width * 0.08 : widget.text == "Home"
               ? MediaQuery.of(context).size.width * 0.13
               : widget.text == "Knowledge Base"
                   ? MediaQuery.of(context).size.width * 0.15

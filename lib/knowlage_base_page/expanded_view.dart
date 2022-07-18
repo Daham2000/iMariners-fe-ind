@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:com_ind_imariners/knowlage_base_page/content_view.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,63 +12,25 @@ import '../theme/colors.dart';
 import '../widgets/snackbar_factory.dart';
 import 'package:http/http.dart' as http;
 
-class Entry {
-  final String title;
-  final String link;
-  final List<Entry>
-      children; // Since this is an expansion list ...children can be another list of entries
-  Entry(this.title, this.link, [this.children = const <Entry>[]]);
-}
+import 'content_view.dart';
 
-class EntryItem extends StatefulWidget {
-  const EntryItem(this.entry);
-
-  final Entry entry;
-
-  @override
-  _EntryItemState createState() => _EntryItemState();
-}
-
-class _EntryItemState extends State<EntryItem> {
-  // This function recursively creates the multi-level list rows.
-  Widget _buildTiles(Entry root) {
-    if (root.children.isEmpty) {
-      return root.link != null
-          ? InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ContentView(
-                              name: root.title,
-                              link: root.link == null ? [] : [root.link],
-                            )));
-              },
-              child: ListTile(
-                title: Text(root.title),
-              ),
-            )
-          : ListTile(
-              title: Text(root.title),
-            );
-    }
-    return ExpansionTile(
-      key: PageStorageKey<Entry>(root),
-      title: Text(root.title),
-      children: root.children.map<Widget>(_buildTiles).toList(),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildTiles(widget.entry);
-  }
-}
-
-class ExpandedView extends StatelessWidget {
+class ExpandedView extends StatefulWidget {
   Datum datum = Datum();
 
   ExpandedView({Key? key, required this.datum}) : super(key: key);
+
+  @override
+  _ExpandedViewState createState() => _ExpandedViewState();
+}
+
+class _ExpandedViewState extends State<ExpandedView> {
+  Datum datum = Datum();
+
+  @override
+  void initState() {
+    datum = widget.datum;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,24 +52,50 @@ class ExpandedView extends StatelessWidget {
                 fit: BoxFit.fill,
               ),
             ),
-            EntryItem(
-              Entry(
-                datum.categoryName ?? "",
-                "",
-                <Entry>[
-                  for (final i in datum.subCategories!)
-                    Entry(
-                      i.name ?? "",
-                      i.subCategories!.length > 0
-                          ? ""
-                          : i.categoryContentLink![0],
-                      <Entry>[
-                        for (final ii in i.subCategories!)
-                          Entry(ii.name ?? "", ii.categoryContentLink ?? ""),
-                      ],
+            ExpansionTile(
+              title: Text(datum.categoryName ?? ""),
+              children: [
+                for (final i in datum.subCategories!)
+                  ExpansionTile(
+                    title: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ContentView(
+                                      name: i.name ?? "",
+                                      link: i.categoryContentLink == null
+                                          ? []
+                                          : i.categoryContentLink ?? [],
+                                    )));
+                      },
+                      child: Text(i.name ?? ""),
                     ),
-                ],
-              ),
+                    children: [
+                      for (final j in i.subCategories ?? [])
+                        ExpansionTile(
+                          trailing: Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.white,
+                          ),
+                          title: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ContentView(
+                                            name: j.name,
+                                            link: j.categoryContentLink == null
+                                                ? []
+                                                : [j.categoryContentLink],
+                                          )));
+                            },
+                            child: Text(j.name ?? ""),
+                          ),
+                        ),
+                    ],
+                  ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -140,8 +127,6 @@ class ExpandedView extends StatelessWidget {
                               title: "Downloading...",
                               fontSize: fontSize,
                             ));
-                            await prefs.remove(
-                                'category_list');
                             final String? categoryList =
                                 prefs.getString('category_list');
                             if (categoryList != null) {
@@ -150,67 +135,60 @@ class ExpandedView extends StatelessWidget {
                                   .where((i) =>
                                       i.categoryName == datum.categoryName)
                                   .toList();
-                              if (cc.isEmpty) {
-                                for (int i = 0;
-                                    i < datum.subCategories!.length;
-                                    i++) {
-                                  //Download subcategory content
-                                  for (int ii = 0;
-                                      ii <
-                                          datum.subCategories![i].subCategories!
-                                              .length;
-                                      ii++) {
-                                    print(datum
-                                        .subCategories![i]
-                                        .subCategories?[ii]
-                                        .categoryContentLink);
-                                    if (datum.subCategories![i]
-                                        .subCategories![ii].categoryContentLink!
-                                        .startsWith("https://")) {
-                                      final url = Uri.parse(
-                                          '${datum.subCategories![i].subCategories?[ii].categoryContentLink}');
-                                      final response = await http.get(url);
-                                      if (response.body != null) {
-                                        datum
-                                                .subCategories![i]
-                                                .subCategories?[ii]
-                                                .categoryContentLink =
-                                            response.body;
-                                        print(datum
-                                            .subCategories![i]
-                                            .subCategories?[ii]
-                                            .categoryContentLink);
-                                      }
-                                    }
-                                  }
-                                  //Download category contents
-                                  for (int ii = 0;
-                                      ii <
-                                          datum.subCategories![i]
-                                              .categoryContentLink!.length;
-                                      ii++) {
-                                    if (datum.subCategories![i]
-                                        .categoryContentLink![0]
-                                        .startsWith("https://")) {
-                                      final url = Uri.parse(
-                                          '${datum.subCategories![i].categoryContentLink![0]}');
-                                      final response = await http.get(url);
-                                      if (response.body != null) {
-                                        datum.subCategories![i]
-                                                .categoryContentLink![0] =
-                                            response.body;
-                                        print(datum.subCategories![i]
-                                            .categoryContentLink![0]);
-                                      }
+                              for (int i = 0;
+                                  i < datum.subCategories!.length;
+                                  i++) {
+                                //Download subcategory content
+                                for (int ii = 0;
+                                    ii <
+                                        datum.subCategories![i].subCategories!
+                                            .length;
+                                    ii++) {
+                                  if (datum.subCategories![i].subCategories![ii]
+                                      .categoryContentLink!
+                                      .startsWith("https://")) {
+                                    final url = Uri.parse(
+                                        '${datum.subCategories![i].subCategories?[ii].categoryContentLink}');
+                                    final response = await http.get(url);
+                                    if (response.body != null) {
+                                      datum.subCategories![i].subCategories?[ii]
+                                          .categoryContentLink = response.body;
                                     }
                                   }
                                 }
-                                c.add(datum);
-                                final String encodedData = Datum.encode(c);
-
-                                await prefs.setString(
-                                    'category_list', encodedData);
+                                //Download category contents
+                                for (int ii = 0;
+                                    ii <
+                                        datum.subCategories![i]
+                                            .categoryContentLink!.length;
+                                    ii++) {
+                                  if (datum
+                                      .subCategories![i].categoryContentLink![0]
+                                      .startsWith("https://")) {
+                                    final url = Uri.parse(
+                                        '${datum.subCategories![i].categoryContentLink![0]}');
+                                    final response = await http.get(url);
+                                    if (response.body != null) {
+                                      datum.subCategories![i]
+                                              .categoryContentLink![0] =
+                                          response.body;
+                                    }
+                                  }
+                                }
                               }
+                              if (cc.isEmpty) {
+                                c.add(datum);
+                              } else {
+                                final int index = c.indexWhere((note) => note
+                                    .categoryName!
+                                    .startsWith(datum.categoryName ?? ""));
+                                if (index > -1) {
+                                  c[index] = datum;
+                                }
+                              }
+                              final String encodedData = Datum.encode(c);
+                              await prefs.setString(
+                                  'category_list', encodedData);
                             } else {
                               for (int i = 0;
                                   i < datum.subCategories!.length;
@@ -223,7 +201,6 @@ class ExpandedView extends StatelessWidget {
                                   if (datum.subCategories![i].subCategories![ii]
                                       .categoryContentLink!
                                       .startsWith("https://")) {
-
                                     final url = Uri.parse(
                                         '${datum.subCategories![i].subCategories?[ii].categoryContentLink}');
                                     final response = await http.get(url);
@@ -234,10 +211,8 @@ class ExpandedView extends StatelessWidget {
                                           .subCategories![i]
                                           .subCategories?[ii]
                                           .categoryContentLink);
-                                      print(datum
-                                          .subCategories![i]
-                                          .subCategories?[ii]
-                                          .name);
+                                      print(datum.subCategories![i]
+                                          .subCategories?[ii].name);
                                     }
                                   }
                                 }
@@ -264,6 +239,7 @@ class ExpandedView extends StatelessWidget {
 
                               await prefs.setString(
                                   'category_list', encodedData);
+
                             }
                           } else {
                             ScaffoldMessenger.of(context)
