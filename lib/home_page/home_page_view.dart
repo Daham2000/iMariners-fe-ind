@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../db/api/category_api.dart';
 import '../db/models/category_model.dart';
 import '../knowlage_base_page/KnowlageBaseViewPrivider.dart';
 import '../knowlage_base_page/content_expand_view.dart';
@@ -34,20 +35,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     counterCubit = BlocProvider.of<CounterCubit>(context);
-    loadCategories();
     StreamSubscription<ConnectivityResult> _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(counterCubit.setOffline);
     super.initState();
-  }
-
-  loadCategories() async {
-    late ConnectivityResult result;
-    try {
-      result = await _connectivity.checkConnectivity();
-      await counterCubit.loadCategories(result.name == "none");
-    } on PlatformException catch (e) {
-      return;
-    }
   }
 
   void openDrawer() {
@@ -110,27 +100,16 @@ class _HomePageState extends State<HomePage> {
                               height: 20,
                             ),
                             InkWell(
-                              onTap: () {
-                                if (state.categoryModel.data!.isNotEmpty) {
-                                  if (state.categoryModel.data!.length >= 1) {
-                                    final List<Datum> cc = state
-                                        .categoryModel.data!
-                                        .where(
-                                            (i) => i.categoryName == "Colreg")
-                                        .toList();
-                                    if (cc.isNotEmpty) {
-                                      Future.microtask(() => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ContentExpandView(
-                                                      datum: cc[0],
-                                                      text: "Colreg",
-                                                    )),
-                                          ));
-                                    }
-                                  }
-                                }
+                              onTap: () async {
+                                  Future.microtask(() => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ContentExpandView(
+                                              datum: Datum(),
+                                              text: "Colreg",
+                                            )),
+                                  ));
                               },
                               child: const CustomHomeButton(
                                   i: 3,
@@ -139,27 +118,13 @@ class _HomePageState extends State<HomePage> {
                             ),
                             InkWell(
                               onTap: () {
-                                if (state.categoryModel.data!.isNotEmpty) {
-                                  if (state.categoryModel.data!.length >= 1) {
-                                    final List<Datum> cc = state
-                                        .categoryModel.data!
-                                        .where(
-                                            (i) => i.categoryName != "Colreg")
-                                        .toList();
-                                    CategoryModel ca =
-                                        CategoryModel(message: "200", data: cc);
-                                    if (cc.isNotEmpty) {
-                                      Future.microtask(() => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    KnowlageBaseProvider(
-                                                      categoryModel: ca,
-                                                    )),
-                                          ));
-                                    }
-                                  }
-                                }
+                                Future.microtask(() => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          KnowlageBaseProvider(
+                                          )),
+                                ));
                               },
                               child: const CustomHomeButton(
                                   i: 2,

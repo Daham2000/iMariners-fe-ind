@@ -1,19 +1,21 @@
+import 'dart:async';
+
 import 'package:com_ind_imariners/db/models/category_model.dart';
 import 'package:com_ind_imariners/login_page/counter_cubit.dart';
 import 'package:com_ind_imariners/login_page/counter_state.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../db/api/category_api.dart';
 import '../home_page/widget/sample_widget.dart';
 import '../main.dart';
 import '../theme/colors.dart';
 import '../widgets/app_bar_curve.dart';
 
 class KnowledgeBaseView extends StatefulWidget {
-  final CategoryModel categoryModel;
 
-  const KnowledgeBaseView({Key? key, required this.categoryModel})
+  const KnowledgeBaseView({Key? key})
       : super(key: key);
 
   @override
@@ -23,14 +25,16 @@ class KnowledgeBaseView extends StatefulWidget {
 class _KnowledgeBaseViewState extends State<KnowledgeBaseView> {
   late CounterCubit counterCubit;
   final TextEditingController searchFieldCtrl = TextEditingController();
-  late CategoryModel searchCategoryModel;
   bool isSearching = false;
+  final Connectivity _connectivity = Connectivity();
 
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
   @override
   void initState() {
     counterCubit = BlocProvider.of<CounterCubit>(context);
-    searchCategoryModel = widget.categoryModel;
+    StreamSubscription<ConnectivityResult> _connectivitySubscription =
+    _connectivity.onConnectivityChanged.listen(counterCubit.setOffline);
+    loadCategories();
     super.initState();
   }
 
@@ -45,21 +49,23 @@ class _KnowledgeBaseViewState extends State<KnowledgeBaseView> {
           : ThemeMode.light;
     });
   }
+  late ConnectivityResult result;
+
+  loadCategories() async {
+    try {
+      result = await _connectivity.checkConnectivity();
+      await counterCubit.loadCategories(result.name == "none");
+    } on PlatformException catch (e) {
+      return;
+    }
+  }
 
   TextFormField getSearchTextField() {
     return TextFormField(
       controller: searchFieldCtrl,
       cursorColor: Colors.black,
       onChanged: (e) async {
-        setState(() {
-          isSearching = true;
-        });
-        final CategoryModel c =
-            await CategoryAPI().getAddCategories(query: e.toLowerCase());
-        setState(() {
-          searchCategoryModel = c;
-          isSearching = false;
-        });
+        await counterCubit.loadCategories(result.name == "none",query: e.toLowerCase());
       },
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
@@ -86,6 +92,8 @@ class _KnowledgeBaseViewState extends State<KnowledgeBaseView> {
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) =>
             pre.count != current.count ||
+            pre.loading != current.loading ||
+            pre.categoryModel != current.categoryModel ||
             pre.isSearching != current.isSearching,
         builder: (ctx, state) {
           return SingleChildScrollView(
@@ -144,25 +152,25 @@ class _KnowledgeBaseViewState extends State<KnowledgeBaseView> {
                         const SizedBox(
                           height: 5,
                         ),
-                        isSearching
+                        state.loading
                             ? Center(
                                 child: CircularProgressIndicator(),
                               )
-                            : searchCategoryModel.data!=null ? Column(
+                            : state.categoryModel.data!=null ? Column(
                                 children: [
                                   for (int i = 0;
-                                      i < searchCategoryModel.data!.length;
+                                      i < state.categoryModel.data!.length;
                                       i = i + 2)
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         CategoryViewCard(
-                                          datum: searchCategoryModel.data![i],
+                                          datum: state.categoryModel.data![i],
                                         ),
-                                        searchCategoryModel.data!.length > i+1
+                                        state.categoryModel.data!.length > i+1
                                             ? CategoryViewCard(
-                                                datum: searchCategoryModel
+                                                datum: state.categoryModel
                                                     .data![i + 1])
                                             : Container(),
                                       ],

@@ -36,15 +36,12 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
   }
 
   void setOffline(ConnectivityResult result) {
-    print(result);
-    loadCategories(result == ConnectivityResult.none);
     emit(state.clone(isOffline: result == ConnectivityResult.none));
   }
 
   @override
   Future<int> resetPasswordEmail(User user) async {
     if (state.isDeviceAccReset == true) {
-      print("isDeviceAccReset");
       int result = await AuthApi().resetDeviceEmail(user);
       if (result == 200) {
         emit(state.clone(emailSend: true));
@@ -100,7 +97,7 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     ));
   }
 
-  Future<void> loadCategories(bool isOffline) async {
+  Future<void> loadCategories(bool isOffline,{String? query}) async {
     if (isOffline) {
       emit(state.clone(isOffline: isOffline));
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -119,7 +116,7 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
       emit(state.clone(
         loading: true,
       ));
-      final categories = await CategoryAPI().getAddCategories();
+      final categories = await CategoryAPI().getAddCategories(query: query);
       emit(state.clone(
         categoryModel: categories,
         loading: false,

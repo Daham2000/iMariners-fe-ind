@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../db/api/category_api.dart';
 import '../db/models/category_model.dart';
 import '../main.dart';
 import '../theme/colors.dart';
@@ -7,9 +8,9 @@ import 'expanded_view.dart';
 
 class ContentExpandView extends StatefulWidget {
   final String text;
-  final Datum datum;
+  Datum datum;
 
-  const ContentExpandView({Key? key, required this.datum, required this.text})
+  ContentExpandView({Key? key, required this.datum, required this.text})
       : super(key: key);
 
   @override
@@ -18,6 +19,7 @@ class ContentExpandView extends StatefulWidget {
 
 class _ContentExpandViewState extends State<ContentExpandView> {
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+  bool loading = false;
 
   void openDrawer() {
     _key.currentState!.openDrawer();
@@ -29,6 +31,27 @@ class _ContentExpandViewState extends State<ContentExpandView> {
           ? ThemeMode.dark
           : ThemeMode.light;
     });
+  }
+
+  @override
+  void initState() {
+    if (widget.datum.categoryName == null) {
+      loadColreg();
+    }
+    super.initState();
+  }
+
+  loadColreg() async {
+    setState(() {
+      loading = true;
+    });
+    final c = await CategoryAPI().getAddCategories(query: "Colreg");
+    if (c.data!.isNotEmpty) {
+      widget.datum = c.data![0];
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override
@@ -53,9 +76,13 @@ class _ContentExpandViewState extends State<ContentExpandView> {
             const SizedBox(
               height: 25,
             ),
-            ExpandedView(
-              datum: widget.datum,
-            ),
+            loading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ExpandedView(
+                    datum: widget.datum,
+                  ),
           ],
         ),
       ),
