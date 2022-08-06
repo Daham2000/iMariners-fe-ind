@@ -125,15 +125,40 @@ class SubCategorySubCategory {
   SubCategorySubCategory({
     this.name,
     this.categoryContentLink,
+    this.topicSubCategories,
+  });
+
+  String? name;
+  String? categoryContentLink;
+  List<TopicSubCategory>? topicSubCategories = [];
+
+
+  factory SubCategorySubCategory.fromJson(Map<String, dynamic> json) => SubCategorySubCategory(
+      name: json["name"] ?? "",
+      categoryContentLink: json["categoryContentLink"] ?? "",
+      topicSubCategories: json["topicSubCategories"]== null ? [] : List<TopicSubCategory>.from(json["topicSubCategories"].map((x) => TopicSubCategory.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "name": name,
+    "categoryContentLink": categoryContentLink,
+    "topicSubCategories": topicSubCategories,
+  };
+}
+
+class TopicSubCategory {
+  TopicSubCategory({
+    this.name,
+    this.categoryContentLink,
   });
 
   String? name;
   String? categoryContentLink;
 
 
-  factory SubCategorySubCategory.fromJson(Map<String, dynamic> json) => SubCategorySubCategory(
-    name: json["name"],
-    categoryContentLink: json["categoryContentLink"]==null ? "": json["categoryContentLink"],
+  factory TopicSubCategory.fromJson(Map<String, dynamic> json) => TopicSubCategory(
+    name: json["name"] ?? "",
+    categoryContentLink: json["categoryContentLink"] ?? "",
   );
 
   Map<String, dynamic> toJson() => {

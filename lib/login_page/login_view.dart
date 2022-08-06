@@ -167,9 +167,8 @@ class _CounterPageState extends State<LoginView> {
                                           obscureText: true,
                                         ),
                                         const SizedBox(
-                                          height: 10,
+                                          height: 20,
                                         ),
-                                        const RemindMeButton(),
                                       ],
                                     )
                                   : state.emailSend == true

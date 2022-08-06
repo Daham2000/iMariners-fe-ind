@@ -12,12 +12,20 @@ class SnackBarFactory {
       margin: EdgeInsets.all(12),
       behavior: SnackBarBehavior.floating,
       elevation: 0,
+      duration: title == "Downloading... This may take few moment"
+          ? Duration(
+              seconds: 60,
+            )
+          : Duration(seconds: 5),
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
             width: 300,
-            height: title=="To download the content please subscribe to the Premium version" ? 60 : 20,
+            height: title ==
+                    "To download the content please subscribe to the Premium version"
+                ? 60
+                : 20,
             child: Text(
               title ?? "",
               overflow: TextOverflow.clip,

@@ -72,11 +72,14 @@ class _ExpandedViewState extends State<ExpandedView> {
                       child: Text(i.name ?? ""),
                     ),
                     children: [
-                      for (final j in i.subCategories ?? [])
+                      for (final SubCategorySubCategory j
+                          in i.subCategories ?? [])
                         ExpansionTile(
                           trailing: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.white,
+                            Icons.keyboard_arrow_down_outlined,
+                            color: j.topicSubCategories!.isEmpty
+                                ? Colors.white
+                                : Colors.black,
                           ),
                           title: InkWell(
                             onTap: () {
@@ -84,14 +87,38 @@ class _ExpandedViewState extends State<ExpandedView> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => ContentView(
-                                            name: j.name,
+                                            name: j.name ?? "",
                                             link: j.categoryContentLink == null
                                                 ? []
-                                                : [j.categoryContentLink],
+                                                : [j.categoryContentLink ?? ""],
                                           )));
                             },
                             child: Text(j.name ?? ""),
                           ),
+                          children: [
+                            for (final q in j.topicSubCategories ?? [])
+                              ExpansionTile(
+                                trailing: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Colors.white,
+                                ),
+                                title: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ContentView(
+                                                  name: q.name,
+                                                  link: q.categoryContentLink ==
+                                                          null
+                                                      ? []
+                                                      : [q.categoryContentLink],
+                                                )));
+                                  },
+                                  child: Text(q.name ?? ""),
+                                ),
+                              ),
+                          ],
                         ),
                     ],
                   ),
@@ -155,13 +182,45 @@ class _ExpandedViewState extends State<ExpandedView> {
                                           .categoryContentLink = response.body;
                                     }
                                   }
+
+                                  //Subcategory topic download
+                                  for (int j = 0;
+                                      j <
+                                          datum
+                                              .subCategories![i]
+                                              .subCategories![ii]
+                                              .topicSubCategories!
+                                              .length;
+                                      j++) {
+                                    if (datum
+                                        .subCategories![i]
+                                        .subCategories![ii]
+                                        .topicSubCategories![j]
+                                        .categoryContentLink!
+                                        .startsWith("https://")) {
+                                      final url = Uri.parse(
+                                          '${datum.subCategories![i].subCategories?[ii].topicSubCategories![j].categoryContentLink}');
+                                      final response = await http.get(url);
+                                      print("Html: ${response.body}");
+                                      if (response.body != null) {
+                                        datum
+                                                .subCategories![i]
+                                                .subCategories![ii]
+                                                .topicSubCategories![j]
+                                                .categoryContentLink =
+                                            response.body;
+                                        print("Content: ${datum
+                                            .subCategories![i]
+                                            .subCategories![ii]
+                                            .topicSubCategories![j]
+                                            .categoryContentLink}");
+                                      }
+                                    }
+                                  }
                                 }
                                 //Download category contents
-                                for (int ii = 0;
-                                    ii <
-                                        datum.subCategories![i]
-                                            .categoryContentLink!.length;
-                                    ii++) {
+                                if (datum.subCategories![i].categoryContentLink!
+                                    .isNotEmpty) {
                                   if (datum
                                       .subCategories![i].categoryContentLink![0]
                                       .startsWith("https://")) {
@@ -207,12 +266,41 @@ class _ExpandedViewState extends State<ExpandedView> {
                                     if (response.body != null) {
                                       datum.subCategories![i].subCategories?[ii]
                                           .categoryContentLink = response.body;
-                                      print(datum
+                                    }
+                                  }
+                                  //Subcategory topic download
+                                  for (int j = 0;
+                                  j <
+                                      datum
                                           .subCategories![i]
-                                          .subCategories?[ii]
-                                          .categoryContentLink);
-                                      print(datum.subCategories![i]
-                                          .subCategories?[ii].name);
+                                          .subCategories![ii]
+                                          .topicSubCategories!
+                                          .length;
+                                  j++) {
+                                    if (datum
+                                        .subCategories![i]
+                                        .subCategories![ii]
+                                        .topicSubCategories![j]
+                                        .categoryContentLink!
+                                        .startsWith("https://")) {
+
+                                      final url = Uri.parse(
+                                          '${datum.subCategories![i].subCategories?[ii].topicSubCategories![j].categoryContentLink}');
+                                      final response = await http.get(url);
+                                      print("Html: ${response.body}");
+                                      if (response.body != null) {
+                                        datum
+                                            .subCategories![i]
+                                            .subCategories![ii]
+                                            .topicSubCategories![j]
+                                            .categoryContentLink =
+                                            response.body;
+                                        print("Content: ${datum
+                                            .subCategories![i]
+                                            .subCategories![ii]
+                                            .topicSubCategories![j]
+                                            .categoryContentLink}");
+                                      }
                                     }
                                   }
                                 }
@@ -239,7 +327,6 @@ class _ExpandedViewState extends State<ExpandedView> {
 
                               await prefs.setString(
                                   'category_list', encodedData);
-
                             }
                           } else {
                             ScaffoldMessenger.of(context)

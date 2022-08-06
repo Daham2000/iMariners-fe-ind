@@ -4,6 +4,7 @@ import 'package:com_ind_imariners/db/models/category_model.dart';
 import 'package:com_ind_imariners/pirvacy_policy_page/privacy_policy_view.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -147,15 +148,16 @@ class _AppBarCurveState extends State<AppBarCurve> {
                                   ? MediaQuery.of(context).size.height * 0.245
                                   : MediaQuery.of(context).size.height * 0.22,
           left: widget.isContent == true
-              ? MediaQuery.of(context).size.width * 0.08 : widget.text == "Home"
-              ? MediaQuery.of(context).size.width * 0.13
-              : widget.text == "Knowledge Base"
-                  ? MediaQuery.of(context).size.width * 0.15
-                  : widget.text == "Telegram"
-                      ? MediaQuery.of(context).size.width * 0.14
-                      : widget.text == "Tools"
-                          ? MediaQuery.of(context).size.width * 0.15
-                          : MediaQuery.of(context).size.width * 0.10,
+              ? MediaQuery.of(context).size.width * 0.08
+              : widget.text == "Home"
+                  ? MediaQuery.of(context).size.width * 0.13
+                  : widget.text == "Knowledge Base"
+                      ? MediaQuery.of(context).size.width * 0.15
+                      : widget.text == "Telegram"
+                          ? MediaQuery.of(context).size.width * 0.14
+                          : widget.text == "Tools"
+                              ? MediaQuery.of(context).size.width * 0.15
+                              : MediaQuery.of(context).size.width * 0.10,
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.6,
             child: Text(
@@ -193,11 +195,14 @@ class DrawerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final double fontSize = MediaQuery.of(context).textScaleFactor;
     openSnackBar(BuildContext context, double fontSize) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBarFactory().getSnackBar(
-        isFail: false,
-        title: "Downloading...",
-        fontSize: fontSize,
-      ));
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBarFactory().getSnackBar(
+          isFail: false,
+          title: "Download finish...",
+          fontSize: fontSize,
+        ));
+      });
     }
 
     return Padding(
@@ -207,7 +212,7 @@ class DrawerApp extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             ListTile(
@@ -217,101 +222,110 @@ class DrawerApp extends StatelessWidget {
                 style: GoogleFonts.roboto(
                     color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
               ),
-              leading: Icon(
+              leading: const Icon(
                 Icons.upgrade_outlined,
                 color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
               ),
               onTap: () {},
             ),
             ListTile(
-              title: Text(
-                'Download all',
-                overflow: TextOverflow.clip,
-                style: GoogleFonts.roboto(
-                    color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
-              ),
-              leading: const Icon(
-                Icons.download_rounded,
-                color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
-              ),
-              onTap: () async {
-                openSnackBar(context, fontSize);
-
-                final Connectivity _connectivity = Connectivity();
-                ConnectivityResult result =
-                    await _connectivity.checkConnectivity();
-                if (result != "none") {
-                  final categories = await CategoryAPI().getAddCategories();
-
-                  final SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-
-                  final String? categoryList = prefs.getString('category_list');
-
-                  for (Datum datum in categories.data ?? []) {
-                    if (categoryList != null) {
-                      final List<Datum> c = Datum.decode(categoryList);
-                      final List<Datum> cc = c
-                          .where((i) => i.categoryName == datum.categoryName)
-                          .toList();
-                      if (cc.isEmpty) {
-                        for (int i = 0; i < datum.subCategories!.length; i++) {
-                          print(datum.subCategories![i].categoryContentLink);
-                          for (int ii = 0;
-                              ii <
-                                  datum.subCategories![i].categoryContentLink!
-                                      .length;
-                              ii++) {
-                            if (datum.subCategories![i].categoryContentLink![0]
+                title: Text(
+                  'Download all',
+                  overflow: TextOverflow.clip,
+                  style: GoogleFonts.roboto(
+                      color: ThemeColors.BACKGROUD_COLOR_BOTTOM),
+                ),
+                leading: const Icon(
+                  Icons.download_rounded,
+                  color: ThemeColors.BACKGROUD_COLOR_BOTTOM,
+                ),
+                onTap: () async {
+                  final Connectivity _connectivity = Connectivity();
+                  ConnectivityResult result =
+                      await _connectivity.checkConnectivity();
+                  if (result != "none") {
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    final String? sharedUserData =
+                        prefs.getString('userObject');
+                    final jsonMap = json.decode(sharedUserData ?? "");
+                    UserModel userModel = UserModel.fromJson(jsonMap);
+                    //check eligibility for the content download
+                    if ((userModel.user?.email == "imariners@hotmail.com") ||
+                        userModel.user?.lastPayment != null) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBarFactory().getSnackBar(
+                        isFail: false,
+                        title:
+                            "Downloading... This may take few moment",
+                        fontSize: fontSize,
+                      ));
+                      final categories = await CategoryAPI().getAddCategories();
+                      await prefs.remove('category_list');
+                      for (int i = 0; i < categories.data!.length; i++) {
+                        for (int j = 0;
+                            j < categories.data![i].subCategories!.length;
+                            j++) {
+                          //Download category contents
+                          if (categories.data![i].subCategories![j]
+                              .categoryContentLink!.isNotEmpty) {
+                            if (categories.data![i].subCategories![j]
+                                .categoryContentLink![0]
                                 .startsWith("https://")) {
                               final url = Uri.parse(
-                                  '${datum.subCategories![i].categoryContentLink![0]}');
+                                  '${categories.data![i].subCategories![j].categoryContentLink![0]}');
                               final response = await http.get(url);
                               if (response.body != null) {
-                                datum.subCategories![i]
+                                categories.data![i].subCategories![j]
                                     .categoryContentLink![0] = response.body;
-                                print(datum
-                                    .subCategories![i].categoryContentLink![0]);
+                              }
+                            }
+                            //Download subcategory content
+                            for (int q = 0;
+                                q <
+                                    categories.data![i].subCategories![j]
+                                        .subCategories!.length;
+                                q++) {
+                              if (categories.data![i].subCategories![j]
+                                  .subCategories![q].categoryContentLink!
+                                  .startsWith("https://")) {
+                                final url = Uri.parse(
+                                    '${categories.data![i].subCategories![j].subCategories?[q].categoryContentLink}');
+                                final response = await http.get(url);
+                                if (response.body != null) {
+                                  categories
+                                      .data![i]
+                                      .subCategories![j]
+                                      .subCategories?[q]
+                                      .categoryContentLink = response.body;
+                                }
                               }
                             }
                           }
                         }
-                        c.add(datum);
-                        final String encodedData = Datum.encode(c);
-
-                        await prefs.setString('category_list', encodedData);
                       }
-                    } else {
-                      for (int i = 0; i < datum.subCategories!.length; i++) {
-                        print(datum.subCategories![i].categoryContentLink);
-                        for (int ii = 0;
-                            ii <
-                                datum.subCategories![i].categoryContentLink!
-                                    .length;
-                            ii++) {
-                          if (datum.subCategories![i].categoryContentLink![0]
-                              .startsWith("https://")) {
-                            final url = Uri.parse(
-                                '${datum.subCategories![i].categoryContentLink![0]}');
-                            final response = await http.get(url);
-                            if (response.body != null) {
-                              datum.subCategories![i].categoryContentLink![0] =
-                                  response.body;
-                              print(datum
-                                  .subCategories![i].categoryContentLink![0]);
-                            }
-                          }
-                        }
-                      }
-                      print(datum.subCategories![0].categoryContentLink![0]);
-                      final String encodedData = Datum.encode([datum]);
-
+                      //Save the list in the cache memory
+                      final String encodedData =
+                          Datum.encode(categories.data ?? []);
                       await prefs.setString('category_list', encodedData);
+                    } else {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBarFactory().getSnackBar(
+                        isFail: true,
+                        title:
+                            "To download the content please subscribe to the Premium version",
+                        fontSize: fontSize,
+                      ));
                     }
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBarFactory().getSnackBar(
+                      isFail: false,
+                      title: "Sorry, you are offline",
+                      fontSize: fontSize,
+                    ));
                   }
-                }
-              },
-            ),
+                }),
             ListTile(
               title: Text(
                 'Theme',
