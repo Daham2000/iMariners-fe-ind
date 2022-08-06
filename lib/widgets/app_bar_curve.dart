@@ -280,24 +280,58 @@ class DrawerApp extends StatelessWidget {
                                     .categoryContentLink![0] = response.body;
                               }
                             }
-                            //Download subcategory content
-                            for (int q = 0;
-                                q <
-                                    categories.data![i].subCategories![j]
-                                        .subCategories!.length;
-                                q++) {
-                              if (categories.data![i].subCategories![j]
-                                  .subCategories![q].categoryContentLink!
+                          }
+                          //Download subcategory content
+                          for (int q = 0;
+                          q <
+                              categories.data![i].subCategories![j]
+                                  .subCategories!.length;
+                          q++) {
+                            if (categories.data![i].subCategories![j]
+                                .subCategories![q].categoryContentLink!
+                                .startsWith("https://")) {
+                              final url = Uri.parse(
+                                  '${categories.data![i].subCategories![j].subCategories?[q].categoryContentLink}');
+                              final response = await http.get(url);
+                              if (response.body != null) {
+                                categories
+                                    .data![i]
+                                    .subCategories![j]
+                                    .subCategories?[q]
+                                    .categoryContentLink = response.body;
+                              }
+                            }
+
+                            //Subcategory topic download
+                            for (int t = 0;
+                            t <
+                                categories
+                                    .data![i]
+                                    .subCategories![j]
+                                    .subCategories![q]
+                                    .topicSubCategories!
+                                    .length;
+                            t++) {
+                              if (categories
+                                  .data![i]
+                                  .subCategories![j]
+                                  .subCategories![q]
+                                  .topicSubCategories![t].categoryContentLink!
                                   .startsWith("https://")) {
                                 final url = Uri.parse(
-                                    '${categories.data![i].subCategories![j].subCategories?[q].categoryContentLink}');
+                                    '${categories
+                                        .data![i]
+                                        .subCategories![j]
+                                        .subCategories![q]
+                                        .topicSubCategories![t].categoryContentLink}');
                                 final response = await http.get(url);
                                 if (response.body != null) {
                                   categories
                                       .data![i]
                                       .subCategories![j]
-                                      .subCategories?[q]
-                                      .categoryContentLink = response.body;
+                                      .subCategories![q]
+                                      .topicSubCategories![t].categoryContentLink =
+                                      response.body;
                                 }
                               }
                             }
