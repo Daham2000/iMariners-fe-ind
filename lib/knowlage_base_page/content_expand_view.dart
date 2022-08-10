@@ -1,4 +1,6 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../db/api/category_api.dart';
 import '../db/models/category_model.dart';
 import '../main.dart';
@@ -20,6 +22,8 @@ class ContentExpandView extends StatefulWidget {
 class _ContentExpandViewState extends State<ContentExpandView> {
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
   bool loading = false;
+  final Connectivity _connectivity = Connectivity();
+  late ConnectivityResult result;
 
   void openDrawer() {
     _key.currentState!.openDrawer();
@@ -45,12 +49,29 @@ class _ContentExpandViewState extends State<ContentExpandView> {
     setState(() {
       loading = true;
     });
-    final c = await CategoryAPI().getAddCategories(query: "Colreg");
-    if (c.data!.isNotEmpty) {
-      widget.datum = c.data![0];
-      setState(() {
-        loading = false;
-      });
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? categoryList = prefs.getString('category_list');
+    if (categoryList != null) {
+      final List<Datum> c = Datum.decode(categoryList);
+      List<Datum> filterColreg =
+          c.where((element) => element.categoryName == "Colreg").toList();
+      if (filterColreg.isNotEmpty) {
+        widget.datum = filterColreg[0];
+        setState(() {
+          loading = false;
+        });
+        return;
+      }
+    }
+    result = await _connectivity.checkConnectivity();
+    if (result != "none") {
+      final c = await CategoryAPI().getAddCategories(query: "Colreg");
+      if (c.data!.isNotEmpty) {
+        widget.datum = c.data![0];
+        setState(() {
+          loading = false;
+        });
+      }
     }
   }
 

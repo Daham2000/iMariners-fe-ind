@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:com_ind_imariners/db/models/category_model.dart';
 import 'package:com_ind_imariners/login_page/counter_cubit.dart';
 import 'package:com_ind_imariners/login_page/counter_state.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';

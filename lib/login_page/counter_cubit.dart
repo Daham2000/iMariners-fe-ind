@@ -97,25 +97,41 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     ));
   }
 
-  Future<void> loadCategories(bool isOffline,{String? query}) async {
+  Future<void> loadCategories(bool isOffline, {String? query}) async {
+    emit(state.clone(
+      loading: true,
+    ));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? categoryList = prefs.getString('category_list');
+    if (categoryList != null) {
+      final List<Datum> c = Datum.decode(categoryList);
+      List<Datum> filterColreg = [];
+      if (query == "Colreg") {
+        filterColreg =
+            c.where((element) => element.categoryName == "Colreg").toList();
+        return;
+      } else {
+        filterColreg =
+            c.where((element) => element.categoryName != "Colreg").toList();
+        print(filterColreg.length);
+      }
+      emit(state.clone(
+        categoryModel: CategoryModel(
+          message: "200",
+          data: filterColreg,
+        ),
+        loading: false,
+      ));
+      return;
+    }
     if (isOffline) {
       emit(state.clone(isOffline: isOffline));
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? categoryList = prefs.getString('category_list');
-      if (categoryList != null) {
-        final List<Datum> c = Datum.decode(categoryList);
+    } else {
+      if (categoryList == null) {
         emit(state.clone(
-          categoryModel: CategoryModel(
-            message: "200",
-            data: c,
-          ),
-          loading: false,
+          loading: true,
         ));
       }
-    } else {
-      emit(state.clone(
-        loading: true,
-      ));
       final categories = await CategoryAPI().getAddCategories(query: query);
       emit(state.clone(
         categoryModel: categories,

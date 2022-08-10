@@ -5,11 +5,9 @@ import 'package:com_ind_imariners/login_page/counter_cubit.dart';
 import 'package:com_ind_imariners/theme/colors.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../db/api/category_api.dart';
 import '../db/models/category_model.dart';
 import '../knowlage_base_page/KnowlageBaseViewPrivider.dart';
 import '../knowlage_base_page/content_expand_view.dart';
@@ -31,13 +29,19 @@ class _HomePageState extends State<HomePage> {
   final Connectivity _connectivity = Connectivity();
   late CounterCubit counterCubit;
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+  late ConnectivityResult result;
 
   @override
   void initState() {
+    checkConn();
     counterCubit = BlocProvider.of<CounterCubit>(context);
     StreamSubscription<ConnectivityResult> _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(counterCubit.setOffline);
     super.initState();
+  }
+
+  checkConn() async {
+    result = await _connectivity.checkConnectivity();
   }
 
   void openDrawer() {
@@ -101,15 +105,31 @@ class _HomePageState extends State<HomePage> {
                             ),
                             InkWell(
                               onTap: () async {
+                                if (result.name != "none") {
                                   Future.microtask(() => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ContentExpandView(
-                                              datum: Datum(),
-                                              text: "Colreg",
-                                            )),
-                                  ));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ContentExpandView(
+                                                  datum: Datum(),
+                                                  text: "Colreg",
+                                                )),
+                                      ));
+                                } else {
+                                  await counterCubit
+                                      .loadCategories(result.name == "none");
+                                  if (state.categoryModel != null) {
+                                      Future.microtask(() => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ContentExpandView(
+                                                      text: "Colreg", datum: Datum(),
+                                                    )),
+                                          ));
+                                  }
+
+                                }
                               },
                               child: const CustomHomeButton(
                                   i: 3,
@@ -119,12 +139,11 @@ class _HomePageState extends State<HomePage> {
                             InkWell(
                               onTap: () {
                                 Future.microtask(() => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          KnowlageBaseProvider(
-                                          )),
-                                ));
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              KnowlageBaseProvider()),
+                                    ));
                               },
                               child: const CustomHomeButton(
                                   i: 2,

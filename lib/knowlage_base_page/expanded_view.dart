@@ -46,7 +46,7 @@ class _ExpandedViewState extends State<ExpandedView> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: datum.image!,
+                imageUrl: datum.image??"https://contents-1.s3.ap-south-1.amazonaws.com/4.jpg",
                 width: 370,
                 height: 155,
                 fit: BoxFit.fill,
@@ -55,7 +55,7 @@ class _ExpandedViewState extends State<ExpandedView> {
             ExpansionTile(
               title: Text(datum.categoryName ?? ""),
               children: [
-                for (final i in datum.subCategories!)
+                for (final i in datum.subCategories??[])
                   ExpansionTile(
                     title: InkWell(
                       onTap: () {
