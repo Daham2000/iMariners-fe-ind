@@ -12,6 +12,7 @@ import '../theme/colors.dart';
 import '../utill/font_size_hanlder.dart';
 import '../widgets/app_bar_curve.dart';
 import '../widgets/calculator_design.dart';
+import '../widgets/drawer_app_bar.dart';
 
 class ToolsView extends StatefulWidget {
   const ToolsView({Key? key}) : super(key: key);

@@ -3,6 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
 import '../widgets/app_bar_curve.dart';
+import '../widgets/drawer_app_bar.dart';
 
 class PrivacyPolicyView extends StatefulWidget {
   const PrivacyPolicyView({Key? key}) : super(key: key);

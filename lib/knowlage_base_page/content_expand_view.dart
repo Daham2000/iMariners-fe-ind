@@ -6,6 +6,7 @@ import '../db/models/category_model.dart';
 import '../main.dart';
 import '../theme/colors.dart';
 import '../widgets/app_bar_curve.dart';
+import '../widgets/drawer_app_bar.dart';
 import 'expanded_view.dart';
 
 class ContentExpandView extends StatefulWidget {

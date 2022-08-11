@@ -16,6 +16,7 @@ import '../main.dart';
 import '../telegram_view/telegram_view.dart';
 import '../tools_view/tools_provider.dart';
 import '../widgets/app_bar_curve.dart';
+import '../widgets/drawer_app_bar.dart';
 import '../widgets/snackbar_factory.dart';
 
 class HomePage extends StatefulWidget {
