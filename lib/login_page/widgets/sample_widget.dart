@@ -271,24 +271,35 @@ class SocialButton extends StatelessWidget {
   SocialButton({Key? key, required this.path, this.bloc}) : super(key: key);
 
   GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email'],
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
   );
 
   @override
   Widget build(BuildContext context) {
+    final double fontSize = MediaQuery.of(context).textScaleFactor;
+
     return InkWell(
       onTap: () async {
         if (path == "assets/Google.jpg") {
           try {
             final googleSignInAccount = await _googleSignIn.signIn();
+            print("Google Email: ${googleSignInAccount?.email}");
             if (googleSignInAccount?.email != null) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBarFactory().getSnackBar(
+                isFail: false,
+                title: "Loading... Please wait.",
+                fontSize: fontSize,
+              ));
               await bloc?.registerUser(User(
                   email: googleSignInAccount?.email,
-                  password: "123456",
+                  password: "123456789",
                   username: googleSignInAccount?.displayName));
               final int? resultLogin = await bloc?.login(
-                  User(email: googleSignInAccount?.email, password: "123456"));
-              print(resultLogin);
+                  User(email: googleSignInAccount?.email, password: "123456789"));
               if (resultLogin != null && resultLogin == 200) {
                 Future.microtask(() => Navigator.pushReplacement(
                       context,
@@ -297,7 +308,7 @@ class SocialButton extends StatelessWidget {
               }
             }
           } catch (error) {
-            print("error: " + error.toString());
+            print("Error Google Signin: " + error.toString());
           }
         } else {
           final result = await FacebookAuth.i
