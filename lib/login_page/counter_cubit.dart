@@ -29,6 +29,7 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
 
   @override
   Future<int> registerUser(User user) async {
+    print(user.email);
     String? deviceId = await PlatformDeviceId.getDeviceId;
     user.deviceId = deviceId;
     int result = await AuthApi().register(user);

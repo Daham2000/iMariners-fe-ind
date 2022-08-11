@@ -172,23 +172,27 @@ class _ActionButtonState extends State<ActionButton> {
                               }
                             }
                           } else {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            final int? result = await widget.bloc?.registerUser(
-                                User(
-                                    email: widget.email,
-                                    password: widget.password,
-                                    username: widget.username));
-                            setState(() {
-                              isLoading = false;
-                            });
-                            if (result == 201) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginProvider()),
-                              );
+                            print("Register user...");
+                            print(widget.email);
+                            if (widget.formKey.currentState.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              final int? result = await widget.bloc?.registerUser(
+                                  User(
+                                      email: widget.email,
+                                      password: widget.password,
+                                      username: widget.username));
+                              setState(() {
+                                isLoading = false;
+                              });
+                              if (result == 201) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginProvider()),
+                                );
+                              }
                             }
                           }
                         }
@@ -298,8 +302,8 @@ class SocialButton extends StatelessWidget {
                   email: googleSignInAccount?.email,
                   password: "123456789",
                   username: googleSignInAccount?.displayName));
-              final int? resultLogin = await bloc?.login(
-                  User(email: googleSignInAccount?.email, password: "123456789"));
+              final int? resultLogin = await bloc?.login(User(
+                  email: googleSignInAccount?.email, password: "123456789"));
               if (resultLogin != null && resultLogin == 200) {
                 Future.microtask(() => Navigator.pushReplacement(
                       context,

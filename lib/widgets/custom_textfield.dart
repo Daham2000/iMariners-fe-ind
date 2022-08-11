@@ -36,16 +36,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
             prefixIcon: widget.icon,
             suffixIcon: widget.text == "Password"
                 ? InkWell(
-              onTap: () {
-                setState(() {
-                  widget.obscureText = !widget.obscureText;
-                });
-              },
-              child: Icon(Icons.remove_red_eye),
-            )
+                    onTap: () {
+                      setState(() {
+                        widget.obscureText = !widget.obscureText;
+                      });
+                    },
+                    child: Icon(Icons.remove_red_eye),
+                  )
                 : Container(
-              width: 10,
-            ),
+                    width: 10,
+                  ),
             enabledBorder: OutlineInputBorder(
               // width: 0.0 produces a thin "hairline" border
               borderSide: const BorderSide(color: Colors.grey, width: 0.5),

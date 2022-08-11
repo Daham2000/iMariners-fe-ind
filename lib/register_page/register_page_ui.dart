@@ -23,9 +23,56 @@ class _CounterPageState extends State<RegisterView> {
   final email = TextEditingController();
   final password = TextEditingController();
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+  bool passwordObscureText = true;
 
   void openDrawer() {
     _key.currentState!.openDrawer();
+  }
+
+  void hidePassword() {
+    setState(() {
+      passwordObscureText = !passwordObscureText;
+    });
+  }
+
+  Widget getTextField(
+      {required TextEditingController ctrl,
+      required bool obscureText,
+      required Icon icon,
+      required String text}) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.86,
+      child: TextFormField(
+        controller: ctrl,
+        obscureText: text == "Password" ? passwordObscureText : obscureText,
+        validator: (text) {
+          if (text == null || text.isEmpty) {
+            return "This field can't be empty";
+          }
+          return null;
+        },
+        decoration: InputDecoration(
+            prefixIcon: icon,
+            suffixIcon: text == "Password"
+                ? InkWell(
+                    onTap: () {
+                      hidePassword();
+                    },
+                    child: Icon(Icons.remove_red_eye),
+                  )
+                : Container(
+                    width: 10,
+                  ),
+            enabledBorder: OutlineInputBorder(
+              // width: 0.0 produces a thin "hairline" border
+              borderSide: const BorderSide(color: Colors.grey, width: 0.5),
+              borderRadius: BorderRadius.circular(50.0),
+            ),
+            hintStyle: TextStyle(color: Colors.grey[400]),
+            hintText: text,
+            fillColor: Colors.white70),
+      ),
+    );
   }
 
   @override
@@ -55,28 +102,28 @@ class _CounterPageState extends State<RegisterView> {
                         const SizedBox(
                           height: 40,
                         ),
-                        CustomTextField(
+                        getTextField(
                           text: "Username",
                           icon: Icon(Icons.person, color: Colors.grey[400]),
-                          textEditingController: username,
+                          ctrl: username,
                           obscureText: false,
                         ),
                         const SizedBox(
                           height: 20,
                         ),
-                        CustomTextField(
+                        getTextField(
                           text: "Email Address",
                           icon: Icon(Icons.email, color: Colors.grey[400]),
-                          textEditingController: email,
+                          ctrl: email,
                           obscureText: false,
                         ),
                         const SizedBox(
                           height: 20,
                         ),
-                        CustomTextField(
+                        getTextField(
                           text: "Password",
                           icon: Icon(Icons.lock, color: Colors.grey[400]),
-                          textEditingController: password,
+                          ctrl: password,
                           obscureText: true,
                         ),
                         const SizedBox(
