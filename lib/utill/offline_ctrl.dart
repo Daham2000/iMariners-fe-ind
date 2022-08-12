@@ -9,6 +9,7 @@ class OfflineCtrl {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final categories =
         await CategoryAPI().getAddCategories(query: "allDownload1010");
+    print(categories.data?.length);
     await prefs.remove('category_list');
     for (int i = 0; i < categories.data!.length; i++) {
       for (int j = 0; j < categories.data![i].subCategories!.length; j++) {

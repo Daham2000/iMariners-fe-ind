@@ -206,7 +206,6 @@ class DrawerApp extends StatelessWidget {
                 ));
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 final String? s = prefs.getString('userObject');
-                print(s);
                 Map<String, dynamic> userMap = jsonDecode(s ?? "");
                 final user = UserModel.fromJson(userMap);
                 final int status = await AuthApi().logout(user.user?.id);

@@ -12,11 +12,15 @@ class CategoryAPI {
     try {
       var url = Uri.parse('${Strings.url}v1/category');
       if (query != null) {
-        print('${query.substring(0,1).toUpperCase()}${query.substring(1,query.length-1)}');
+        String reqQuery = '${query.substring(0,1).toUpperCase()}${query.substring(1,query.length-1)}';
+        if(query=="allDownload1010"){
+          reqQuery = '${query}';
+        }
         final queryParameters = {
-          'query': '${query.substring(0,1).toUpperCase()}${query.substring(1,query.length-1)}',
+          'query': reqQuery,
         };
         url = Uri.https('${Strings.url2}', "v1/category", queryParameters);
+        print(url);
       }else{
         final queryParameters = {
           'query': '',
@@ -29,6 +33,7 @@ class CategoryAPI {
       );
       if (response.statusCode == 200) {
         final jsonString = response.body;
+        print(jsonString);
         final jsonMap = json.decode(jsonString);
         categoryModel = CategoryModel.fromJson(jsonMap);
       }
