@@ -1,4 +1,6 @@
+import 'package:com_ind_imariners/login_page/login_provider.dart';
 import 'package:flutter/material.dart';
+import 'theme/primary_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,14 +9,16 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  static final ValueNotifier<ThemeMode> themeNotifier =
+  ValueNotifier(ThemeMode.light);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Container(),
+      title: 'iMariners',
+      theme: PrimaryTheme.generateTheme(context),
+      debugShowCheckedModeBanner: false,
+      home: LoginProvider(),
     );
   }
 }
