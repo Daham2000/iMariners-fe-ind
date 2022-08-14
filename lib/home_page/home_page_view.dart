@@ -18,6 +18,7 @@ import '../tools_view/tools_provider.dart';
 import '../widgets/app_bar_curve.dart';
 import '../widgets/drawer_app_bar.dart';
 import '../widgets/snackbar_factory.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   late CounterCubit counterCubit;
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
   late ConnectivityResult result;
+  late InterstitialAd interstitialAd;
 
   @override
   void initState() {
@@ -39,6 +41,17 @@ class _HomePageState extends State<HomePage> {
     StreamSubscription<ConnectivityResult> _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(counterCubit.setOffline);
     super.initState();
+    InterstitialAd.load(
+        adUnitId: 'ca-app-pub-7889520853518031/8211776058',
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            interstitialAd = ad;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('InterstitialAd failed to load: $error');
+          },
+        ));
   }
 
   checkConn() async {
@@ -59,6 +72,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if(interstitialAd!=null){
+      interstitialAd.show();
+    }
     return Scaffold(
       key: _key,
       drawer: DrawerApp(
