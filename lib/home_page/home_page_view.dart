@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:com_ind_imariners/home_page/widget/sample_widget.dart';
 import 'package:com_ind_imariners/login_page/counter_cubit.dart';
 import 'package:com_ind_imariners/theme/colors.dart';
+import 'package:com_ind_imariners/utill/add_unit_helper.dart';
+import 'package:com_ind_imariners/utill/user_check_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,26 +34,24 @@ class _HomePageState extends State<HomePage> {
   late CounterCubit counterCubit;
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
   late ConnectivityResult result;
-  late InterstitialAd interstitialAd;
+  late BannerAd _bottomBannerAd;
+  bool _isBottomBannerAdLoaded = false;
 
   @override
   void initState() {
     checkConn();
     counterCubit = BlocProvider.of<CounterCubit>(context);
-    StreamSubscription<ConnectivityResult> _connectivitySubscription =
+    StreamSubscription<ConnectivityResult> connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(counterCubit.setOffline);
     super.initState();
-    InterstitialAd.load(
-        adUnitId: 'ca-app-pub-7889520853518031/8211776058',
-        request: AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            interstitialAd = ad;
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            print('InterstitialAd failed to load: $error');
-          },
-        ));
+    showBannerAd();
+  }
+
+  showBannerAd() async {
+    final bool proUser = await UserCheckService().userCheck();
+    if (proUser) {
+      _createBottomBannerAd();
+    }
   }
 
   checkConn() async {
@@ -70,16 +70,39 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _createBottomBannerAd() {
+    _bottomBannerAd = BannerAd(
+      adUnitId: AddUnitHelper().getAddUnit("banner") ?? "",
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBottomBannerAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+        },
+      ),
+    );
+    _bottomBannerAd.load();
+  }
+
   @override
   Widget build(BuildContext context) {
-    if(interstitialAd!=null){
-      interstitialAd.show();
-    }
     return Scaffold(
       key: _key,
       drawer: DrawerApp(
         changeTheme: changeTheme,
       ),
+      bottomNavigationBar: _isBottomBannerAdLoaded
+          ? Container(
+              height: _bottomBannerAd.size.height.toDouble(),
+              width: _bottomBannerAd.size.width.toDouble(),
+              child: AdWidget(ad: _bottomBannerAd),
+            )
+          : null,
       body: BlocBuilder<CounterCubit, CounterState>(
         buildWhen: (pre, current) =>
             pre.count != current.count ||
@@ -136,16 +159,16 @@ class _HomePageState extends State<HomePage> {
                                   await counterCubit
                                       .loadCategories(result.name == "none");
                                   if (state.categoryModel != null) {
-                                      Future.microtask(() => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ContentExpandView(
-                                                      text: "Colreg", datum: Datum(),
-                                                    )),
-                                          ));
+                                    Future.microtask(() => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ContentExpandView(
+                                                    text: "Colreg",
+                                                    datum: Datum(),
+                                                  )),
+                                        ));
                                   }
-
                                 }
                               },
                               child: const CustomHomeButton(
