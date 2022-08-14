@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:com_ind_imariners/utill/logout_service.dart';
 import 'package:com_ind_imariners/utill/offline_ctrl.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -8,15 +8,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../contact_us_page/contact_us_view.dart';
-import '../db/api/auth_api.dart';
-import '../db/api/category_api.dart';
-import '../db/models/category_model.dart';
 import '../db/models/user_model.dart';
 import '../login_page/login_provider.dart';
 import '../pirvacy_policy_page/privacy_policy_view.dart';
 import '../theme/colors.dart';
 import 'snackbar_factory.dart';
-import 'package:http/http.dart' as http;
 
 class DrawerApp extends StatelessWidget {
   final VoidCallback changeTheme;
@@ -201,14 +197,10 @@ class DrawerApp extends StatelessWidget {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBarFactory().getSnackBar(
                   isFail: false,
-                  title: "Logging out...",
+                  title: "Logging out. Please wait.",
                   fontSize: fontSize,
                 ));
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                final String? s = prefs.getString('userObject');
-                Map<String, dynamic> userMap = jsonDecode(s ?? "");
-                final user = UserModel.fromJson(userMap);
-                final int status = await AuthApi().logout(user.user?.id);
+                await LogoutService().logout();
                 Future.microtask(() => Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => LoginProvider()),

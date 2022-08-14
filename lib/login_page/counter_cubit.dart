@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:com_ind_imariners/db/api/auth_api.dart';
 import 'package:com_ind_imariners/db/api/category_api.dart';
 import 'package:com_ind_imariners/db/models/user_model.dart';
