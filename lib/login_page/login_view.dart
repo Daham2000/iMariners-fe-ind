@@ -35,7 +35,6 @@ class _CounterPageState extends State<LoginView> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -69,15 +68,14 @@ class _CounterPageState extends State<LoginView> {
 
   Widget getTextField(
       {required TextEditingController ctrl,
-        required bool obscureText,
-        required Icon icon,
-        required String text}) {
+      required bool obscureText,
+      required Icon icon,
+      required String text}) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.86,
       child: TextFormField(
         controller: ctrl,
-        obscureText: text == "Password"
-            ? passwordObscureText : obscureText,
+        obscureText: text == "Password" ? passwordObscureText : obscureText,
         validator: (text) {
           if (text == null || text.isEmpty) {
             return "This field can't be empty";
@@ -88,14 +86,14 @@ class _CounterPageState extends State<LoginView> {
             prefixIcon: icon,
             suffixIcon: text == "Password"
                 ? InkWell(
-              onTap: () {
-                hidePassword();
-              },
-              child: Icon(Icons.remove_red_eye),
-            )
+                    onTap: () {
+                      hidePassword();
+                    },
+                    child: Icon(Icons.remove_red_eye),
+                  )
                 : Container(
-              width: 10,
-            ),
+                    width: 10,
+                  ),
             enabledBorder: OutlineInputBorder(
               // width: 0.0 produces a thin "hairline" border
               borderSide: const BorderSide(color: Colors.grey, width: 0.5),
@@ -110,8 +108,6 @@ class _CounterPageState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-
-
     CounterCubit counterCubit = BlocProvider.of<CounterCubit>(context);
     return Scaffold(
       body: BlocBuilder<CounterCubit, CounterState>(
@@ -279,12 +275,16 @@ class _CounterPageState extends State<LoginView> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             SocialButton(
-                                                path: "assets/Google.jpg",bloc: counterCubit,),
+                                              path: "assets/Google.jpg",
+                                              bloc: counterCubit,
+                                            ),
                                             SizedBox(
                                               width: 15.0,
                                             ),
                                             SocialButton(
-                                                path: "assets/facebook.png",bloc: counterCubit,)
+                                              path: "assets/facebook.png",
+                                              bloc: counterCubit,
+                                            )
                                           ],
                                         ),
                                         const SizedBox(

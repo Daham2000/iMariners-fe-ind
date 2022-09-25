@@ -106,30 +106,30 @@ class CounterCubit extends Cubit<CounterState> implements SuperCubit {
     ));
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? categoryList = prefs.getString('category_list');
-    if (query == null) {
-      if (categoryList != null) {
-        final List<Datum> c = Datum.decode(categoryList);
-        List<Datum> filterColreg = [];
-        if (query == "Colreg") {
-          filterColreg =
-              c.where((element) => element.categoryName == "Colreg").toList();
-          return;
-        } else {
-          filterColreg =
-              c.where((element) => element.categoryName != "Colreg").toList();
-        }
-        emit(state.clone(
-          categoryModel: CategoryModel(
-            message: "200",
-            data: filterColreg,
-          ),
-          loading: false,
-        ));
-        return;
-      }
-    }
     if (isOffline) {
       emit(state.clone(isOffline: isOffline));
+      if (query == null) {
+        if (categoryList != null) {
+          final List<Datum> c = Datum.decode(categoryList);
+          List<Datum> filterColreg = [];
+          if (query == "Colreg") {
+            filterColreg =
+                c.where((element) => element.categoryName == "Colreg").toList();
+            return;
+          } else {
+            filterColreg =
+                c.where((element) => element.categoryName != "Colreg").toList();
+          }
+          emit(state.clone(
+            categoryModel: CategoryModel(
+              message: "200",
+              data: filterColreg,
+            ),
+            loading: false,
+          ));
+          return;
+        }
+      }
     } else {
       if (categoryList == null) {
         emit(state.clone(
